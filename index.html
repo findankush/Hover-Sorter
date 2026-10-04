@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Smart Document Hover Sorter | Ankush Saha</title>
+
+  <!-- Client-side OCR Engine -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-dark: #090d16;
+      --panel-bg: #111827;
+      --accent-green: #22c55e;
+      --accent-blue: #38bdf8;
+      --border-color: #334155;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-dark);
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      padding-bottom: 50px;
+    }
+
+    header {
+      background: #1e293b;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      z-index: 40;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #2563eb, #38bdf8);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1rem;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: #f1f5f9;
+    }
+    .brand-subtitle {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 0.05em;
+    }
+    .controls {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .btn {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-secondary { background: #334155; color: #cbd5e1; }
+
+    /* Configuration Modal Drawer */
+    #settings-drawer {
+      background: var(--panel-bg);
+      padding: 14px 16px;
+      border-bottom: 2px solid var(--primary);
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 0.85rem;
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 40;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+    }
+    .drawer-section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-blue);
+      font-weight: 700;
+      margin-top: 4px;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+      padding-bottom: 3px;
+    }
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .setting-label {
+      color: #cbd5e1;
+      font-weight: 500;
+      font-size: 0.8rem;
+    }
+    select, input {
+      background: #0f172a;
+      color: #38bdf8;
+      border: 1px solid #475569;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      width: 100%;
+    }
+    select[multiple] {
+      height: 85px;
+    }
+    .setting-row-half {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* Live Preview Breadcrumb Bars */
+    .preview-bar {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 6px 10px;
+      min-height: 32px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #38bdf8;
+    }
+    .match-chip {
+      background: #065f46;
+      color: #a7f3d0;
+      border: 1px solid #10b981;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .hierarchy-chip {
+      background: #1e3a8a;
+      color: #bfdbfe;
+      border: 1px solid #3b82f6;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Auto-Audit Notification Card */
+    .audit-badge-card {
+      background: #064e3b;
+      border: 1px solid #059669;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: #d1fae5;
+    }
+    .audit-badge-card strong {
+      color: #6ee7b7;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    /* Camera Viewport */
+    #camera-container {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+      overflow: hidden;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #reticle {
+      position: absolute;
+      width: 84%;
+      height: 38%;
+      border: 2px dashed rgba(56, 189, 248, 0.7);
+      border-radius: 14px;
+      pointer-events: none;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+    }
+    #reticle::after {
+      content: "ALIGN DOCUMENT DETAILS / BARCODE";
+      font-size: 0.68rem;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+    canvas { display: none; }
+
+    /* Top Floating Routing Display Banner */
+    #sorting-banner {
+      position: absolute;
+      top: 10px;
+      left: 8px;
+      right: 8px;
+      z-index: 30;
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      transition: all 0.25s ease;
+    }
+    .banner-standby {
+      background: rgba(30, 41, 59, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+    .banner-reading {
+      background: rgba(3, 105, 161, 0.92);
+      border: 1px solid var(--accent-blue);
+      color: #e0f2fe;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .banner-error {
+      background: rgba(153, 27, 27, 0.95);
+      border: 1px solid #f87171;
+      color: #fee2e2;
+      font-size: 0.88rem;
+    }
+
+    /* Confirmed Match High-Visibility Card */
+    .banner-match {
+      background: #14532d !important;
+      border: 3px solid #22c55e !important;
+      color: #ffffff !important;
+      transform: scale(1.01);
+      box-shadow: 0 0 35px rgba(34, 197, 94, 0.85) !important;
+    }
+    .match-tag {
+      display: inline-block;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 4px;
+      font-weight: 700;
+      color: #bbf7d0;
+    }
+    .sort-instruction {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: #fef08a;
+      letter-spacing: 0.04em;
+    }
+    .target-bin-multilevel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .level-chip-card {
+      background: #166534;
+      border: 2px solid #86efac;
+      padding: 6px 12px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 85%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+    .level-attr-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #bbf7d0;
+      font-weight: 800;
+    }
+    .level-attr-value {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+      margin-top: 2px;
+      word-break: break-word;
+      text-align: center;
+    }
+    .level-arrow {
+      font-size: 1.4rem;
+      color: #fef08a;
+      font-weight: 900;
+    }
+
+    #log-panel {
+      height: 70px;
+      background: #020617;
+      padding: 6px 12px;
+      font-family: monospace;
+      font-size: 0.7rem;
+      overflow-y: auto;
+      border-top: 1px solid #1e293b;
+      z-index: 10;
+    }
+    .log-line { margin: 2px 0; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-wrap">
+      <div class="brand-logo">AS</div>
+      <div class="brand-text">
+        <span class="brand-title">Hover Sorter</span>
+        <span class="brand-subtitle">Dev: Ankush Saha</span>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="toggle-config-btn" class="btn btn-secondary">⚙ Config</button>
+      <button id="camera-btn" class="btn">Open Camera</button>
+    </div>
+  </header>
+
+  <!-- Dynamic Configuration Drawer -->
+  <div id="settings-drawer">
+    <div class="drawer-section-title">1. Target Sheet & Optical Sensor</div>
+    <div class="setting-row-half">
+      <div class="setting-group">
+        <label class="setting-label">Active Sheet Tab:</label>
+        <select id="sheet-select"><option value="">Connecting to Sheet...</option></select>
+      </div>
+      <div class="setting-group">
+        <label class="setting-label">Camera Sensor:</label>
+        <select id="camera-select"><option value="">Auto Select</option></select>
+      </div>
+    </div>
+
+    <div class="drawer-section-title">2. Document Matching Criteria</div>
+    <div class="setting-row-half">
+      <div class="setting-group">
+        <label class="setting-label">Match Logic:</label>
+        <select id="match-logic">
+          <option value="ALL">ALL Selected (AND)</option>
+          <option value="ANY">ANY Selected (OR)</option>
+        </select>
+      </div>
+      <div class="setting-group">
+        <label class="setting-label">Skip If Already Processed:</label>
+        <select id="skip-processed-toggle">
+          <option value="true">Yes (Active Filter)</option>
+          <option value="false">No (Re-Scan Allowed)</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Matching Columns Select & Dedicated Active Indicator Area -->
+    <div class="setting-group">
+      <label class="setting-label">Columns to Find in Document (Select ID or Code column):</label>
+      <select id="match-columns-select" multiple size="3"></select>
+    </div>
+    <div class="setting-group">
+      <label class="setting-label">Active Finding Criteria (Verified Columns):</label>
+      <div id="match-cols-preview" class="preview-bar">-- None selected --</div>
+    </div>
+
+    <div class="drawer-section-title">3. Multi-Level Routing Hierarchy (Sorting Bins)</div>
+    <div class="setting-group">
+      <label class="setting-label">Display Columns (Tap options to add in order):</label>
+      <select id="display-columns-select" multiple size="3"></select>
+    </div>
+    <div class="setting-group">
+      <label class="setting-label">Active Hierarchy Flow Order:</label>
+      <div id="hierarchy-preview" class="preview-bar">-- None selected. Tap columns above --</div>
+    </div>
+
+    <div class="drawer-section-title">4. Automatic Sheet Audit & Provenance</div>
+    <div class="audit-badge-card">
+      <strong>✓ Real-Time Write-Back Active:</strong>
+      Columns for <em>Status</em>, <em>Scan Timestamp</em>, <em>Operator Signature</em>, <em>Device Name</em>, and <em>Device ID</em> are auto-created if missing and written into the <strong>exact matched row</strong>.
+    </div>
+
+    <div class="setting-row-half">
+      <div class="setting-group">
+        <label class="setting-label">Operator Name / Email (Saved on Device):</label>
+        <input type="text" id="operator-name-input" value="Ankush Saha">
+      </div>
+      <div class="setting-group">
+        <label class="setting-label">Status Value to Write:</label>
+        <input type="text" id="status-val-input" value="Processed">
+      </div>
+    </div>
+
+    <div class="setting-row-half">
+      <div class="setting-group">
+        <label class="setting-label">Detected Device Model:</label>
+        <input type="text" id="device-name-input" readonly style="background: #020617; color: #94a3b8;">
+      </div>
+      <div class="setting-group">
+        <label class="setting-label">Persistent Device UUID:</label>
+        <input type="text" id="device-uuid-input" readonly style="background: #020617; color: #94a3b8; font-family: monospace;">
+      </div>
+    </div>
+  </div>
+
+  <div id="camera-container">
+    <div id="sorting-banner" class="banner-standby">
+      Tap "Open Camera" to start hover sorting
+    </div>
+
+    <video id="video" autoplay playsinline webkit-playsinline muted></video>
+    <div id="reticle"></div>
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <div id="log-panel"></div>
+
+  <script>
+    // =========================================================================
+    // CONFIGURATION: Paste your deployed Google Apps Script URL here
+    // =========================================================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6jngSeasRs_Fy2C8IU0Pz6oJ0DEhnKIppK_6oVhMScD7TcTRxtVkiZuDFSSj1d3iP/exec";
+    const SCAN_INTERVAL_MS = 3000;
+    const MATCH_HOLD_DURATION_MS = 4500;
+
+    // Elements
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const sortingBanner = document.getElementById("sorting-banner");
+    const logPanel = document.getElementById("log-panel");
+    const cameraBtn = document.getElementById("camera-btn");
+    const toggleConfigBtn = document.getElementById("toggle-config-btn");
+    const settingsDrawer = document.getElementById("settings-drawer");
+
+    // Dynamic Selectors
+    const sheetSelect = document.getElementById("sheet-select");
+    const cameraSelect = document.getElementById("camera-select");
+    const matchLogic = document.getElementById("match-logic");
+    const skipProcessedToggle = document.getElementById("skip-processed-toggle");
+    const matchColumnsSelect = document.getElementById("match-columns-select");
+    const matchColsPreview = document.getElementById("match-cols-preview");
+    const displayColumnsSelect = document.getElementById("display-columns-select");
+    const hierarchyPreview = document.getElementById("hierarchy-preview");
+    const statusValInput = document.getElementById("status-val-input");
+    const operatorNameInput = document.getElementById("operator-name-input");
+    const deviceNameInput = document.getElementById("device-name-input");
+    const deviceUuidInput = document.getElementById("device-uuid-input");
+
+    let isScanning = false;
+    let isProcessing = false;
+    let stream = null;
+    let scanTimer = null;
+    let barcodeDetector = null;
+    let audioCtx = null;
+    let globalSheetsSchema = [];
+    
+    // Explicit array to preserve chronological tap order for multi-level sorting
+    let orderedHierarchyConfig = [];
+
+    // 1. Generate & Persist Device UUID and Hardware Identity
+    function initDeviceIdentity() {
+      let uuid = localStorage.getItem("hover_sorter_device_uuid");
+      if (!uuid) {
+        uuid = "dev-" + Math.random().toString(36).substring(2, 10) + "-" + Date.now().toString(36);
+        localStorage.setItem("hover_sorter_device_uuid", uuid);
+      }
+      deviceUuidInput.value = uuid;
+
+      const ua = navigator.userAgent;
+      let dev = "Desktop PC";
+      if (/android/i.test(ua)) dev = "Android Mobile";
+      else if (/iPad|iPhone|iPod/.test(ua)) dev = "Apple iOS Device";
+      else if (/Windows/i.test(ua)) dev = "Windows Workstation";
+      else if (/Macintosh/i.test(ua)) dev = "Mac Workstation";
+
+      const res = `${window.screen.width}x${window.screen.height}`;
+      deviceNameInput.value = `${dev} (${res})`;
+    }
+    initDeviceIdentity();
+
+    // Restore saved Operator Name / Email
+    const savedOp = localStorage.getItem("hover_sorter_operator");
+    if (savedOp) operatorNameInput.value = savedOp;
+    operatorNameInput.addEventListener("input", () => {
+      localStorage.setItem("hover_sorter_operator", operatorNameInput.value);
+    });
+
+    function log(msg, color = "#94a3b8") {
+      const line = document.createElement("div");
+      line.className = "log-line";
+      line.style.color = color;
+      line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      logPanel.prepend(line);
+    }
+
+    function setBanner(html, cssClass) {
+      sortingBanner.className = cssClass;
+      sortingBanner.innerHTML = html;
+    }
+
+    toggleConfigBtn.addEventListener("click", () => {
+      settingsDrawer.style.display = settingsDrawer.style.display === "flex" ? "none" : "flex";
+    });
+
+    // Sound feedback
+    function playBeep(type) {
+      try {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) audioCtx = new AudioContext();
+        }
+        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+        if (!audioCtx) return;
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        const t = audioCtx.currentTime;
+
+        if (type === "match") {
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(523.25, t);
+          osc.frequency.setValueAtTime(659.25, t + 0.1);
+          osc.frequency.setValueAtTime(783.99, t + 0.2);
+          gain.gain.setValueAtTime(0.3, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+          osc.start(t);
+          osc.stop(t + 0.45);
+        } else if (type === "error") {
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(140, t);
+          gain.gain.setValueAtTime(0.2, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+          osc.start(t);
+          osc.stop(t + 0.25);
+        }
+      } catch (e) {}
+    }
+
+    if ("BarcodeDetector" in window) {
+      try { barcodeDetector = new BarcodeDetector(); } catch(e) {}
+    }
+
+    // 2. Fetch Schema with Resilient Tab Handling
+    async function loadDynamicSheetSchema() {
+      try {
+        const res = await fetch(SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + "getSheets=1");
+        const data = await res.json();
+        if (data.sheets && data.sheets.length > 0) {
+          globalSheetsSchema = data.sheets;
+          sheetSelect.innerHTML = "";
+          data.sheets.forEach(s => {
+            const opt = document.createElement("option");
+            opt.value = s.sheetName;
+            opt.textContent = `${s.sheetName} (${s.columns.length} columns)`;
+            sheetSelect.appendChild(opt);
+          });
+          bindSheetColumns(data.sheets[0]);
+          log("Connected: loaded " + data.sheets.length + " sheet(s) schema.", "#4ade80");
+        }
+      } catch (e) {
+        log("Could not auto-fetch columns: " + e.message, "#fbbf24");
+      }
+    }
+
+    // 3. Clean Binding: Track Chronological Hierarchy Sequence & Match Criteria
+    function bindSheetColumns(sheetMeta) {
+      if (!sheetMeta || !sheetMeta.columns) return;
+      const cols = sheetMeta.columns;
+
+      matchColumnsSelect.innerHTML = "";
+      displayColumnsSelect.innerHTML = "";
+      orderedHierarchyConfig = [];
+      renderHierarchyPreview();
+
+      cols.forEach((col, idx) => {
+        const label = `[Col ${col.index}] ${col.name}`;
+
+        // 1. Match Columns (Auto-select if name contains code/id or default to Col 1)
+        const optMatch = document.createElement("option");
+        optMatch.value = col.index;
+        optMatch.dataset.name = col.name;
+        optMatch.textContent = label;
+        if (/id|code|dise|invoice|barcode|sl/i.test(col.name) || idx === 1) {
+          optMatch.selected = true;
+        }
+        matchColumnsSelect.appendChild(optMatch);
+
+        // 2. Multilevel Bins: Unselected by default
+        const optDisp = document.createElement("option");
+        optDisp.value = col.index;
+        optDisp.dataset.name = col.name;
+        optDisp.textContent = label;
+        displayColumnsSelect.appendChild(optDisp);
+      });
+
+      renderMatchColsPreview();
+    }
+
+    // Update Match Columns Live Preview Bar
+    function renderMatchColsPreview() {
+      const selected = Array.from(matchColumnsSelect.selectedOptions);
+      if (selected.length === 0) {
+        matchColsPreview.innerHTML = "-- None selected --";
+        return;
+      }
+      matchColsPreview.innerHTML = selected.map(opt => 
+        `<span class="match-chip">🔍 ${opt.textContent}</span>`
+      ).join(" ");
+    }
+
+    matchColumnsSelect.addEventListener("change", renderMatchColsPreview);
+
+    // Event listener to preserve tap sequence for hierarchy
+    displayColumnsSelect.addEventListener("change", () => {
+      const selectedOpts = Array.from(displayColumnsSelect.selectedOptions);
+      
+      // Remove unselected
+      orderedHierarchyConfig = orderedHierarchyConfig.filter(item => 
+        selectedOpts.some(opt => parseInt(opt.value, 10) === item.index)
+      );
+
+      // Add new items preserving tap order
+      selectedOpts.forEach(opt => {
+        const idx = parseInt(opt.value, 10);
+        if (!orderedHierarchyConfig.some(item => item.index === idx)) {
+          orderedHierarchyConfig.push({
+            index: idx,
+            attribute: opt.dataset.name || opt.textContent.replace(/^\[Col\s+\d+\]\s*/i, '').trim()
+          });
+        }
+      });
+
+      renderHierarchyPreview();
+    });
+
+    function renderHierarchyPreview() {
+      if (orderedHierarchyConfig.length === 0) {
+        hierarchyPreview.innerHTML = "-- None selected. Tap columns above --";
+        return;
+      }
+      hierarchyPreview.innerHTML = orderedHierarchyConfig.map((item, i) => 
+        `<span class="hierarchy-chip">${i + 1}. ${item.attribute}</span>`
+      ).join(" ➔ ");
+    }
+
+    sheetSelect.addEventListener("change", () => {
+      const selected = globalSheetsSchema.find(s => s.sheetName === sheetSelect.value);
+      if (selected) bindSheetColumns(selected);
+    });
+
+    loadDynamicSheetSchema();
+
+    // 4. Optical Sensor Discovery
+    async function populateCameras() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(d => d.kind === "videoinput");
+        cameraSelect.innerHTML = "";
+
+        videoDevices.forEach((dev, i) => {
+          const opt = document.createElement("option");
+          opt.value = dev.deviceId;
+          opt.textContent = dev.label || `Camera ${i + 1}`;
+          if (/back|rear|environment/i.test(dev.label)) opt.selected = true;
+          cameraSelect.appendChild(opt);
+        });
+      } catch(e) {}
+    }
+
+    async function startCamera() {
+      if (location.protocol !== "https:" && !["localhost", "127.0.0.1"].includes(location.hostname)) {
+        setBanner("<strong>HTTPS Required:</strong> Chrome disables camera on unencrypted HTTP.", "banner-error");
+        return;
+      }
+
+      setBanner("Opening camera feed...", "banner-reading");
+
+      const selectedId = cameraSelect.value;
+      const ladder = [];
+      if (selectedId) ladder.push({ video: { deviceId: { exact: selectedId } } });
+      ladder.push({ video: { facingMode: { ideal: "environment" } } });
+      ladder.push({ video: { facingMode: "environment" } });
+      ladder.push({ video: true });
+
+      for (const constraints of ladder) {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia(constraints);
+          if (stream) break;
+        } catch(e) {}
+      }
+
+      if (!stream) {
+        setBanner("Failed to access camera sensor. Check permissions.", "banner-error");
+        return;
+      }
+
+      video.srcObject = stream;
+      video.setAttribute("playsinline", "true");
+      video.setAttribute("webkit-playsinline", "true");
+      video.muted = true;
+      await video.play();
+
+      await populateCameras();
+
+      isScanning = true;
+      cameraBtn.textContent = "Stop Camera";
+      setBanner("Hover camera over target document details...", "banner-standby");
+      scanTimer = setInterval(scanFrame, SCAN_INTERVAL_MS);
+      log("Camera hardware online.", "#4ade80");
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+      }
+      video.srcObject = null;
+      clearInterval(scanTimer);
+      isScanning = false;
+      cameraBtn.textContent = "Open Camera";
+      setBanner("Camera stopped. Tap 'Open Camera' to resume.", "banner-standby");
+      log("Camera disconnected.");
+    }
+
+    cameraBtn.addEventListener("click", () => {
+      if (isScanning) stopCamera();
+      else startCamera();
+    });
+
+    cameraSelect.addEventListener("change", () => {
+      if (isScanning) startCamera();
+    });
+
+    // 5. Scan Frame Engine
+    async function scanFrame() {
+      if (!isScanning || isProcessing || video.readyState < 2) return;
+      isProcessing = true;
+
+      try {
+        const vW = video.videoWidth || 640;
+        const vH = video.videoHeight || 480;
+
+        const cW = Math.round(vW * 0.84);
+        const cH = Math.round(vH * 0.38);
+        const cX = Math.round((vW - cW) / 2);
+        const cY = Math.round((vH - cH) / 2);
+
+        canvas.width = cW;
+        canvas.height = cH;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, cX, cY, cW, cH, 0, 0, cW, cH);
+
+        // Tier 1: Hardware Barcode
+        let barcodeVal = "";
+        if (barcodeDetector) {
+          try {
+            const barcodes = await barcodeDetector.detect(canvas);
+            if (barcodes.length > 0) barcodeVal = barcodes[0].rawValue;
+          } catch(e) {}
+        }
+
+        if (barcodeVal) {
+          log("Barcode detected: " + barcodeVal, "#38bdf8");
+          await sendPayloadToBackend({ barcode: barcodeVal });
+          return;
+        }
+
+        // Tier 2: Local Client OCR via Tesseract
+        setBanner("Analyzing document details...", "banner-reading");
+        const { data: { text } } = await Tesseract.recognize(canvas, "eng");
+        const clean = text.trim();
+
+        if (clean.length >= 3) {
+          log(`Scanned text: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
+          await sendPayloadToBackend({ scannedText: clean });
+        } else {
+          setBanner("Hover camera reticle over target document...", "banner-standby");
+        }
+
+      } catch (err) {
+        log("Scan warning: " + err.message, "#f87171");
+      } finally {
+        isProcessing = false;
+      }
+    }
+
+    function getSelectedValues(selectElem) {
+      const vals = [];
+      for (let i = 0; i < selectElem.options.length; i++) {
+        if (selectElem.options[i].selected) {
+          const num = parseInt(selectElem.options[i].value, 10);
+          if (!isNaN(num) && num > 0) vals.push(num);
+        }
+      }
+      return vals;
+    }
+
+    // 6. Two-Way Sync With Exact Physical Row Targeting & Ordered Hierarchical Bins
+    async function sendPayloadToBackend(payload) {
+      const selectedMatchCols = getSelectedValues(matchColumnsSelect);
+
+      const requestBody = {
+        sheetName: sheetSelect.value,
+        barcode: payload.barcode || "",
+        scannedText: payload.scannedText || "",
+        matchRules: {
+          matchColumns: selectedMatchCols.length > 0 ? selectedMatchCols : [1],
+          operator: matchLogic.value,
+          skipAlreadyProcessed: skipProcessedToggle.value === "true",
+          statusValue: statusValInput.value || "Processed",
+          operatorName: operatorNameInput.value || "Ankush Saha",
+          deviceName: deviceNameInput.value,
+          deviceId: deviceUuidInput.value,
+          displayActionColumns: orderedHierarchyConfig
+        }
+      };
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(requestBody)
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          setBanner(`<strong>Error:</strong> ${data.error}`, "banner-error");
+          playBeep("error");
+          return;
+        }
+
+        if (data.match) {
+          playBeep("match");
+          if (navigator.vibrate) navigator.vibrate([150, 80, 150]);
+
+          const matchedLabel = (data.matchedValues && data.matchedValues.length) 
+            ? data.matchedValues.join(" · ") 
+            : "MATCH VERIFIED";
+
+          // Render Hierarchical Multi-Level Sorting Cards With Actual Attribute Names
+          let levelsHtml = "";
+          if (data.levels && data.levels.length > 0) {
+            levelsHtml = data.levels.map((lvl, idx) => {
+              return `
+                <div class="level-chip-card">
+                  <span class="level-attr-title">${lvl.attribute}</span>
+                  <span class="level-attr-value">${lvl.value}</span>
+                </div>` + 
+                (idx < data.levels.length - 1 ? `<span class="level-arrow">➔</span>` : "");
+            }).join(" ");
+          } else {
+            levelsHtml = `
+              <div class="level-chip-card">
+                <span class="level-attr-title">Action</span>
+                <span class="level-attr-value">${data.action}</span>
+              </div>`;
+          }
+
+          const bannerHtml = `
+            <div class="match-tag">✓ Row #${data.rowIndex} (${matchedLabel})</div>
+            <div class="sort-instruction">👉 ROUTE & SORT INTO:</div>
+            <div class="target-bin-multilevel">${levelsHtml}</div>
+          `;
+
+          setBanner(bannerHtml, "banner-match");
+          log(`Write-back confirmed in Row #${data.rowIndex} (Status, Timestamp, Operator, Device)`, "#4ade80");
+
+          // Hold display for operator reading
+          clearInterval(scanTimer);
+          setTimeout(() => {
+            if (isScanning) {
+              setBanner("Hover camera reticle over next document...", "banner-standby");
+              scanTimer = setInterval(scanFrame, SCAN_INTERVAL_MS);
+            }
+          }, MATCH_HOLD_DURATION_MS);
+
+        } else {
+          setBanner("Hovering... (No matching criteria in sheet)", "banner-standby");
+        }
+
+      } catch (netErr) {
+        setBanner("Sync connection error: " + netErr.message, "banner-error");
+        playBeep("error");
+      }
+    }
+  </script>
+</body>
+</html>

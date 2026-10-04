@@ -185,7 +185,7 @@
       flex-direction: column;
       gap: 12px;
       font-size: 0.82rem;
-      max-height: 84vh;
+      max-height: 85vh;
       overflow-y: auto;
       z-index: 45;
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.9);
@@ -279,13 +279,32 @@
       font-weight: 700;
     }
 
-    /* Custom Field Extractor Builder Table */
-    .custom-field-row {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr auto;
-      gap: 6px;
-      margin-bottom: 6px;
+    /* Enterprise Field Mapping Card */
+    .custom-field-card {
+      background: #050811;
+      border: 1px solid var(--border-active);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+    }
+
+    .custom-field-card-header {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-emerald);
+    }
+
+    .custom-field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
     }
 
     .sync-schema-btn {
@@ -293,7 +312,7 @@
       border: 1px solid #38bdf8;
       color: #fff;
       font-weight: 700;
-      padding: 8px 12px;
+      padding: 9px 12px;
       border-radius: 6px;
       cursor: pointer;
       width: 100%;
@@ -465,7 +484,7 @@
       color: #fef08a;
     }
 
-    /* Modal for Multiple Duplicate Candidate Disambiguation */
+    /* Modal for Disambiguation */
     #disambiguation-modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -690,10 +709,10 @@
       <div id="hierarchy-flow-chips" class="chip-sequence-bar">-- Tap columns above to build flow --</div>
     </div>
 
-    <!-- 5. DYNAMIC EXTRA DOCUMENT EXTRACTION FIELDS (USER CONFIGURED ON-THE-FLY) -->
+    <!-- 5. DYNAMIC FIELD-LABEL EXTRACTION BUILDER WITH PRESET DROPDOWNS -->
     <div class="drawer-sec-header">
-      <span>5. Custom Extracted Document Fields (Auto-Created Columns)</span>
-      <button id="add-custom-field-btn" class="btn btn-secondary" style="padding:2px 8px; font-size:0.68rem;">+ Add Field</button>
+      <span>5. Custom Document Fields to Write-Back to Sheet</span>
+      <button id="add-custom-field-btn" class="btn btn-secondary" style="padding:2px 8px; font-size:0.68rem;">+ Add Document Field</button>
     </div>
     <div id="custom-fields-container">
       <!-- Dynamic rows auto-populated from localStorage -->
@@ -740,7 +759,7 @@
 
   <div id="console-log"></div>
 
-  <!-- Ambiguity Disambiguation Modal Popup (When multiple rows match) -->
+  <!-- Ambiguity Disambiguation Modal Popup -->
   <div id="disambiguation-modal">
     <div class="modal-dialog">
       <div class="modal-head">
@@ -748,7 +767,7 @@
         <button id="close-modal-btn" class="btn btn-secondary" style="padding:2px 6px;">✕</button>
       </div>
       <div class="modal-body" id="modal-candidates-list">
-        <!-- Render candidate row buttons -->
+        <!-- Candidate buttons -->
       </div>
     </div>
   </div>
@@ -836,7 +855,6 @@
       };
     }
 
-    // Device Signature
     function initDeviceSignature() {
       let uuid = localStorage.getItem("hs_device_uuid");
       if (!uuid) {
@@ -851,7 +869,6 @@
     }
     initDeviceSignature();
 
-    // Operator storage
     const savedOp = localStorage.getItem("hs_operator_name");
     if (savedOp) operatorInput.value = savedOp;
     operatorInput.addEventListener("input", () => {
@@ -864,7 +881,6 @@
       localStorage.setItem("hs_status_header", statusHeaderInput.value);
     });
 
-    // Logging
     function log(msg, color = "#94a3b8") {
       const line = document.createElement("div");
       line.className = "log-row";
@@ -886,7 +902,6 @@
       disambiguationModal.style.display = "none";
     });
 
-    // Voice Readout (TTS)
     function speakText(text) {
       if (ttsToggle.value !== "true" || !("speechSynthesis" in window)) return;
       window.speechSynthesis.cancel();
@@ -895,7 +910,6 @@
       window.speechSynthesis.speak(u);
     }
 
-    // Haptic Vibration Cadence
     function triggerHaptic(type) {
       if (hapticToggle.value !== "true" || !navigator.vibrate) return;
       if (type === "match") navigator.vibrate([80, 50, 80]);
@@ -903,7 +917,6 @@
       else navigator.vibrate(350);
     }
 
-    // Torch / Flashlight Toggle
     torchBtn.addEventListener("click", async () => {
       if (!activeStream) return;
       const track = activeStream.getVideoTracks()[0];
@@ -921,7 +934,6 @@
       }
     });
 
-    // Dynamic UI Mode Syncer
     pipelineTierSelect.addEventListener("change", updateButtonContext);
 
     function updateButtonContext() {
@@ -950,7 +962,6 @@
       }
     }
 
-    // Audio synthesizer
     function playChime(type) {
       try {
         if (!audioCtx) {
@@ -990,7 +1001,6 @@
       try { barcodeDetector = new BarcodeDetector(); } catch(e) {}
     }
 
-    // Connect & Introspect Google Sheet
     async function fetchSchema() {
       try {
         const res = await fetch(SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + "getSheets=1");
@@ -1088,7 +1098,7 @@
     });
 
     // =========================================================================
-    // DYNAMIC CUSTOM EXTRACTED FIELDS BUILDER WITH PERMANENT LOCALSTORAGE SYNC
+    // DYNAMIC ENTERPRISE FIELD EXTRACTOR (PRESET DROPDOWNS + CUSTOM REGEX)
     // =========================================================================
     function loadSavedCustomFields() {
       customFieldsContainer.innerHTML = "";
@@ -1097,7 +1107,7 @@
         try {
           const list = JSON.parse(raw);
           if (Array.isArray(list) && list.length > 0) {
-            list.forEach(item => addCustomFieldRow(item.colHeader, item.regexPattern));
+            list.forEach(item => addCustomFieldCard(item.fieldLabel, item.colHeader, item.patternType, item.regexPattern));
             return;
           }
         } catch(e) {}
@@ -1110,42 +1120,91 @@
     }
 
     addCustomFieldBtn.addEventListener("click", () => {
-      addCustomFieldRow();
+      addCustomFieldCard("", "", "digits", "");
       saveCustomFieldsToStorage();
     });
 
-    function addCustomFieldRow(colHeader = "", regex = "") {
+    function addCustomFieldCard(fieldLabel = "", colHeader = "", patternType = "digits", regexPattern = "") {
       const id = Date.now() + Math.floor(Math.random() * 1000);
-      const div = document.createElement("div");
-      div.className = "custom-field-row";
-      div.id = `cf-row-${id}`;
-      div.innerHTML = `
-        <input type="text" placeholder="Sheet Column (e.g. Total Fees)" class="cf-col" value="${colHeader}">
-        <input type="text" placeholder="Regex / Pattern (Optional)" class="cf-reg" value="${regex}">
-        <button class="btn btn-secondary" style="padding:4px 8px; color:#f87171;" onclick="removeCustomFieldRow(${id})">✕</button>
+      const card = document.createElement("div");
+      card.className = "custom-field-card";
+      card.id = `cf-card-${id}`;
+
+      card.innerHTML = `
+        <div class="custom-field-card-header">
+          <span>📄 Target Document Field Mapping</span>
+          <button class="btn btn-secondary" style="padding:2px 8px; color:#f87171;" onclick="removeCustomFieldCard(${id})">✕ Remove</button>
+        </div>
+        <div class="custom-field-grid">
+          <div class="setting-group">
+            <label class="setting-label">Document Label on Paper:</label>
+            <input type="text" class="cf-label" placeholder="e.g. Total Fees, Student Count, Roll" value="${fieldLabel}">
+          </div>
+          <div class="setting-group">
+            <label class="setting-label">Target Sheet Column Header:</label>
+            <input type="text" class="cf-col" placeholder="e.g. Fees Paid, Roll No" value="${colHeader}">
+          </div>
+        </div>
+        <div class="custom-field-grid">
+          <div class="setting-group">
+            <label class="setting-label">Pattern Type Preset:</label>
+            <select class="cf-preset">
+              <option value="digits" ${patternType === 'digits' ? 'selected' : ''}>Numbers / Roll / Count (\d+)</option>
+              <option value="udise" ${patternType === 'udise' ? 'selected' : ''}>11-Digit Code / UDISE (\d{11})</option>
+              <option value="currency" ${patternType === 'currency' ? 'selected' : ''}>Currency / Amount (Rs, INR, $, Decimal)</option>
+              <option value="date" ${patternType === 'date' ? 'selected' : ''}>Date (DD/MM/YYYY or DD-MM-YYYY)</option>
+              <option value="alphanumeric" ${patternType === 'alphanumeric' ? 'selected' : ''}>Alphanumeric / Invoice Code</option>
+              <option value="phone" ${patternType === 'phone' ? 'selected' : ''}>Phone / Mobile Number (10 Digits)</option>
+              <option value="custom" ${patternType === 'custom' ? 'selected' : ''}>Custom Regex Pattern / Free Match</option>
+            </select>
+          </div>
+          <div class="setting-group cf-custom-box" style="${patternType === 'custom' ? '' : 'opacity:0.6;'}">
+            <label class="setting-label">Custom Regex / Specific Override:</label>
+            <input type="text" class="cf-reg" placeholder="e.g. ([A-Z]{3}-\d{4}) or optional pattern" value="${regexPattern}">
+          </div>
+        </div>
       `;
-      
-      div.querySelectorAll("input").forEach(inp => {
-        inp.addEventListener("input", saveCustomFieldsToStorage);
+
+      const presetSelect = card.querySelector(".cf-preset");
+      const customBox = card.querySelector(".cf-custom-box");
+      presetSelect.addEventListener("change", () => {
+        if (presetSelect.value === "custom") {
+          customBox.style.opacity = "1";
+        } else {
+          customBox.style.opacity = "0.6";
+        }
+        saveCustomFieldsToStorage();
       });
 
-      customFieldsContainer.appendChild(div);
+      card.querySelectorAll("input, select").forEach(inp => {
+        inp.addEventListener("input", saveCustomFieldsToStorage);
+        inp.addEventListener("change", saveCustomFieldsToStorage);
+      });
+
+      customFieldsContainer.appendChild(card);
     }
 
-    window.removeCustomFieldRow = function(id) {
-      const el = document.getElementById(`cf-row-${id}`);
+    window.removeCustomFieldCard = function(id) {
+      const el = document.getElementById(`cf-card-${id}`);
       if (el) el.remove();
       saveCustomFieldsToStorage();
     };
 
     function getCustomExtractionConfigs() {
-      const rows = document.querySelectorAll(".custom-field-row");
+      const cards = document.querySelectorAll(".custom-field-card");
       const list = [];
-      rows.forEach(r => {
-        const col = r.querySelector(".cf-col").value.trim();
-        const reg = r.querySelector(".cf-reg").value.trim();
-        if (col) {
-          list.push({ colHeader: col, regexPattern: reg });
+      cards.forEach(c => {
+        const label = c.querySelector(".cf-label").value.trim();
+        const col = c.querySelector(".cf-col").value.trim() || label;
+        const preset = c.querySelector(".cf-preset").value;
+        const reg = c.querySelector(".cf-reg").value.trim();
+        if (col || label) {
+          list.push({
+            fieldLabel: label,
+            colHeader: col,
+            patternType: preset,
+            regexPattern: reg
+          });
         }
       });
       return list;
@@ -1456,7 +1515,12 @@
           setHUD(bannerHtml, "hud-match");
           speakText(voiceText);
 
-          log(`Write-back saved in Row #${data.rowIndex} [${data.writeBackAudit ? data.writeBackAudit.statusColumn : 'Status'}] (${durationSec}s)`, "#34d399");
+          // Log write-back with custom extracted fields info
+          let customLogDetails = "";
+          if (data.extractedCustomFields && Object.keys(data.extractedCustomFields).length > 0) {
+            customLogDetails = " + Fields: " + JSON.stringify(data.extractedCustomFields);
+          }
+          log(`Write-back saved Row #${data.rowIndex} [${data.writeBackAudit ? data.writeBackAudit.statusColumn : 'Status'}]${customLogDetails} (${durationSec}s)`, "#34d399");
 
           if (pipelineTierSelect.value !== "tier2" && loopTimer) {
             clearInterval(loopTimer);

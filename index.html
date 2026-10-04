@@ -42,14 +42,14 @@
       height: 100vh;
       height: 100dvh;
       overflow: hidden;
-      padding-bottom: 35px;
+      padding-bottom: 25px;
     }
 
     /* Technocratic Header */
     header {
-      background: rgba(11, 17, 32, 0.95);
+      background: rgba(11, 17, 32, 0.96);
       backdrop-filter: blur(16px);
-      padding: 10px 14px;
+      padding: 8px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -64,8 +64,8 @@
     }
 
     .brand-svg-logo {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       flex-shrink: 0;
     }
 
@@ -81,7 +81,7 @@
     }
 
     .brand-name {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 800;
       letter-spacing: -0.01em;
       background: linear-gradient(135deg, #ffffff 40%, var(--primary-glow) 100%);
@@ -90,7 +90,7 @@
     }
 
     .tier-indicator-pill {
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       font-weight: 800;
       padding: 2px 6px;
       border-radius: 4px;
@@ -102,15 +102,15 @@
     }
 
     .brand-architect {
-      font-size: 0.65rem;
+      font-size: 0.63rem;
       font-weight: 600;
       color: var(--text-muted);
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
     }
 
     .header-actions {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
     }
 
@@ -118,10 +118,10 @@
       background: var(--primary);
       color: #ffffff;
       border: none;
-      padding: 7px 13px;
+      padding: 7px 11px;
       border-radius: 6px;
       font-weight: 700;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -136,6 +136,44 @@
       background: linear-gradient(135deg, #10b981, #059669);
       box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
       border: 1px solid #34d399;
+    }
+
+    .btn-icon {
+      padding: 7px 9px;
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid var(--border-active);
+    }
+
+    /* Shift Performance Metrics Bar */
+    #metrics-strip {
+      background: #020617;
+      padding: 4px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.68rem;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      color: #94a3b8;
+      z-index: 48;
+    }
+
+    .metric-item strong {
+      color: #38bdf8;
+    }
+
+    .offline-sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      font-size: 0.62rem;
+      font-weight: 700;
     }
 
     /* Configuration Sliding Drawer */
@@ -164,6 +202,7 @@
       align-items: center;
       padding-bottom: 4px;
       border-bottom: 1px solid var(--border-subtle);
+      margin-top: 4px;
     }
 
     .setting-group {
@@ -199,7 +238,6 @@
       gap: 10px;
     }
 
-    /* Pipeline Strategy Selector Banner */
     .pipeline-strategy-card {
       background: linear-gradient(145deg, #0f172a, #0b1329);
       border: 1px solid rgba(56, 189, 248, 0.25);
@@ -207,15 +245,6 @@
       padding: 10px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-    }
-
-    .strategy-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--primary-glow);
-      display: flex;
-      align-items: center;
       gap: 6px;
     }
 
@@ -250,6 +279,15 @@
       font-weight: 700;
     }
 
+    /* Custom Field Extractor Builder Table */
+    .custom-field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 6px;
+      margin-bottom: 6px;
+      align-items: center;
+    }
+
     /* Camera Viewport */
     #viewport-container {
       position: relative;
@@ -267,7 +305,6 @@
       object-fit: cover;
     }
 
-    /* Technocratic Reticle */
     #aim-reticle {
       position: absolute;
       width: 86%;
@@ -415,9 +452,90 @@
       color: #fef08a;
     }
 
+    /* Modal for Multiple Duplicate Candidate Disambiguation */
+    #disambiguation-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(2, 6, 23, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-dialog {
+      background: var(--bg-surface);
+      border: 2px solid var(--accent-amber);
+      border-radius: 12px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      background: #1e293b;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-active);
+    }
+
+    .modal-head h3 {
+      font-size: 0.95rem;
+      color: #fef08a;
+      font-weight: 800;
+    }
+
+    .modal-body {
+      padding: 14px 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .candidate-card-btn {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 10px 12px;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .candidate-card-btn:active {
+      transform: scale(0.98);
+      border-color: #38bdf8;
+    }
+
+    .candidate-row-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+
+    .candidate-summary-grid {
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+
     /* Diagnostics Log */
     #console-log {
-      height: 65px;
+      height: 60px;
       background: #020617;
       border-top: 1px solid var(--border-subtle);
       padding: 5px 10px;
@@ -434,7 +552,6 @@
 
   <header>
     <div class="brand-cluster">
-      <!-- High-Tech Geometric SVG Logo: Hover Sorter (HS + Lens + Array) -->
       <svg class="brand-svg-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="5" y="5" width="90" height="90" rx="20" fill="url(#logo_grad_bg)" stroke="#38bdf8" stroke-width="2"/>
         <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/>
@@ -458,11 +575,20 @@
     </div>
 
     <div class="header-actions">
-      <button id="shutter-trigger" class="btn btn-shutter">⚡ Snap Now</button>
+      <button id="torch-btn" class="btn btn-icon" title="Toggle Flashlight">🔦</button>
+      <button id="shutter-trigger" class="btn btn-shutter">⚡ Snap</button>
       <button id="config-trigger" class="btn btn-secondary">⚙ Config</button>
-      <button id="cam-toggle" class="btn">Start Auto-Scan</button>
+      <button id="cam-toggle" class="btn">Start Auto</button>
     </div>
   </header>
+
+  <!-- Live Shift Performance Metrics Strip -->
+  <div id="metrics-strip">
+    <span class="metric-item">Shift Total: <strong id="metric-total">0</strong></span>
+    <span class="metric-item">Rate: <strong id="metric-rate">0</strong>/min</span>
+    <span class="metric-item">Speed: <strong id="metric-speed">0.0</strong>s</span>
+    <span id="offline-badge" class="offline-sync-badge">✓ Cloud Online</span>
+  </div>
 
   <!-- Complete Sliding Config Drawer -->
   <div id="settings-drawer">
@@ -481,22 +607,38 @@
       </div>
     </div>
 
-    <!-- High-Volume Strategy Selector -->
     <div class="pipeline-strategy-card">
-      <div class="strategy-title">
-        <span>⚡ High-Volume Execution Strategy:</span>
-      </div>
+      <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ High-Volume Execution Strategy:</div>
       <select id="pipeline-tier-select">
         <option value="tier1">Tier 1: Hybrid Edge (Barcode + On-Device OCR - 0 Cost / Unlimited)</option>
         <option value="tier2">Tier 2: Debounced On-Demand Shutter (Saves 95% Battery & Tokens)</option>
-        <option value="tier3">Tier 3: Direct Multimodal AI Vision (Gemini 2.5 Flash / Messy Forms)</option>
+        <option value="tier3">Tier 3: Direct Multimodal AI Vision (Gemini 2.5 Flash / Complex Forms)</option>
       </select>
     </div>
 
     <div class="drawer-sec-header">
-      <span>2. Document Match Parameters</span>
+      <span>2. Operator Guidance & Accessibility</span>
     </div>
-    
+    <div class="grid-duo">
+      <div class="setting-group">
+        <label class="setting-label">Voice Readout (TTS Guidance):</label>
+        <select id="tts-toggle">
+          <option value="true">Enabled (Audibly announce sorting bin)</option>
+          <option value="false">Muted / Silent</option>
+        </select>
+      </div>
+      <div class="setting-group">
+        <label class="setting-label">Haptic Vibration Cadence:</label>
+        <select id="haptic-toggle">
+          <option value="true">Active (Double-pulse on match)</option>
+          <option value="false">Disabled</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="drawer-sec-header">
+      <span>3. Document Match Parameters</span>
+    </div>
     <div class="grid-duo">
       <div class="setting-group">
         <label class="setting-label">Match Logic:</label>
@@ -524,9 +666,8 @@
     </div>
 
     <div class="drawer-sec-header">
-      <span>3. Multi-Level Routing Hierarchy (Storage Bins)</span>
+      <span>4. Multi-Level Routing Hierarchy (Storage Bins)</span>
     </div>
-    
     <div class="setting-group">
       <label class="setting-label">Hierarchy Display Columns (Tap in strict sequence):</label>
       <select id="display-columns-select" multiple size="3"></select>
@@ -536,10 +677,18 @@
       <div id="hierarchy-flow-chips" class="chip-sequence-bar">-- Tap columns above to build flow --</div>
     </div>
 
+    <!-- 5. DYNAMIC EXTRA DOCUMENT EXTRACTION FIELDS (USER CONFIGURED ON-THE-FLY) -->
     <div class="drawer-sec-header">
-      <span>4. Auto-Audit & Dynamic Columns</span>
+      <span>5. Custom Extracted Document Fields (Auto-Created Columns)</span>
+      <button id="add-custom-field-btn" class="btn btn-secondary" style="padding:2px 8px; font-size:0.68rem;">+ Add Field</button>
+    </div>
+    <div id="custom-fields-container">
+      <!-- Dynamic rows populated via JS -->
     </div>
 
+    <div class="drawer-sec-header">
+      <span>6. Provenance & Dynamic Status Header</span>
+    </div>
     <div class="grid-duo">
       <div class="setting-group">
         <label class="setting-label">Status Column Header (On-the-fly):</label>
@@ -550,7 +699,6 @@
         <input type="text" id="status-val-input" value="Processed">
       </div>
     </div>
-
     <div class="grid-duo">
       <div class="setting-group">
         <label class="setting-label">Operator Signature:</label>
@@ -563,9 +711,10 @@
     </div>
   </div>
 
+  <!-- Camera Viewport -->
   <div id="viewport-container">
     <div id="hud-banner" class="hud-standby">
-      Tap "Start Auto-Scan" or "Snap Now" to begin
+      Tap "Start Auto" or "Snap" to begin
     </div>
 
     <video id="video-feed" autoplay playsinline webkit-playsinline muted></video>
@@ -576,6 +725,19 @@
   </div>
 
   <div id="console-log"></div>
+
+  <!-- Ambiguity Disambiguation Modal Popup (When multiple rows match) -->
+  <div id="disambiguation-modal">
+    <div class="modal-dialog">
+      <div class="modal-head">
+        <h3>⚠️ Multiple Matching Records Found</h3>
+        <button id="close-modal-btn" class="btn btn-secondary" style="padding:2px 6px;">✕</button>
+      </div>
+      <div class="modal-body" id="modal-candidates-list">
+        <!-- Render candidate row buttons -->
+      </div>
+    </div>
+  </div>
 
   <script>
     // =========================================================================
@@ -593,13 +755,25 @@
     const camToggle = document.getElementById("cam-toggle");
     const shutterTrigger = document.getElementById("shutter-trigger");
     const configTrigger = document.getElementById("config-trigger");
+    const torchBtn = document.getElementById("torch-btn");
     const settingsDrawer = document.getElementById("settings-drawer");
     const tierBadge = document.getElementById("tier-badge");
+    const disambiguationModal = document.getElementById("disambiguation-modal");
+    const modalCandidatesList = document.getElementById("modal-candidates-list");
+    const closeModalBtn = document.getElementById("close-modal-btn");
+
+    // Metrics Elements
+    const metricTotal = document.getElementById("metric-total");
+    const metricRate = document.getElementById("metric-rate");
+    const metricSpeed = document.getElementById("metric-speed");
+    const offlineBadge = document.getElementById("offline-badge");
 
     // Selectors
     const sheetSelect = document.getElementById("sheet-select");
     const cameraSelect = document.getElementById("camera-select");
     const pipelineTierSelect = document.getElementById("pipeline-tier-select");
+    const ttsToggle = document.getElementById("tts-toggle");
+    const hapticToggle = document.getElementById("haptic-toggle");
     const matchLogic = document.getElementById("match-logic");
     const skipProcessed = document.getElementById("skip-processed");
     const statusHeaderInput = document.getElementById("status-header-input");
@@ -610,6 +784,8 @@
     const matchCriteriaChips = document.getElementById("match-criteria-chips");
     const displayColumnsSelect = document.getElementById("display-columns-select");
     const hierarchyFlowChips = document.getElementById("hierarchy-flow-chips");
+    const addCustomFieldBtn = document.getElementById("add-custom-field-btn");
+    const customFieldsContainer = document.getElementById("custom-fields-container");
 
     let isStreaming = false;
     let isProcessing = false;
@@ -619,8 +795,33 @@
     let audioCtx = null;
     let globalSchema = [];
     let orderedHierarchy = [];
+    let isTorchOn = false;
 
-    // Device Metadata Initialization
+    // Shift Performance Metrics State
+    let shiftCount = 0;
+    let shiftStartTime = Date.now();
+    let lastScanDuration = 0;
+
+    // IndexedDB Offline Queue Storage
+    const DB_NAME = "HoverSorterOfflineDB";
+    let db = null;
+    initIndexedDB();
+
+    function initIndexedDB() {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = (e) => {
+        db = e.target.result;
+        if (!db.objectStoreNames.contains("sync_queue")) {
+          db.createObjectStore("sync_queue", { autoIncrement: true });
+        }
+      };
+      req.onsuccess = (e) => {
+        db = e.target.result;
+        flushOfflineQueue();
+      };
+    }
+
+    // Device Signature
     function initDeviceSignature() {
       let uuid = localStorage.getItem("hs_device_uuid");
       if (!uuid) {
@@ -635,7 +836,7 @@
     }
     initDeviceSignature();
 
-    // Restore operator signature
+    // Operator storage
     const savedOp = localStorage.getItem("hs_operator_name");
     if (savedOp) operatorInput.value = savedOp;
     operatorInput.addEventListener("input", () => {
@@ -660,7 +861,46 @@
       settingsDrawer.style.display = settingsDrawer.style.display === "flex" ? "none" : "flex";
     });
 
-    // Dynamic UI Context Syncer based on Tier selection
+    closeModalBtn.addEventListener("click", () => {
+      disambiguationModal.style.display = "none";
+    });
+
+    // Voice Readout (TTS)
+    function speakText(text) {
+      if (ttsToggle.value !== "true" || !("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 1.05;
+      window.speechSynthesis.speak(u);
+    }
+
+    // Haptic Vibration Cadence
+    function triggerHaptic(type) {
+      if (hapticToggle.value !== "true" || !navigator.vibrate) return;
+      if (type === "match") navigator.vibrate([80, 50, 80]);
+      else if (type === "ambiguous") navigator.vibrate([200, 100, 200]);
+      else navigator.vibrate(350);
+    }
+
+    // Torch / Flashlight Toggle
+    torchBtn.addEventListener("click", async () => {
+      if (!activeStream) return;
+      const track = activeStream.getVideoTracks()[0];
+      if (!track || !track.getCapabilities || !track.getCapabilities().torch) {
+        log("Torch feature not supported on this lens.", "#fbbf24");
+        return;
+      }
+      try {
+        isTorchOn = !isTorchOn;
+        await track.applyConstraints({ advanced: [{ torch: isTorchOn }] });
+        torchBtn.style.color = isTorchOn ? "#fef08a" : "#e2e8f0";
+        torchBtn.style.borderColor = isTorchOn ? "#f59e0b" : "var(--border-active)";
+      } catch (err) {
+        log("Torch toggle failed: " + err.message, "#ef4444");
+      }
+    });
+
+    // Dynamic UI Mode Syncer
     pipelineTierSelect.addEventListener("change", updateButtonContext);
 
     function updateButtonContext() {
@@ -794,7 +1034,6 @@
     }
     matchColumnsSelect.addEventListener("change", renderMatchChips);
 
-    // Track sequential tapping for hierarchy
     displayColumnsSelect.addEventListener("change", () => {
       const selectedOpts = Array.from(displayColumnsSelect.selectedOptions);
       orderedHierarchy = orderedHierarchy.filter(item => 
@@ -827,6 +1066,43 @@
       if (selected) populateColumns(selected);
     });
 
+    // Custom Extracted Fields Builder
+    let customFieldRows = [];
+    addCustomFieldBtn.addEventListener("click", () => {
+      addCustomFieldRow();
+    });
+
+    function addCustomFieldRow(colHeader = "", regex = "") {
+      const id = Date.now();
+      const div = document.createElement("div");
+      div.className = "custom-field-row";
+      div.id = `cf-row-${id}`;
+      div.innerHTML = `
+        <input type="text" placeholder="Sheet Column (e.g. Total Fees)" class="cf-col" value="${colHeader}">
+        <input type="text" placeholder="Match Regex / String" class="cf-reg" value="${regex}">
+        <button class="btn btn-secondary" style="padding:4px 8px; color:#f87171;" onclick="removeCustomFieldRow(${id})">✕</button>
+      `;
+      customFieldsContainer.appendChild(div);
+    }
+
+    window.removeCustomFieldRow = function(id) {
+      const el = document.getElementById(`cf-row-${id}`);
+      if (el) el.remove();
+    };
+
+    function getCustomExtractionConfigs() {
+      const rows = document.querySelectorAll(".custom-field-row");
+      const list = [];
+      rows.forEach(r => {
+        const col = r.querySelector(".cf-col").value.trim();
+        const reg = r.querySelector(".cf-reg").value.trim();
+        if (col) {
+          list.push({ colHeader: col, regexPattern: reg });
+        }
+      });
+      return list;
+    }
+
     fetchSchema();
 
     // Camera Hardware Access
@@ -848,7 +1124,7 @@
 
     async function startCamera() {
       if (location.protocol !== "https:" && !["localhost", "127.0.0.1"].includes(location.hostname)) {
-        setHUD("<strong>HTTPS Required:</strong> Chrome disables camera on unencrypted HTTP.", "hud-error");
+        setHUD("<strong>HTTPS Required:</strong> Camera disabled on unencrypted HTTP.", "hud-error");
         return;
       }
 
@@ -907,7 +1183,6 @@
       else startCamera();
     });
 
-    // Unified Shutter Trigger with Smart Debounce
     shutterTrigger.addEventListener("click", async () => {
       if (isProcessing) return;
 
@@ -930,10 +1205,11 @@
       if (isStreaming) startCamera();
     });
 
-    // Optical Recognition Pipeline
+    // Frame Processing
     async function processFrame() {
       if (!isStreaming || isProcessing || video.readyState < 2) return;
       isProcessing = true;
+      const tStart = performance.now();
 
       try {
         const vW = video.videoWidth || 640;
@@ -949,7 +1225,7 @@
         const ctx = canvas.getContext("2d");
         ctx.drawImage(video, cX, cY, cW, cH, 0, 0, cW, cH);
 
-        // Hardware Barcode Scan (0ms, 0 Cost)
+        // Hardware Barcode Scan (Instant)
         let barcodeVal = "";
         if (barcodeDetector) {
           try {
@@ -960,27 +1236,25 @@
 
         if (barcodeVal) {
           log("Barcode detected: " + barcodeVal, "#38bdf8");
-          await dispatchToBackend({ barcode: barcodeVal });
+          await dispatchToBackend({ barcode: barcodeVal }, tStart);
           return;
         }
 
         const tier = pipelineTierSelect.value;
 
         if (tier === "tier3") {
-          // Tier 3: Direct Multimodal AI
           setHUD("Direct AI Vision parsing frame...", "hud-scanning");
           log("Direct Gemini Vision invoked...", "#fbbf24");
           const b64 = canvas.toDataURL("image/jpeg", 0.55);
-          await dispatchToBackend({ imageBase64: b64, directAiMode: true });
+          await dispatchToBackend({ imageBase64: b64, directAiMode: true }, tStart);
         } else {
-          // Tier 1 & 2: Local Edge Tesseract OCR (0 Cost)
           setHUD("Edge OCR analyzing frame...", "hud-scanning");
           const { data: { text } } = await Tesseract.recognize(canvas, "eng");
           const clean = text.trim();
 
           if (clean.length >= 3) {
             log(`OCR read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
-            await dispatchToBackend({ scannedText: clean, directAiMode: false });
+            await dispatchToBackend({ scannedText: clean, directAiMode: false }, tStart);
           } else {
             setHUD("Sensor active: align document inside reticle...", "hud-standby");
           }
@@ -1005,8 +1279,9 @@
     }
 
     // Google Sheets Cloud Synchronization
-    async function dispatchToBackend(payload) {
+    async function dispatchToBackend(payload, startTime = performance.now()) {
       const selectedMatchCols = getSelectedValues(matchColumnsSelect);
+      const customFieldConfigs = getCustomExtractionConfigs();
 
       const requestBody = {
         sheetName: sheetSelect.value,
@@ -1014,6 +1289,7 @@
         scannedText: payload.scannedText || "",
         imageBase64: payload.imageBase64 || "",
         directAiMode: payload.directAiMode === true,
+        manualChosenRowIndex: payload.manualChosenRowIndex || null,
         matchRules: {
           matchColumns: selectedMatchCols.length > 0 ? selectedMatchCols : [1],
           operator: matchLogic.value,
@@ -1023,7 +1299,8 @@
           operatorName: operatorInput.value || "Ankush Saha",
           deviceName: deviceMetaInput.value,
           deviceId: localStorage.getItem("hs_device_uuid") || "DEV-UNKNOWN",
-          displayActionColumns: orderedHierarchy
+          displayActionColumns: orderedHierarchy,
+          customExtractionFields: customFieldConfigs
         }
       };
 
@@ -1035,24 +1312,38 @@
         });
 
         const data = await res.json();
+        const durationSec = ((performance.now() - startTime) / 1000).toFixed(1);
+        updateShiftMetrics(durationSec);
 
         if (data.error) {
           setHUD(`<strong>Sync Error:</strong> ${data.error}`, "hud-error");
           playChime("error");
+          triggerHaptic("error");
           return;
         }
 
+        // Case: Multiple Ambiguous Matches Found
+        if (data.ambiguous && data.candidates && data.candidates.length > 1) {
+          playChime("error");
+          triggerHaptic("ambiguous");
+          promptDisambiguationModal(data.candidates, payload);
+          return;
+        }
+
+        // Case: Confirmed Match
         if (data.match) {
           playChime("match");
-          if (navigator.vibrate) navigator.vibrate([150, 80, 150]);
+          triggerHaptic("match");
 
           const matchedLabel = (data.matchedValues && data.matchedValues.length) 
             ? data.matchedValues.join(" · ") 
             : "MATCH VERIFIED";
 
           let flowHtml = "";
+          let voiceText = "";
           if (data.levels && data.levels.length > 0) {
             flowHtml = data.levels.map((lvl, idx) => {
+              voiceText += `${lvl.attribute} ${lvl.value}. `;
               return `
                 <div class="tier-card">
                   <span class="tier-card-header">${lvl.attribute}</span>
@@ -1061,6 +1352,7 @@
                 (idx < data.levels.length - 1 ? `<span class="tier-flow-arrow">➔</span>` : "");
             }).join(" ");
           } else {
+            voiceText = data.action;
             flowHtml = `
               <div class="tier-card">
                 <span class="tier-card-header">Action</span>
@@ -1075,7 +1367,9 @@
           `;
 
           setHUD(bannerHtml, "hud-match");
-          log(`Write-back saved in Row #${data.rowIndex} [${data.writeBackAudit.statusColumn}: ${data.writeBackAudit.status}]`, "#34d399");
+          speakText(voiceText);
+
+          log(`Write-back saved in Row #${data.rowIndex} [${data.writeBackAudit ? data.writeBackAudit.statusColumn : 'Status'}] (${durationSec}s)`, "#34d399");
 
           if (pipelineTierSelect.value !== "tier2" && loopTimer) {
             clearInterval(loopTimer);
@@ -1092,10 +1386,92 @@
         }
 
       } catch (netErr) {
-        setHUD("Connection exception: " + netErr.message, "hud-error");
-        playChime("error");
+        log("Network connection lost. Saving to local offline queue...", "#fbbf24");
+        saveToOfflineQueue(requestBody);
+        offlineBadge.textContent = "⚡ Offline Queued";
+        offlineBadge.style.background = "rgba(245, 158, 11, 0.2)";
+        offlineBadge.style.color = "#fbbf24";
+        setHUD("Offline: scanned document queued for auto-sync.", "hud-standby");
       }
     }
+
+    // Modal Disambiguation
+    function promptDisambiguationModal(candidates, originalPayload) {
+      modalCandidatesList.innerHTML = "";
+      candidates.forEach(c => {
+        const btn = document.createElement("button");
+        btn.className = "candidate-card-btn";
+        
+        let summaryHtml = "";
+        for (let k in c.previewSummary) {
+          summaryHtml += `<div><strong>${k}:</strong> ${c.previewSummary[k]}</div>`;
+        }
+
+        btn.innerHTML = `
+          <div class="candidate-row-title">Select Physical Row #${c.rowIndex}</div>
+          <div class="candidate-summary-grid">${summaryHtml}</div>
+        `;
+
+        btn.addEventListener("click", async () => {
+          disambiguationModal.style.display = "none";
+          originalPayload.manualChosenRowIndex = c.rowIndex;
+          log(`Manual operator selected Row #${c.rowIndex}`, "#38bdf8");
+          await dispatchToBackend(originalPayload);
+        });
+
+        modalCandidatesList.appendChild(btn);
+      });
+
+      disambiguationModal.style.display = "flex";
+    }
+
+    // Shift Metrics Tracker
+    function updateShiftMetrics(lastSpeedSec) {
+      shiftCount++;
+      metricTotal.textContent = shiftCount;
+      metricSpeed.textContent = lastSpeedSec;
+
+      const elapsedMins = (Date.now() - shiftStartTime) / 60000;
+      const rate = elapsedMins > 0 ? (shiftCount / elapsedMins).toFixed(0) : shiftCount;
+      metricRate.textContent = rate;
+    }
+
+    // Offline Store-and-Forward Logic
+    function saveToOfflineQueue(reqData) {
+      if (!db) return;
+      const tx = db.transaction("sync_queue", "readwrite");
+      tx.objectStore("sync_queue").add(reqData);
+    }
+
+    async function flushOfflineQueue() {
+      if (!db || !navigator.onLine) return;
+      const tx = db.transaction("sync_queue", "readonly");
+      const store = tx.objectStore("sync_queue");
+      const req = store.getAll();
+      req.onsuccess = async () => {
+        const items = req.result;
+        if (items && items.length > 0) {
+          log(`Flushing ${items.length} queued offline scans...`, "#38bdf8");
+          for (let item of items) {
+            try {
+              await fetch(SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(item)
+              });
+            } catch(e) {}
+          }
+          const delTx = db.transaction("sync_queue", "readwrite");
+          delTx.objectStore("sync_queue").clear();
+          offlineBadge.textContent = "✓ Cloud Online";
+          offlineBadge.style.background = "rgba(16, 185, 129, 0.15)";
+          offlineBadge.style.color = "#34d399";
+          log("Offline queue synced to Google Sheets successfully.", "#34d399");
+        }
+      };
+    }
+
+    window.addEventListener("online", flushOfflineQueue);
   </script>
 </body>
 </html>

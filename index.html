@@ -130,6 +130,7 @@
     }
 
     .btn:active { transform: scale(0.96); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-secondary { background: #1e293b; color: var(--text-muted); border: 1px solid var(--border-active); }
     .btn-shutter {
       background: linear-gradient(135deg, #10b981, #059669);
@@ -450,16 +451,16 @@
       <div class="brand-meta">
         <div class="brand-title-wrap">
           <span class="brand-name">Hover-Sorter</span>
-          <span id="tier-badge" class="tier-indicator-pill">Tier 1: Fast-OCR</span>
+          <span id="tier-badge" class="tier-indicator-pill">Tier 1: Auto Edge</span>
         </div>
         <span class="brand-architect">Architected by Ankush Saha</span>
       </div>
     </div>
 
     <div class="header-actions">
-      <button id="shutter-trigger" class="btn btn-shutter">⚡ Scan</button>
+      <button id="shutter-trigger" class="btn btn-shutter">⚡ Snap Now</button>
       <button id="config-trigger" class="btn btn-secondary">⚙ Config</button>
-      <button id="cam-toggle" class="btn">Start Cam</button>
+      <button id="cam-toggle" class="btn">Start Auto-Scan</button>
     </div>
   </header>
 
@@ -564,7 +565,7 @@
 
   <div id="viewport-container">
     <div id="hud-banner" class="hud-standby">
-      Tap "Start Cam" to activate hover detection
+      Tap "Start Auto-Scan" or "Snap Now" to begin
     </div>
 
     <video id="video-feed" autoplay playsinline webkit-playsinline muted></video>
@@ -578,7 +579,7 @@
 
   <script>
     // =========================================================================
-    // CONFIGURATION: Paste your deployed Google Apps Script Web App URL below
+    // CONFIGURATION: Google Apps Script Web App Deployment URL
     // =========================================================================
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6jngSeasRs_Fy2C8IU0Pz6oJ0DEhnKIppK_6oVhMScD7TcTRxtVkiZuDFSSj1d3iP/exec";
     const SCAN_INTERVAL_MS = 3000;
@@ -659,20 +660,34 @@
       settingsDrawer.style.display = settingsDrawer.style.display === "flex" ? "none" : "flex";
     });
 
-    // Pipeline Tier badge update
-    pipelineTierSelect.addEventListener("change", () => {
-      const val = pipelineTierSelect.value;
-      if (val === "tier1") {
-        tierBadge.textContent = "Tier 1: Edge-OCR";
-        tierBadge.style.color = "#38bdf8";
-      } else if (val === "tier2") {
-        tierBadge.textContent = "Tier 2: Shutter";
+    // Dynamic UI Context Syncer based on Tier selection
+    pipelineTierSelect.addEventListener("change", updateButtonContext);
+
+    function updateButtonContext() {
+      const tier = pipelineTierSelect.value;
+      if (tier === "tier2") {
+        shutterTrigger.textContent = "📷 SNAP & SORT";
+        shutterTrigger.style.flex = "1.4";
+        camToggle.textContent = isStreaming ? "Pause Feed" : "Start Feed";
+        tierBadge.textContent = "Tier 2: Manual Shutter";
         tierBadge.style.color = "#34d399";
+        if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
       } else {
-        tierBadge.textContent = "Tier 3: Vision-AI";
-        tierBadge.style.color = "#fbbf24";
+        shutterTrigger.textContent = "⚡ Snap Now";
+        shutterTrigger.style.flex = "1";
+        camToggle.textContent = isStreaming ? "Stop Auto-Scan" : "Start Auto-Scan";
+        if (tier === "tier1") {
+          tierBadge.textContent = "Tier 1: Auto Edge";
+          tierBadge.style.color = "#38bdf8";
+        } else {
+          tierBadge.textContent = "Tier 3: Auto AI";
+          tierBadge.style.color = "#fbbf24";
+        }
+        if (isStreaming && !loopTimer) {
+          loopTimer = setInterval(processFrame, SCAN_INTERVAL_MS);
+        }
       }
-    });
+    }
 
     // Audio synthesizer
     function playChime(type) {
@@ -865,7 +880,7 @@
 
       await enumerateLenses();
       isStreaming = true;
-      camToggle.textContent = "Stop Cam";
+      updateButtonContext();
       setHUD("Sensor active: align document inside reticle...", "hud-standby");
 
       if (pipelineTierSelect.value !== "tier2") {
@@ -880,10 +895,10 @@
         activeStream = null;
       }
       video.srcObject = null;
-      if (loopTimer) clearInterval(loopTimer);
+      if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
       isStreaming = false;
-      camToggle.textContent = "Start Cam";
-      setHUD("Optical sensor idle. Tap 'Start Cam' to resume.", "hud-standby");
+      updateButtonContext();
+      setHUD("Optical sensor idle. Tap to activate.", "hud-standby");
       log("Sensor disengaged.");
     }
 
@@ -892,11 +907,22 @@
       else startCamera();
     });
 
-    shutterTrigger.addEventListener("click", () => {
+    // Unified Shutter Trigger with Smart Debounce
+    shutterTrigger.addEventListener("click", async () => {
+      if (isProcessing) return;
+
       if (!isStreaming) {
-        startCamera().then(() => setTimeout(processFrame, 700));
+        await startCamera();
+        setTimeout(processFrame, 650);
       } else {
-        processFrame();
+        shutterTrigger.textContent = "⏳ Analyzing...";
+        shutterTrigger.disabled = true;
+        try {
+          await processFrame();
+        } finally {
+          updateButtonContext();
+          shutterTrigger.disabled = false;
+        }
       }
     });
 

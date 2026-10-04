@@ -185,7 +185,7 @@
       flex-direction: column;
       gap: 12px;
       font-size: 0.82rem;
-      max-height: 82vh;
+      max-height: 84vh;
       overflow-y: auto;
       z-index: 45;
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.9);
@@ -282,10 +282,23 @@
     /* Custom Field Extractor Builder Table */
     .custom-field-row {
       display: grid;
-      grid-template-columns: 1fr 1fr auto;
+      grid-template-columns: 1.2fr 1fr auto;
       gap: 6px;
       margin-bottom: 6px;
       align-items: center;
+    }
+
+    .sync-schema-btn {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      border: 1px solid #38bdf8;
+      color: #fff;
+      font-weight: 700;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      margin-top: 4px;
     }
 
     /* Camera Viewport */
@@ -683,8 +696,9 @@
       <button id="add-custom-field-btn" class="btn btn-secondary" style="padding:2px 8px; font-size:0.68rem;">+ Add Field</button>
     </div>
     <div id="custom-fields-container">
-      <!-- Dynamic rows populated via JS -->
+      <!-- Dynamic rows auto-populated from localStorage -->
     </div>
+    <button id="sync-schema-btn" class="sync-schema-btn">⚡ Create / Sync Columns in Google Sheet Now</button>
 
     <div class="drawer-sec-header">
       <span>6. Provenance & Dynamic Status Header</span>
@@ -786,6 +800,7 @@
     const hierarchyFlowChips = document.getElementById("hierarchy-flow-chips");
     const addCustomFieldBtn = document.getElementById("add-custom-field-btn");
     const customFieldsContainer = document.getElementById("custom-fields-container");
+    const syncSchemaBtn = document.getElementById("sync-schema-btn");
 
     let isStreaming = false;
     let isProcessing = false;
@@ -841,6 +856,12 @@
     if (savedOp) operatorInput.value = savedOp;
     operatorInput.addEventListener("input", () => {
       localStorage.setItem("hs_operator_name", operatorInput.value);
+    });
+
+    const savedStatusHeader = localStorage.getItem("hs_status_header");
+    if (savedStatusHeader) statusHeaderInput.value = savedStatusHeader;
+    statusHeaderInput.addEventListener("input", () => {
+      localStorage.setItem("hs_status_header", statusHeaderInput.value);
     });
 
     // Logging
@@ -1066,28 +1087,55 @@
       if (selected) populateColumns(selected);
     });
 
-    // Custom Extracted Fields Builder
-    let customFieldRows = [];
+    // =========================================================================
+    // DYNAMIC CUSTOM EXTRACTED FIELDS BUILDER WITH PERMANENT LOCALSTORAGE SYNC
+    // =========================================================================
+    function loadSavedCustomFields() {
+      customFieldsContainer.innerHTML = "";
+      const raw = localStorage.getItem("hs_custom_extraction_fields");
+      if (raw) {
+        try {
+          const list = JSON.parse(raw);
+          if (Array.isArray(list) && list.length > 0) {
+            list.forEach(item => addCustomFieldRow(item.colHeader, item.regexPattern));
+            return;
+          }
+        } catch(e) {}
+      }
+    }
+
+    function saveCustomFieldsToStorage() {
+      const list = getCustomExtractionConfigs();
+      localStorage.setItem("hs_custom_extraction_fields", JSON.stringify(list));
+    }
+
     addCustomFieldBtn.addEventListener("click", () => {
       addCustomFieldRow();
+      saveCustomFieldsToStorage();
     });
 
     function addCustomFieldRow(colHeader = "", regex = "") {
-      const id = Date.now();
+      const id = Date.now() + Math.floor(Math.random() * 1000);
       const div = document.createElement("div");
       div.className = "custom-field-row";
       div.id = `cf-row-${id}`;
       div.innerHTML = `
         <input type="text" placeholder="Sheet Column (e.g. Total Fees)" class="cf-col" value="${colHeader}">
-        <input type="text" placeholder="Match Regex / String" class="cf-reg" value="${regex}">
+        <input type="text" placeholder="Regex / Pattern (Optional)" class="cf-reg" value="${regex}">
         <button class="btn btn-secondary" style="padding:4px 8px; color:#f87171;" onclick="removeCustomFieldRow(${id})">✕</button>
       `;
+      
+      div.querySelectorAll("input").forEach(inp => {
+        inp.addEventListener("input", saveCustomFieldsToStorage);
+      });
+
       customFieldsContainer.appendChild(div);
     }
 
     window.removeCustomFieldRow = function(id) {
       const el = document.getElementById(`cf-row-${id}`);
       if (el) el.remove();
+      saveCustomFieldsToStorage();
     };
 
     function getCustomExtractionConfigs() {
@@ -1103,6 +1151,45 @@
       return list;
     }
 
+    // On-Demand Column Sync with Google Sheet
+    syncSchemaBtn.addEventListener("click", async () => {
+      syncSchemaBtn.disabled = true;
+      syncSchemaBtn.textContent = "⏳ Syncing & Creating Columns in Sheet...";
+      try {
+        const customFields = getCustomExtractionConfigs();
+        const requestBody = {
+          action: "syncColumns",
+          sheetName: sheetSelect.value,
+          matchRules: {
+            statusColumnHeader: statusHeaderInput.value.trim() || "Status",
+            customExtractionFields: customFields
+          }
+        };
+
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(requestBody)
+        });
+
+        const data = await res.json();
+        if (data.status === "success") {
+          log(`Sheet schema synchronized: ${data.columnsCreated} new column(s) created.`, "#34d399");
+          setHUD(`Columns verified in Google Sheet (+${data.columnsCreated} added)`, "hud-match");
+          setTimeout(() => setHUD("Sensor active: ready for scanning.", "hud-standby"), 3000);
+          await fetchSchema();
+        } else {
+          log("Sync error: " + (data.error || "Failed to update sheet"), "#ef4444");
+        }
+      } catch (err) {
+        log("Connection error syncing columns: " + err.message, "#ef4444");
+      } finally {
+        syncSchemaBtn.disabled = false;
+        syncSchemaBtn.textContent = "⚡ Create / Sync Columns in Google Sheet Now";
+      }
+    });
+
+    loadSavedCustomFields();
     fetchSchema();
 
     // Camera Hardware Access
@@ -1225,7 +1312,7 @@
         const ctx = canvas.getContext("2d");
         ctx.drawImage(video, cX, cY, cW, cH, 0, 0, cW, cH);
 
-        // Hardware Barcode Scan (Instant)
+        // Hardware Barcode Scan
         let barcodeVal = "";
         if (barcodeDetector) {
           try {
@@ -1322,7 +1409,7 @@
           return;
         }
 
-        // Case: Multiple Ambiguous Matches Found
+        // Multiple Ambiguous Matches Found
         if (data.ambiguous && data.candidates && data.candidates.length > 1) {
           playChime("error");
           triggerHaptic("ambiguous");
@@ -1330,7 +1417,7 @@
           return;
         }
 
-        // Case: Confirmed Match
+        // Confirmed Match
         if (data.match) {
           playChime("match");
           triggerHaptic("match");
@@ -1436,7 +1523,7 @@
       metricRate.textContent = rate;
     }
 
-    // Offline Store-and-Forward Logic
+    // Offline Store-and-Forward
     function saveToOfflineQueue(reqData) {
       if (!db) return;
       const tx = db.transaction("sync_queue", "readwrite");

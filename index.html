@@ -3,391 +3,500 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Smart Document Hover Sorter | Ankush Saha</title>
+  <title>Hover-Sorter Enterprise | Architected by Ankush Saha</title>
 
   <!-- Client-side OCR Engine -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
   <style>
+    :root {
+      --bg-core: #050811;
+      --bg-surface: #0b1120;
+      --bg-panel: #0f172a;
+      --primary: #2563eb;
+      --primary-glow: #38bdf8;
+      --accent-green: #10b981;
+      --accent-emerald: #059669;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-subtle: #1e293b;
+      --border-active: #334155;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --bg-dark: #090d16;
-      --panel-bg: #111827;
-      --accent-green: #22c55e;
-      --accent-blue: #38bdf8;
-      --border-color: #334155;
-    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg-dark);
-      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "SF Pro Display", sans-serif;
+      background: var(--bg-core);
+      color: var(--text-main);
       display: flex;
       flex-direction: column;
       height: 100vh;
       height: 100dvh;
       overflow: hidden;
-      padding-bottom: 50px;
+      padding-bottom: 35px;
     }
 
+    /* Technocratic Header */
     header {
-      background: #1e293b;
+      background: rgba(11, 17, 32, 0.95);
+      backdrop-filter: blur(16px);
       padding: 10px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border-color);
-      z-index: 40;
+      border-bottom: 1px solid var(--border-subtle);
+      z-index: 50;
     }
-    .brand-wrap {
+
+    .brand-cluster {
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    .brand-logo {
-      width: 34px;
-      height: 34px;
-      background: linear-gradient(135deg, #2563eb, #38bdf8);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 1rem;
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+
+    .brand-svg-logo {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
     }
-    .brand-text {
+
+    .brand-meta {
       display: flex;
       flex-direction: column;
     }
-    .brand-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      color: #f1f5f9;
+
+    .brand-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .brand-subtitle {
+
+    .brand-name {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      background: linear-gradient(135deg, #ffffff 40%, var(--primary-glow) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tier-indicator-pill {
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: #1e293b;
+      color: var(--primary-glow);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .brand-architect {
       font-size: 0.65rem;
       font-weight: 600;
-      color: #94a3b8;
-      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
     }
-    .controls {
+
+    .header-actions {
       display: flex;
       gap: 6px;
       align-items: center;
     }
+
     .btn {
       background: var(--primary);
       color: #ffffff;
       border: none;
-      padding: 8px 14px;
+      padding: 7px 13px;
       border-radius: 6px;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       cursor: pointer;
-      transition: background 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .btn:active { transform: scale(0.97); }
-    .btn-secondary { background: #334155; color: #cbd5e1; }
 
-    /* Configuration Modal Drawer */
+    .btn:active { transform: scale(0.96); }
+    .btn-secondary { background: #1e293b; color: var(--text-muted); border: 1px solid var(--border-active); }
+    .btn-shutter {
+      background: linear-gradient(135deg, #10b981, #059669);
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+      border: 1px solid #34d399;
+    }
+
+    /* Configuration Sliding Drawer */
     #settings-drawer {
-      background: var(--panel-bg);
-      padding: 14px 16px;
+      background: var(--bg-surface);
       border-bottom: 2px solid var(--primary);
+      padding: 14px 16px;
       display: none;
       flex-direction: column;
       gap: 12px;
-      font-size: 0.85rem;
-      max-height: 80vh;
+      font-size: 0.82rem;
+      max-height: 82vh;
       overflow-y: auto;
-      z-index: 40;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+      z-index: 45;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.9);
     }
-    .drawer-section-title {
-      font-size: 0.75rem;
+
+    .drawer-sec-header {
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--accent-blue);
-      font-weight: 700;
-      margin-top: 4px;
-      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
-      padding-bottom: 3px;
+      color: var(--primary-glow);
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border-subtle);
     }
+
     .setting-group {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
+
     .setting-label {
-      color: #cbd5e1;
-      font-weight: 500;
-      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.76rem;
     }
+
     select, input {
-      background: #0f172a;
+      background: #050811;
       color: #38bdf8;
-      border: 1px solid #475569;
+      border: 1px solid var(--border-active);
       padding: 7px 10px;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       outline: none;
       width: 100%;
     }
+
     select[multiple] {
-      height: 85px;
+      height: 80px;
     }
-    .setting-row-half {
+
+    .grid-duo {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
-    /* Live Preview Breadcrumb Bars */
-    .preview-bar {
-      background: #0f172a;
-      border: 1px solid #334155;
+    /* Pipeline Strategy Selector Banner */
+    .pipeline-strategy-card {
+      background: linear-gradient(145deg, #0f172a, #0b1329);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .strategy-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary-glow);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip-sequence-bar {
+      background: #050811;
+      border: 1px solid var(--border-subtle);
       border-radius: 6px;
-      padding: 6px 10px;
+      padding: 6px 8px;
       min-height: 32px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      color: #38bdf8;
-    }
-    .match-chip {
-      background: #065f46;
-      color: #a7f3d0;
-      border: 1px solid #10b981;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .hierarchy-chip {
-      background: #1e3a8a;
-      color: #bfdbfe;
-      border: 1px solid #3b82f6;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      gap: 5px;
+      font-size: 0.72rem;
     }
 
-    /* Auto-Audit Notification Card */
-    .audit-badge-card {
-      background: #064e3b;
-      border: 1px solid #059669;
-      border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 0.78rem;
-      line-height: 1.4;
-      color: #d1fae5;
+    .chip-tag-match {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 700;
     }
-    .audit-badge-card strong {
-      color: #6ee7b7;
-      display: block;
-      margin-bottom: 3px;
+
+    .chip-tag-hierarchy {
+      background: rgba(37, 99, 235, 0.2);
+      color: #93c5fd;
+      border: 1px solid rgba(96, 165, 250, 0.4);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 700;
     }
 
     /* Camera Viewport */
-    #camera-container {
+    #viewport-container {
       position: relative;
       flex: 1;
+      background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #000000;
       overflow: hidden;
     }
+
     video {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    #reticle {
+
+    /* Technocratic Reticle */
+    #aim-reticle {
       position: absolute;
-      width: 84%;
+      width: 86%;
       height: 38%;
       border: 2px dashed rgba(56, 189, 248, 0.7);
-      border-radius: 14px;
+      border-radius: 12px;
       pointer-events: none;
-      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      padding-bottom: 8px;
+      padding-bottom: 6px;
     }
-    #reticle::after {
-      content: "ALIGN DOCUMENT DETAILS / BARCODE";
-      font-size: 0.68rem;
-      color: rgba(255, 255, 255, 0.6);
+
+    #aim-reticle::before, #aim-reticle::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-color: #38bdf8;
+      border-style: solid;
+    }
+    #aim-reticle::before { top: -2px; left: -2px; border-width: 3px 0 0 3px; }
+    #aim-reticle::after { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; }
+
+    .reticle-label {
+      font-size: 0.65rem;
       letter-spacing: 0.08em;
-      font-weight: 600;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
     }
+
     canvas { display: none; }
 
-    /* Top Floating Routing Display Banner */
-    #sorting-banner {
+    /* HUD Top Routing Alert */
+    #hud-banner {
       position: absolute;
       top: 10px;
       left: 8px;
       right: 8px;
-      z-index: 30;
+      z-index: 35;
       padding: 12px;
-      border-radius: 12px;
+      border-radius: 10px;
       text-align: center;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
       transition: all 0.25s ease;
     }
-    .banner-standby {
-      background: rgba(30, 41, 59, 0.92);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #94a3b8;
-      font-size: 0.95rem;
+
+    .hud-standby {
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid var(--border-active);
+      color: var(--text-muted);
+      font-size: 0.92rem;
     }
-    .banner-reading {
+
+    .hud-scanning {
       background: rgba(3, 105, 161, 0.92);
-      border: 1px solid var(--accent-blue);
+      border: 1px solid var(--primary-glow);
       color: #e0f2fe;
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 700;
     }
-    .banner-error {
+
+    .hud-error {
       background: rgba(153, 27, 27, 0.95);
-      border: 1px solid #f87171;
+      border: 1px solid var(--accent-red);
       color: #fee2e2;
       font-size: 0.88rem;
     }
 
-    /* Confirmed Match High-Visibility Card */
-    .banner-match {
-      background: #14532d !important;
-      border: 3px solid #22c55e !important;
+    .hud-match {
+      background: #064e3b !important;
+      border: 3px solid #10b981 !important;
       color: #ffffff !important;
-      transform: scale(1.01);
-      box-shadow: 0 0 35px rgba(34, 197, 94, 0.85) !important;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.7) !important;
+      animation: pulseMatch 1.2s infinite alternate;
     }
-    .match-tag {
+
+    @keyframes pulseMatch {
+      0% { transform: scale(1.0); }
+      100% { transform: scale(1.02); }
+    }
+
+    .match-meta-tag {
       display: inline-block;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
       background: rgba(0, 0, 0, 0.4);
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 20px;
+      color: #a7f3d0;
       margin-bottom: 4px;
-      font-weight: 700;
-      color: #bbf7d0;
     }
-    .sort-instruction {
+
+    .sort-headline {
       font-size: 1.15rem;
       font-weight: 900;
+      letter-spacing: 0.03em;
       color: #fef08a;
-      letter-spacing: 0.04em;
     }
-    .target-bin-multilevel {
+
+    .routing-flow-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       justify-content: center;
       align-items: center;
-      margin-top: 8px;
+      margin-top: 6px;
     }
-    .level-chip-card {
-      background: #166534;
-      border: 2px solid #86efac;
-      padding: 6px 12px;
-      border-radius: 8px;
+
+    .tier-card {
+      background: #065f46;
+      border: 2px solid #34d399;
+      padding: 5px 10px;
+      border-radius: 7px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      max-width: 85%;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    }
-    .level-attr-title {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #bbf7d0;
-      font-weight: 800;
-    }
-    .level-attr-value {
-      font-size: 1.35rem;
-      font-weight: 900;
-      color: #ffffff;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
-      margin-top: 2px;
-      word-break: break-word;
-      text-align: center;
-    }
-    .level-arrow {
-      font-size: 1.4rem;
-      color: #fef08a;
-      font-weight: 900;
+      max-width: 90%;
     }
 
-    #log-panel {
-      height: 70px;
+    .tier-card-header {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #a7f3d0;
+    }
+
+    .tier-card-value {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      word-break: break-word;
+    }
+
+    .tier-flow-arrow {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #fef08a;
+    }
+
+    /* Diagnostics Log */
+    #console-log {
+      height: 65px;
       background: #020617;
-      padding: 6px 12px;
-      font-family: monospace;
-      font-size: 0.7rem;
+      border-top: 1px solid var(--border-subtle);
+      padding: 5px 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.68rem;
       overflow-y: auto;
-      border-top: 1px solid #1e293b;
       z-index: 10;
     }
-    .log-line { margin: 2px 0; }
+
+    .log-row { margin: 1px 0; }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="brand-wrap">
-      <div class="brand-logo">AS</div>
-      <div class="brand-text">
-        <span class="brand-title">Hover Sorter</span>
-        <span class="brand-subtitle">Dev: Ankush Saha</span>
+    <div class="brand-cluster">
+      <!-- High-Tech Geometric SVG Logo: Hover Sorter (HS + Lens + Array) -->
+      <svg class="brand-svg-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="90" height="90" rx="20" fill="url(#logo_grad_bg)" stroke="#38bdf8" stroke-width="2"/>
+        <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="50" cy="50" r="14" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
+        <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="50" cy="50" r="4" fill="#fef08a"/>
+        <defs>
+          <linearGradient id="logo_grad_bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#0f172a"/>
+            <stop offset="1" stop-color="#1e293b"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="brand-meta">
+        <div class="brand-title-wrap">
+          <span class="brand-name">Hover-Sorter</span>
+          <span id="tier-badge" class="tier-indicator-pill">Tier 1: Fast-OCR</span>
+        </div>
+        <span class="brand-architect">Architected by Ankush Saha</span>
       </div>
     </div>
-    <div class="controls">
-      <button id="toggle-config-btn" class="btn btn-secondary">⚙ Config</button>
-      <button id="camera-btn" class="btn">Open Camera</button>
+
+    <div class="header-actions">
+      <button id="shutter-trigger" class="btn btn-shutter">⚡ Scan</button>
+      <button id="config-trigger" class="btn btn-secondary">⚙ Config</button>
+      <button id="cam-toggle" class="btn">Start Cam</button>
     </div>
   </header>
 
-  <!-- Dynamic Configuration Drawer -->
+  <!-- Complete Sliding Config Drawer -->
   <div id="settings-drawer">
-    <div class="drawer-section-title">1. Target Sheet & Optical Sensor</div>
-    <div class="setting-row-half">
+    <div class="drawer-sec-header">
+      <span>1. Database & High-Volume Strategy</span>
+    </div>
+    
+    <div class="grid-duo">
       <div class="setting-group">
         <label class="setting-label">Active Sheet Tab:</label>
-        <select id="sheet-select"><option value="">Connecting to Sheet...</option></select>
+        <select id="sheet-select"><option value="">Connecting Sheet...</option></select>
       </div>
       <div class="setting-group">
         <label class="setting-label">Camera Sensor:</label>
-        <select id="camera-select"><option value="">Auto Select</option></select>
+        <select id="camera-select"><option value="">Auto Lens</option></select>
       </div>
     </div>
 
-    <div class="drawer-section-title">2. Document Matching Criteria</div>
-    <div class="setting-row-half">
+    <!-- High-Volume Strategy Selector -->
+    <div class="pipeline-strategy-card">
+      <div class="strategy-title">
+        <span>⚡ High-Volume Execution Strategy:</span>
+      </div>
+      <select id="pipeline-tier-select">
+        <option value="tier1">Tier 1: Hybrid Edge (Barcode + On-Device OCR - 0 Cost / Unlimited)</option>
+        <option value="tier2">Tier 2: Debounced On-Demand Shutter (Saves 95% Battery & Tokens)</option>
+        <option value="tier3">Tier 3: Direct Multimodal AI Vision (Gemini 2.5 Flash / Messy Forms)</option>
+      </select>
+    </div>
+
+    <div class="drawer-sec-header">
+      <span>2. Document Match Parameters</span>
+    </div>
+    
+    <div class="grid-duo">
       <div class="setting-group">
         <label class="setting-label">Match Logic:</label>
         <select id="match-logic">
@@ -396,164 +505,177 @@
         </select>
       </div>
       <div class="setting-group">
-        <label class="setting-label">Skip If Already Processed:</label>
-        <select id="skip-processed-toggle">
-          <option value="true">Yes (Active Filter)</option>
-          <option value="false">No (Re-Scan Allowed)</option>
+        <label class="setting-label">Filter Processed Rows:</label>
+        <select id="skip-processed">
+          <option value="true">Yes (Prevent Re-scan)</option>
+          <option value="false">No (Allow Re-scan)</option>
         </select>
       </div>
     </div>
-    
-    <!-- Matching Columns Select & Dedicated Active Indicator Area -->
+
     <div class="setting-group">
-      <label class="setting-label">Columns to Find in Document (Select ID or Code column):</label>
+      <label class="setting-label">Match Columns (Document ID / Unique Key):</label>
       <select id="match-columns-select" multiple size="3"></select>
     </div>
     <div class="setting-group">
-      <label class="setting-label">Active Finding Criteria (Verified Columns):</label>
-      <div id="match-cols-preview" class="preview-bar">-- None selected --</div>
+      <label class="setting-label">Active Match Criteria Verification:</label>
+      <div id="match-criteria-chips" class="chip-sequence-bar">-- None selected --</div>
     </div>
 
-    <div class="drawer-section-title">3. Multi-Level Routing Hierarchy (Sorting Bins)</div>
+    <div class="drawer-sec-header">
+      <span>3. Multi-Level Routing Hierarchy (Storage Bins)</span>
+    </div>
+    
     <div class="setting-group">
-      <label class="setting-label">Display Columns (Tap options to add in order):</label>
+      <label class="setting-label">Hierarchy Display Columns (Tap in strict sequence):</label>
       <select id="display-columns-select" multiple size="3"></select>
     </div>
     <div class="setting-group">
-      <label class="setting-label">Active Hierarchy Flow Order:</label>
-      <div id="hierarchy-preview" class="preview-bar">-- None selected. Tap columns above --</div>
+      <label class="setting-label">Verified Routing Flow Sequence:</label>
+      <div id="hierarchy-flow-chips" class="chip-sequence-bar">-- Tap columns above to build flow --</div>
     </div>
 
-    <div class="drawer-section-title">4. Automatic Sheet Audit & Provenance</div>
-    <div class="audit-badge-card">
-      <strong>✓ Real-Time Write-Back Active:</strong>
-      Columns for <em>Status</em>, <em>Scan Timestamp</em>, <em>Operator Signature</em>, <em>Device Name</em>, and <em>Device ID</em> are auto-created if missing and written into the <strong>exact matched row</strong>.
+    <div class="drawer-sec-header">
+      <span>4. Auto-Audit & Dynamic Columns</span>
     </div>
 
-    <div class="setting-row-half">
+    <div class="grid-duo">
       <div class="setting-group">
-        <label class="setting-label">Operator Name / Email (Saved on Device):</label>
-        <input type="text" id="operator-name-input" value="Ankush Saha">
+        <label class="setting-label">Status Column Header (On-the-fly):</label>
+        <input type="text" id="status-header-input" value="Status">
       </div>
       <div class="setting-group">
-        <label class="setting-label">Status Value to Write:</label>
+        <label class="setting-label">Status Value to Stamp:</label>
         <input type="text" id="status-val-input" value="Processed">
       </div>
     </div>
 
-    <div class="setting-row-half">
+    <div class="grid-duo">
       <div class="setting-group">
-        <label class="setting-label">Detected Device Model:</label>
-        <input type="text" id="device-name-input" readonly style="background: #020617; color: #94a3b8;">
+        <label class="setting-label">Operator Signature:</label>
+        <input type="text" id="operator-input" value="Ankush Saha">
       </div>
       <div class="setting-group">
-        <label class="setting-label">Persistent Device UUID:</label>
-        <input type="text" id="device-uuid-input" readonly style="background: #020617; color: #94a3b8; font-family: monospace;">
+        <label class="setting-label">Device Signature:</label>
+        <input type="text" id="device-meta-input" readonly style="background:#020617; color:#64748b;">
       </div>
     </div>
   </div>
 
-  <div id="camera-container">
-    <div id="sorting-banner" class="banner-standby">
-      Tap "Open Camera" to start hover sorting
+  <div id="viewport-container">
+    <div id="hud-banner" class="hud-standby">
+      Tap "Start Cam" to activate hover detection
     </div>
 
-    <video id="video" autoplay playsinline webkit-playsinline muted></video>
-    <div id="reticle"></div>
-    <canvas id="canvas"></canvas>
+    <video id="video-feed" autoplay playsinline webkit-playsinline muted></video>
+    <div id="aim-reticle">
+      <span class="reticle-label">ALIGN TARGET / ID / BARCODE</span>
+    </div>
+    <canvas id="snapshot-canvas"></canvas>
   </div>
 
-  <div id="log-panel"></div>
+  <div id="console-log"></div>
 
   <script>
     // =========================================================================
-    // CONFIGURATION: Paste your deployed Google Apps Script URL here
+    // CONFIGURATION: Paste your deployed Google Apps Script Web App URL below
     // =========================================================================
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6jngSeasRs_Fy2C8IU0Pz6oJ0DEhnKIppK_6oVhMScD7TcTRxtVkiZuDFSSj1d3iP/exec";
     const SCAN_INTERVAL_MS = 3000;
-    const MATCH_HOLD_DURATION_MS = 4500;
+    const HOLD_ON_MATCH_MS = 4500;
 
-    // Elements
-    const video = document.getElementById("video");
-    const canvas = document.getElementById("canvas");
-    const sortingBanner = document.getElementById("sorting-banner");
-    const logPanel = document.getElementById("log-panel");
-    const cameraBtn = document.getElementById("camera-btn");
-    const toggleConfigBtn = document.getElementById("toggle-config-btn");
+    // DOM Elements
+    const video = document.getElementById("video-feed");
+    const canvas = document.getElementById("snapshot-canvas");
+    const hudBanner = document.getElementById("hud-banner");
+    const consoleLog = document.getElementById("console-log");
+    const camToggle = document.getElementById("cam-toggle");
+    const shutterTrigger = document.getElementById("shutter-trigger");
+    const configTrigger = document.getElementById("config-trigger");
     const settingsDrawer = document.getElementById("settings-drawer");
+    const tierBadge = document.getElementById("tier-badge");
 
-    // Dynamic Selectors
+    // Selectors
     const sheetSelect = document.getElementById("sheet-select");
     const cameraSelect = document.getElementById("camera-select");
+    const pipelineTierSelect = document.getElementById("pipeline-tier-select");
     const matchLogic = document.getElementById("match-logic");
-    const skipProcessedToggle = document.getElementById("skip-processed-toggle");
-    const matchColumnsSelect = document.getElementById("match-columns-select");
-    const matchColsPreview = document.getElementById("match-cols-preview");
-    const displayColumnsSelect = document.getElementById("display-columns-select");
-    const hierarchyPreview = document.getElementById("hierarchy-preview");
+    const skipProcessed = document.getElementById("skip-processed");
+    const statusHeaderInput = document.getElementById("status-header-input");
     const statusValInput = document.getElementById("status-val-input");
-    const operatorNameInput = document.getElementById("operator-name-input");
-    const deviceNameInput = document.getElementById("device-name-input");
-    const deviceUuidInput = document.getElementById("device-uuid-input");
+    const operatorInput = document.getElementById("operator-input");
+    const deviceMetaInput = document.getElementById("device-meta-input");
+    const matchColumnsSelect = document.getElementById("match-columns-select");
+    const matchCriteriaChips = document.getElementById("match-criteria-chips");
+    const displayColumnsSelect = document.getElementById("display-columns-select");
+    const hierarchyFlowChips = document.getElementById("hierarchy-flow-chips");
 
-    let isScanning = false;
+    let isStreaming = false;
     let isProcessing = false;
-    let stream = null;
-    let scanTimer = null;
+    let activeStream = null;
+    let loopTimer = null;
     let barcodeDetector = null;
     let audioCtx = null;
-    let globalSheetsSchema = [];
-    
-    // Explicit array to preserve chronological tap order for multi-level sorting
-    let orderedHierarchyConfig = [];
+    let globalSchema = [];
+    let orderedHierarchy = [];
 
-    // 1. Generate & Persist Device UUID and Hardware Identity
-    function initDeviceIdentity() {
-      let uuid = localStorage.getItem("hover_sorter_device_uuid");
+    // Device Metadata Initialization
+    function initDeviceSignature() {
+      let uuid = localStorage.getItem("hs_device_uuid");
       if (!uuid) {
-        uuid = "dev-" + Math.random().toString(36).substring(2, 10) + "-" + Date.now().toString(36);
-        localStorage.setItem("hover_sorter_device_uuid", uuid);
+        uuid = "HS-" + Math.random().toString(36).substring(2, 9).toUpperCase();
+        localStorage.setItem("hs_device_uuid", uuid);
       }
-      deviceUuidInput.value = uuid;
-
       const ua = navigator.userAgent;
-      let dev = "Desktop PC";
-      if (/android/i.test(ua)) dev = "Android Mobile";
-      else if (/iPad|iPhone|iPod/.test(ua)) dev = "Apple iOS Device";
-      else if (/Windows/i.test(ua)) dev = "Windows Workstation";
-      else if (/Macintosh/i.test(ua)) dev = "Mac Workstation";
-
-      const res = `${window.screen.width}x${window.screen.height}`;
-      deviceNameInput.value = `${dev} (${res})`;
+      let platform = "Desktop";
+      if (/android/i.test(ua)) platform = "Android";
+      else if (/iphone|ipad/i.test(ua)) platform = "iOS";
+      deviceMetaInput.value = `${platform} (${window.screen.width}x${window.screen.height}) [${uuid}]`;
     }
-    initDeviceIdentity();
+    initDeviceSignature();
 
-    // Restore saved Operator Name / Email
-    const savedOp = localStorage.getItem("hover_sorter_operator");
-    if (savedOp) operatorNameInput.value = savedOp;
-    operatorNameInput.addEventListener("input", () => {
-      localStorage.setItem("hover_sorter_operator", operatorNameInput.value);
+    // Restore operator signature
+    const savedOp = localStorage.getItem("hs_operator_name");
+    if (savedOp) operatorInput.value = savedOp;
+    operatorInput.addEventListener("input", () => {
+      localStorage.setItem("hs_operator_name", operatorInput.value);
     });
 
+    // Logging
     function log(msg, color = "#94a3b8") {
       const line = document.createElement("div");
-      line.className = "log-line";
+      line.className = "log-row";
       line.style.color = color;
       line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
-      logPanel.prepend(line);
+      consoleLog.prepend(line);
     }
 
-    function setBanner(html, cssClass) {
-      sortingBanner.className = cssClass;
-      sortingBanner.innerHTML = html;
+    function setHUD(html, className) {
+      hudBanner.className = className;
+      hudBanner.innerHTML = html;
     }
 
-    toggleConfigBtn.addEventListener("click", () => {
+    configTrigger.addEventListener("click", () => {
       settingsDrawer.style.display = settingsDrawer.style.display === "flex" ? "none" : "flex";
     });
 
-    // Sound feedback
-    function playBeep(type) {
+    // Pipeline Tier badge update
+    pipelineTierSelect.addEventListener("change", () => {
+      const val = pipelineTierSelect.value;
+      if (val === "tier1") {
+        tierBadge.textContent = "Tier 1: Edge-OCR";
+        tierBadge.style.color = "#38bdf8";
+      } else if (val === "tier2") {
+        tierBadge.textContent = "Tier 2: Shutter";
+        tierBadge.style.color = "#34d399";
+      } else {
+        tierBadge.textContent = "Tier 3: Vision-AI";
+        tierBadge.style.color = "#fbbf24";
+      }
+    });
+
+    // Audio synthesizer
+    function playChime(type) {
       try {
         if (!audioCtx) {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -592,42 +714,40 @@
       try { barcodeDetector = new BarcodeDetector(); } catch(e) {}
     }
 
-    // 2. Fetch Schema with Resilient Tab Handling
-    async function loadDynamicSheetSchema() {
+    // Connect & Introspect Google Sheet
+    async function fetchSchema() {
       try {
         const res = await fetch(SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + "getSheets=1");
         const data = await res.json();
         if (data.sheets && data.sheets.length > 0) {
-          globalSheetsSchema = data.sheets;
+          globalSchema = data.sheets;
           sheetSelect.innerHTML = "";
           data.sheets.forEach(s => {
             const opt = document.createElement("option");
             opt.value = s.sheetName;
-            opt.textContent = `${s.sheetName} (${s.columns.length} columns)`;
+            opt.textContent = `${s.sheetName} (${s.columns.length} cols)`;
             sheetSelect.appendChild(opt);
           });
-          bindSheetColumns(data.sheets[0]);
-          log("Connected: loaded " + data.sheets.length + " sheet(s) schema.", "#4ade80");
+          populateColumns(data.sheets[0]);
+          log("Connected: loaded " + data.sheets.length + " sheet(s).", "#34d399");
         }
       } catch (e) {
-        log("Could not auto-fetch columns: " + e.message, "#fbbf24");
+        log("Schema fetch warning: " + e.message, "#fbbf24");
       }
     }
 
-    // 3. Clean Binding: Track Chronological Hierarchy Sequence & Match Criteria
-    function bindSheetColumns(sheetMeta) {
+    function populateColumns(sheetMeta) {
       if (!sheetMeta || !sheetMeta.columns) return;
       const cols = sheetMeta.columns;
 
       matchColumnsSelect.innerHTML = "";
       displayColumnsSelect.innerHTML = "";
-      orderedHierarchyConfig = [];
-      renderHierarchyPreview();
+      orderedHierarchy = [];
+      renderHierarchyChips();
 
       cols.forEach((col, idx) => {
         const label = `[Col ${col.index}] ${col.name}`;
 
-        // 1. Match Columns (Auto-select if name contains code/id or default to Col 1)
         const optMatch = document.createElement("option");
         optMatch.value = col.index;
         optMatch.dataset.name = col.name;
@@ -637,7 +757,6 @@
         }
         matchColumnsSelect.appendChild(optMatch);
 
-        // 2. Multilevel Bins: Unselected by default
         const optDisp = document.createElement("option");
         optDisp.value = col.index;
         optDisp.dataset.name = col.name;
@@ -645,72 +764,64 @@
         displayColumnsSelect.appendChild(optDisp);
       });
 
-      renderMatchColsPreview();
+      renderMatchChips();
     }
 
-    // Update Match Columns Live Preview Bar
-    function renderMatchColsPreview() {
+    function renderMatchChips() {
       const selected = Array.from(matchColumnsSelect.selectedOptions);
       if (selected.length === 0) {
-        matchColsPreview.innerHTML = "-- None selected --";
+        matchCriteriaChips.innerHTML = "-- None selected --";
         return;
       }
-      matchColsPreview.innerHTML = selected.map(opt => 
-        `<span class="match-chip">🔍 ${opt.textContent}</span>`
+      matchCriteriaChips.innerHTML = selected.map(opt => 
+        `<span class="chip-tag-match">🔍 ${opt.textContent}</span>`
       ).join(" ");
     }
+    matchColumnsSelect.addEventListener("change", renderMatchChips);
 
-    matchColumnsSelect.addEventListener("change", renderMatchColsPreview);
-
-    // Event listener to preserve tap sequence for hierarchy
+    // Track sequential tapping for hierarchy
     displayColumnsSelect.addEventListener("change", () => {
       const selectedOpts = Array.from(displayColumnsSelect.selectedOptions);
-      
-      // Remove unselected
-      orderedHierarchyConfig = orderedHierarchyConfig.filter(item => 
+      orderedHierarchy = orderedHierarchy.filter(item => 
         selectedOpts.some(opt => parseInt(opt.value, 10) === item.index)
       );
-
-      // Add new items preserving tap order
       selectedOpts.forEach(opt => {
         const idx = parseInt(opt.value, 10);
-        if (!orderedHierarchyConfig.some(item => item.index === idx)) {
-          orderedHierarchyConfig.push({
+        if (!orderedHierarchy.some(item => item.index === idx)) {
+          orderedHierarchy.push({
             index: idx,
             attribute: opt.dataset.name || opt.textContent.replace(/^\[Col\s+\d+\]\s*/i, '').trim()
           });
         }
       });
-
-      renderHierarchyPreview();
+      renderHierarchyChips();
     });
 
-    function renderHierarchyPreview() {
-      if (orderedHierarchyConfig.length === 0) {
-        hierarchyPreview.innerHTML = "-- None selected. Tap columns above --";
+    function renderHierarchyChips() {
+      if (orderedHierarchy.length === 0) {
+        hierarchyFlowChips.innerHTML = "-- Tap columns above to build flow --";
         return;
       }
-      hierarchyPreview.innerHTML = orderedHierarchyConfig.map((item, i) => 
-        `<span class="hierarchy-chip">${i + 1}. ${item.attribute}</span>`
+      hierarchyFlowChips.innerHTML = orderedHierarchy.map((item, i) => 
+        `<span class="chip-tag-hierarchy">${i + 1}. ${item.attribute}</span>`
       ).join(" ➔ ");
     }
 
     sheetSelect.addEventListener("change", () => {
-      const selected = globalSheetsSchema.find(s => s.sheetName === sheetSelect.value);
-      if (selected) bindSheetColumns(selected);
+      const selected = globalSchema.find(s => s.sheetName === sheetSelect.value);
+      if (selected) populateColumns(selected);
     });
 
-    loadDynamicSheetSchema();
+    fetchSchema();
 
-    // 4. Optical Sensor Discovery
-    async function populateCameras() {
+    // Camera Hardware Access
+    async function enumerateLenses() {
       if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
       try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(d => d.kind === "videoinput");
+        const videoInputs = devices.filter(d => d.kind === "videoinput");
         cameraSelect.innerHTML = "";
-
-        videoDevices.forEach((dev, i) => {
+        videoInputs.forEach((dev, i) => {
           const opt = document.createElement("option");
           opt.value = dev.deviceId;
           opt.textContent = dev.label || `Camera ${i + 1}`;
@@ -722,78 +833,87 @@
 
     async function startCamera() {
       if (location.protocol !== "https:" && !["localhost", "127.0.0.1"].includes(location.hostname)) {
-        setBanner("<strong>HTTPS Required:</strong> Chrome disables camera on unencrypted HTTP.", "banner-error");
+        setHUD("<strong>HTTPS Required:</strong> Chrome disables camera on unencrypted HTTP.", "hud-error");
         return;
       }
 
-      setBanner("Opening camera feed...", "banner-reading");
-
-      const selectedId = cameraSelect.value;
+      setHUD("Connecting optical sensor...", "hud-scanning");
+      const chosenId = cameraSelect.value;
       const ladder = [];
-      if (selectedId) ladder.push({ video: { deviceId: { exact: selectedId } } });
+      if (chosenId) ladder.push({ video: { deviceId: { exact: chosenId } } });
       ladder.push({ video: { facingMode: { ideal: "environment" } } });
       ladder.push({ video: { facingMode: "environment" } });
       ladder.push({ video: true });
 
       for (const constraints of ladder) {
         try {
-          stream = await navigator.mediaDevices.getUserMedia(constraints);
-          if (stream) break;
+          activeStream = await navigator.mediaDevices.getUserMedia(constraints);
+          if (activeStream) break;
         } catch(e) {}
       }
 
-      if (!stream) {
-        setBanner("Failed to access camera sensor. Check permissions.", "banner-error");
+      if (!activeStream) {
+        setHUD("Optical sensor access failed. Check site permissions.", "hud-error");
         return;
       }
 
-      video.srcObject = stream;
+      video.srcObject = activeStream;
       video.setAttribute("playsinline", "true");
       video.setAttribute("webkit-playsinline", "true");
       video.muted = true;
       await video.play();
 
-      await populateCameras();
+      await enumerateLenses();
+      isStreaming = true;
+      camToggle.textContent = "Stop Cam";
+      setHUD("Sensor active: align document inside reticle...", "hud-standby");
 
-      isScanning = true;
-      cameraBtn.textContent = "Stop Camera";
-      setBanner("Hover camera over target document details...", "banner-standby");
-      scanTimer = setInterval(scanFrame, SCAN_INTERVAL_MS);
-      log("Camera hardware online.", "#4ade80");
+      if (pipelineTierSelect.value !== "tier2") {
+        loopTimer = setInterval(processFrame, SCAN_INTERVAL_MS);
+      }
+      log("Optical sensor engaged.", "#34d399");
     }
 
     function stopCamera() {
-      if (stream) {
-        stream.getTracks().forEach(t => t.stop());
-        stream = null;
+      if (activeStream) {
+        activeStream.getTracks().forEach(t => t.stop());
+        activeStream = null;
       }
       video.srcObject = null;
-      clearInterval(scanTimer);
-      isScanning = false;
-      cameraBtn.textContent = "Open Camera";
-      setBanner("Camera stopped. Tap 'Open Camera' to resume.", "banner-standby");
-      log("Camera disconnected.");
+      if (loopTimer) clearInterval(loopTimer);
+      isStreaming = false;
+      camToggle.textContent = "Start Cam";
+      setHUD("Optical sensor idle. Tap 'Start Cam' to resume.", "hud-standby");
+      log("Sensor disengaged.");
     }
 
-    cameraBtn.addEventListener("click", () => {
-      if (isScanning) stopCamera();
+    camToggle.addEventListener("click", () => {
+      if (isStreaming) stopCamera();
       else startCamera();
     });
 
-    cameraSelect.addEventListener("change", () => {
-      if (isScanning) startCamera();
+    shutterTrigger.addEventListener("click", () => {
+      if (!isStreaming) {
+        startCamera().then(() => setTimeout(processFrame, 700));
+      } else {
+        processFrame();
+      }
     });
 
-    // 5. Scan Frame Engine
-    async function scanFrame() {
-      if (!isScanning || isProcessing || video.readyState < 2) return;
+    cameraSelect.addEventListener("change", () => {
+      if (isStreaming) startCamera();
+    });
+
+    // Optical Recognition Pipeline
+    async function processFrame() {
+      if (!isStreaming || isProcessing || video.readyState < 2) return;
       isProcessing = true;
 
       try {
         const vW = video.videoWidth || 640;
         const vH = video.videoHeight || 480;
 
-        const cW = Math.round(vW * 0.84);
+        const cW = Math.round(vW * 0.86);
         const cH = Math.round(vH * 0.38);
         const cX = Math.round((vW - cW) / 2);
         const cY = Math.round((vH - cH) / 2);
@@ -803,35 +923,45 @@
         const ctx = canvas.getContext("2d");
         ctx.drawImage(video, cX, cY, cW, cH, 0, 0, cW, cH);
 
-        // Tier 1: Hardware Barcode
+        // Hardware Barcode Scan (0ms, 0 Cost)
         let barcodeVal = "";
         if (barcodeDetector) {
           try {
-            const barcodes = await barcodeDetector.detect(canvas);
-            if (barcodes.length > 0) barcodeVal = barcodes[0].rawValue;
+            const codes = await barcodeDetector.detect(canvas);
+            if (codes.length > 0) barcodeVal = codes[0].rawValue;
           } catch(e) {}
         }
 
         if (barcodeVal) {
           log("Barcode detected: " + barcodeVal, "#38bdf8");
-          await sendPayloadToBackend({ barcode: barcodeVal });
+          await dispatchToBackend({ barcode: barcodeVal });
           return;
         }
 
-        // Tier 2: Local Client OCR via Tesseract
-        setBanner("Analyzing document details...", "banner-reading");
-        const { data: { text } } = await Tesseract.recognize(canvas, "eng");
-        const clean = text.trim();
+        const tier = pipelineTierSelect.value;
 
-        if (clean.length >= 3) {
-          log(`Scanned text: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
-          await sendPayloadToBackend({ scannedText: clean });
+        if (tier === "tier3") {
+          // Tier 3: Direct Multimodal AI
+          setHUD("Direct AI Vision parsing frame...", "hud-scanning");
+          log("Direct Gemini Vision invoked...", "#fbbf24");
+          const b64 = canvas.toDataURL("image/jpeg", 0.55);
+          await dispatchToBackend({ imageBase64: b64, directAiMode: true });
         } else {
-          setBanner("Hover camera reticle over target document...", "banner-standby");
+          // Tier 1 & 2: Local Edge Tesseract OCR (0 Cost)
+          setHUD("Edge OCR analyzing frame...", "hud-scanning");
+          const { data: { text } } = await Tesseract.recognize(canvas, "eng");
+          const clean = text.trim();
+
+          if (clean.length >= 3) {
+            log(`OCR read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
+            await dispatchToBackend({ scannedText: clean, directAiMode: false });
+          } else {
+            setHUD("Sensor active: align document inside reticle...", "hud-standby");
+          }
         }
 
       } catch (err) {
-        log("Scan warning: " + err.message, "#f87171");
+        log("Scan exception: " + err.message, "#ef4444");
       } finally {
         isProcessing = false;
       }
@@ -848,23 +978,26 @@
       return vals;
     }
 
-    // 6. Two-Way Sync With Exact Physical Row Targeting & Ordered Hierarchical Bins
-    async function sendPayloadToBackend(payload) {
+    // Google Sheets Cloud Synchronization
+    async function dispatchToBackend(payload) {
       const selectedMatchCols = getSelectedValues(matchColumnsSelect);
 
       const requestBody = {
         sheetName: sheetSelect.value,
         barcode: payload.barcode || "",
         scannedText: payload.scannedText || "",
+        imageBase64: payload.imageBase64 || "",
+        directAiMode: payload.directAiMode === true,
         matchRules: {
           matchColumns: selectedMatchCols.length > 0 ? selectedMatchCols : [1],
           operator: matchLogic.value,
-          skipAlreadyProcessed: skipProcessedToggle.value === "true",
+          skipAlreadyProcessed: skipProcessed.value === "true",
+          statusColumnHeader: statusHeaderInput.value.trim() || "Status",
           statusValue: statusValInput.value || "Processed",
-          operatorName: operatorNameInput.value || "Ankush Saha",
-          deviceName: deviceNameInput.value,
-          deviceId: deviceUuidInput.value,
-          displayActionColumns: orderedHierarchyConfig
+          operatorName: operatorInput.value || "Ankush Saha",
+          deviceName: deviceMetaInput.value,
+          deviceId: localStorage.getItem("hs_device_uuid") || "DEV-UNKNOWN",
+          displayActionColumns: orderedHierarchy
         }
       };
 
@@ -878,63 +1011,63 @@
         const data = await res.json();
 
         if (data.error) {
-          setBanner(`<strong>Error:</strong> ${data.error}`, "banner-error");
-          playBeep("error");
+          setHUD(`<strong>Sync Error:</strong> ${data.error}`, "hud-error");
+          playChime("error");
           return;
         }
 
         if (data.match) {
-          playBeep("match");
+          playChime("match");
           if (navigator.vibrate) navigator.vibrate([150, 80, 150]);
 
           const matchedLabel = (data.matchedValues && data.matchedValues.length) 
             ? data.matchedValues.join(" · ") 
             : "MATCH VERIFIED";
 
-          // Render Hierarchical Multi-Level Sorting Cards With Actual Attribute Names
-          let levelsHtml = "";
+          let flowHtml = "";
           if (data.levels && data.levels.length > 0) {
-            levelsHtml = data.levels.map((lvl, idx) => {
+            flowHtml = data.levels.map((lvl, idx) => {
               return `
-                <div class="level-chip-card">
-                  <span class="level-attr-title">${lvl.attribute}</span>
-                  <span class="level-attr-value">${lvl.value}</span>
+                <div class="tier-card">
+                  <span class="tier-card-header">${lvl.attribute}</span>
+                  <span class="tier-card-value">${lvl.value}</span>
                 </div>` + 
-                (idx < data.levels.length - 1 ? `<span class="level-arrow">➔</span>` : "");
+                (idx < data.levels.length - 1 ? `<span class="tier-flow-arrow">➔</span>` : "");
             }).join(" ");
           } else {
-            levelsHtml = `
-              <div class="level-chip-card">
-                <span class="level-attr-title">Action</span>
-                <span class="level-attr-value">${data.action}</span>
+            flowHtml = `
+              <div class="tier-card">
+                <span class="tier-card-header">Action</span>
+                <span class="tier-card-value">${data.action}</span>
               </div>`;
           }
 
           const bannerHtml = `
-            <div class="match-tag">✓ Row #${data.rowIndex} (${matchedLabel})</div>
-            <div class="sort-instruction">👉 ROUTE & SORT INTO:</div>
-            <div class="target-bin-multilevel">${levelsHtml}</div>
+            <div class="match-meta-tag">✓ ROW #${data.rowIndex} (${matchedLabel})</div>
+            <div class="sort-headline">👉 ROUTE & SORT INTO:</div>
+            <div class="routing-flow-grid">${flowHtml}</div>
           `;
 
-          setBanner(bannerHtml, "banner-match");
-          log(`Write-back confirmed in Row #${data.rowIndex} (Status, Timestamp, Operator, Device)`, "#4ade80");
+          setHUD(bannerHtml, "hud-match");
+          log(`Write-back saved in Row #${data.rowIndex} [${data.writeBackAudit.statusColumn}: ${data.writeBackAudit.status}]`, "#34d399");
 
-          // Hold display for operator reading
-          clearInterval(scanTimer);
-          setTimeout(() => {
-            if (isScanning) {
-              setBanner("Hover camera reticle over next document...", "banner-standby");
-              scanTimer = setInterval(scanFrame, SCAN_INTERVAL_MS);
-            }
-          }, MATCH_HOLD_DURATION_MS);
+          if (pipelineTierSelect.value !== "tier2" && loopTimer) {
+            clearInterval(loopTimer);
+            setTimeout(() => {
+              if (isStreaming) {
+                setHUD("Sensor active: align next document...", "hud-standby");
+                loopTimer = setInterval(processFrame, SCAN_INTERVAL_MS);
+              }
+            }, HOLD_ON_MATCH_MS);
+          }
 
         } else {
-          setBanner("Hovering... (No matching criteria in sheet)", "banner-standby");
+          setHUD("Sensor active... (No matching criteria in sheet)", "hud-standby");
         }
 
       } catch (netErr) {
-        setBanner("Sync connection error: " + netErr.message, "banner-error");
-        playBeep("error");
+        setHUD("Connection exception: " + netErr.message, "hud-error");
+        playChime("error");
       }
     }
   </script>

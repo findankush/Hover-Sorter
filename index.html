@@ -45,6 +45,7 @@
       padding-bottom: 20px;
     }
 
+    /* Top Navigation Header */
     header {
       background: rgba(11, 17, 32, 0.96);
       backdrop-filter: blur(16px);
@@ -153,6 +154,7 @@
       border: 1px solid var(--border-active);
     }
 
+    /* Shift Performance & User Strip */
     #metrics-strip {
       background: #020617;
       padding: 4px 12px;
@@ -183,7 +185,7 @@
       font-weight: 700;
     }
 
-    /* Mode Dynamic Action Bar (Directly Above Camera) */
+    /* Dynamic Action Bar (Directly Above Camera) */
     #mode-action-bar {
       background: #0f172a;
       border-bottom: 1px solid var(--border-subtle);
@@ -216,7 +218,7 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    /* Configuration Drawer */
+    /* Configuration Sliding Drawer */
     #settings-drawer {
       background: var(--bg-surface);
       border-bottom: 2px solid var(--primary);
@@ -706,7 +708,7 @@
 </head>
 <body>
 
-  <!-- 1. ENTERPRISE GOOGLE IDENTITY / AUTHENTICATION MODAL -->
+  <!-- 1. ENTERPRISE AUTHENTICATION MODAL -->
   <div id="auth-modal">
     <div class="auth-card">
       <div class="auth-logo-wrap">
@@ -714,14 +716,14 @@
           <rect x="5" y="5" width="90" height="90" rx="20" fill="#0f172a" stroke="#38bdf8" stroke-width="4"/>
           <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="4" stroke-linejoin="round"/>
           <circle cx="50" cy="50" r="14" fill="#1e293b" stroke="#10b981" stroke-width="4"/>
-          <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+          <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
           <circle cx="50" cy="50" r="4" fill="#fef08a"/>
         </svg>
       </div>
 
       <div>
         <h2 style="font-size:1.15rem; font-weight:800; color:#f8fafc;">Hover-Sorter Enterprise</h2>
-        <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">v2.6-PROD-VERIFIED • Session Audit System</p>
+        <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">v3.0 Production • Multi-Level Governance System</p>
       </div>
 
       <!-- Quick 1-Click Android / Gmail Authenticator -->
@@ -743,12 +745,12 @@
         <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Operator Full Name:</label>
         <input type="text" id="auth-name-input" placeholder="e.g. Ankush Saha (Terminal 1)">
         <button id="auth-confirm-btn" class="btn" style="width:100%; justify-content:center; padding:10px; margin-top:4px;">
-          ✓ Authorize & Launch Scanner
+          ✓ Authorize &amp; Launch Terminal
         </button>
       </div>
 
       <p style="font-size:0.65rem; color:#64748b; line-height:1.4;">
-        Security Notice: Login sessions, hardware UUID, platform metadata, and activity timestamps are registered in the secure <code style="color:#38bdf8;">User_Login_Audit_Logs</code> sheet.
+        Multi-Tenant Security: Device fingerprints &amp; login records are stored automatically in the <code style="color:#38bdf8;">User_Login_Audit_Logs</code> sheet tab.
       </p>
     </div>
   </div>
@@ -779,19 +781,19 @@
 
     <div class="header-actions">
       <button id="torch-btn" class="btn btn-icon" title="Toggle Flashlight">🔦</button>
-      <button id="active-user-badge" class="btn-user-badge" title="Tap to switch user">
+      <button id="active-user-badge" class="btn-user-badge" title="Tap to switch user session">
         <span id="header-user-email">Operator</span> ⚙
       </button>
       <button id="config-trigger" class="btn btn-secondary">⚙ Config</button>
     </div>
   </header>
 
-  <!-- Shift Performance & User Strip -->
+  <!-- Shift Performance & Status Strip -->
   <div id="metrics-strip">
     <span class="metric-item">Shift Total: <strong id="metric-total">0</strong></span>
     <span class="metric-item">Rate: <strong id="metric-rate">0</strong>/min</span>
     <span class="metric-item">Speed: <strong id="metric-speed">0.0</strong>s</span>
-    <span id="cloud-status" class="cloud-status-badge">✓ Engine Active</span>
+    <span id="cloud-status" class="cloud-status-badge">✓ Governance Active</span>
   </div>
 
   <!-- Dynamic Contextual Action Bar (Activated strictly as per Tier) -->
@@ -808,48 +810,53 @@
   <!-- Complete Sliding Config Drawer -->
   <div id="settings-drawer">
     <div class="drawer-sec-header">
-      <span>1. Target Spreadsheet &amp; Camera Sensor</span>
+      <span>1. Governance: Active Sheet &amp; Sensor</span>
     </div>
     
     <div class="grid-duo">
       <div class="setting-group">
-        <label class="setting-label">Active Sheet Tab:</label>
+        <label class="setting-label">Active Document Sheet Tab:</label>
         <select id="sheet-select"><option value="">Connecting Sheet...</option></select>
       </div>
       <div class="setting-group">
-        <label class="setting-label">Camera Sensor:</label>
+        <label class="setting-label">Camera Sensor Lens:</label>
         <select id="camera-select"><option value="">Auto Lens</option></select>
       </div>
     </div>
 
-    <!-- Scanning Mode Defaults strictly to Tier 1 -->
+    <!-- Scanning Mode Defaults to Tier 1 -->
     <div class="pipeline-strategy-card">
-      <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ Scanning Mode &amp; Optimization:</div>
+      <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ Scanning Mode &amp; Strategy:</div>
       <select id="pipeline-tier-select">
         <option value="tier1" selected>Tier 1: Standard Edge (Continuous Camera Loop - $0 / Unlimited Tokens)</option>
+        <option value="auto">✨ Smart Hybrid Auto-Escalate (Local OCR first; auto-calls Cloud AI if faint)</option>
         <option value="tier2">Tier 2: Manual Shutter (Tap Snap to Scan - Zero battery &amp; Zero blur)</option>
         <option value="tier3">Tier 3: Direct Cloud AI Vision (Gemini Multimodal for Faint/Handwritten)</option>
       </select>
     </div>
 
     <div class="drawer-sec-header">
-      <span>2. Operator Guidance &amp; Audio</span>
+      <span>2. Operator Guidance &amp; Display Times</span>
     </div>
     <div class="grid-duo">
       <div class="setting-group">
-        <label class="setting-label">Voice Readout (Speaks Sorting Bin):</label>
+        <label class="setting-label">Voice Readout (Speech Reply):</label>
         <select id="tts-toggle">
-          <option value="true">Enabled (Voice announces destination)</option>
+          <option value="true">Enabled (Voice speaks destination once smoothly)</option>
           <option value="false">Muted / Silent</option>
         </select>
       </div>
       <div class="setting-group">
-        <label class="setting-label">Haptic Confirmation Vibrate:</label>
+        <label class="setting-label">Haptic Vibration Confirmation:</label>
         <select id="haptic-toggle">
           <option value="true">Active (Double-pulse on match)</option>
           <option value="false">Disabled</option>
         </select>
       </div>
+    </div>
+    <div class="setting-group">
+      <label class="setting-label">Match Banner Display Hold Duration (ms):</label>
+      <input type="number" id="hold-duration-input" min="1500" max="15000" step="500" value="4500">
     </div>
 
     <div class="drawer-sec-header">
@@ -960,7 +967,7 @@
     // =========================================================================
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6jngSeasRs_Fy2C8IU0Pz6oJ0DEhnKIppK_6oVhMScD7TcTRxtVkiZuDFSSj1d3iP/exec";
     const SCAN_INTERVAL_MS = 3000;
-    const HOLD_ON_MATCH_MS = 4500;
+    let holdOnMatchDuration = 4500; // Configurable duration
 
     // DOM Elements
     const video = document.getElementById("video-feed");
@@ -1001,6 +1008,7 @@
     const pipelineTierSelect = document.getElementById("pipeline-tier-select");
     const ttsToggle = document.getElementById("tts-toggle");
     const hapticToggle = document.getElementById("haptic-toggle");
+    const holdDurationInput = document.getElementById("hold-duration-input");
     const matchLogic = document.getElementById("match-logic");
     const skipProcessed = document.getElementById("skip-processed");
     const statusHeaderInput = document.getElementById("status-header-input");
@@ -1017,6 +1025,7 @@
 
     let isStreaming = false;
     let isProcessing = false;
+    let isSpeaking = false;
     let activeStream = null;
     let loopTimer = null;
     let barcodeDetector = null;
@@ -1142,6 +1151,17 @@
       localStorage.setItem("hs_status_header", statusHeaderInput.value);
     });
 
+    // Hold Duration Configuration
+    const savedHoldTime = localStorage.getItem("hs_hold_duration_ms");
+    if (savedHoldTime) {
+      holdOnMatchDuration = parseInt(savedHoldTime, 10);
+      holdDurationInput.value = holdOnMatchDuration;
+    }
+    holdDurationInput.addEventListener("input", () => {
+      holdOnMatchDuration = parseInt(holdDurationInput.value, 10) || 4500;
+      localStorage.setItem("hs_hold_duration_ms", holdOnMatchDuration);
+    });
+
     function log(msg, color = "#94a3b8") {
       const line = document.createElement("div");
       line.className = "log-row";
@@ -1163,12 +1183,19 @@
       disambiguationModal.style.display = "none";
     });
 
-    function speakText(text) {
+    // Word-Based Smooth Speech Synthesis (Plays strictly once without repetition)
+    function speakText(rawText) {
       if (ttsToggle.value !== "true" || !("speechSynthesis" in window)) return;
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.rate = 1.05;
-      window.speechSynthesis.speak(u);
+      try {
+        window.speechSynthesis.cancel(); // Stop any pending utterances
+        const cleanWords = rawText.replace(/[^a-zA-Z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+        if (!cleanWords) return;
+
+        const u = new SpeechSynthesisUtterance(cleanWords);
+        u.rate = 1.0;
+        u.pitch = 1.0;
+        window.speechSynthesis.speak(u);
+      } catch(e) {}
     }
 
     function triggerHaptic(type) {
@@ -1196,7 +1223,7 @@
     });
 
     // =========================================================================
-    // 2. DYNAMIC SINGLE-BUTTON ACTION BAR BASED STRICTLY ON TIER
+    // 2. DYNAMIC SINGLE-BUTTON ACTION BAR BASED ON TIER
     // =========================================================================
     pipelineTierSelect.addEventListener("change", syncDynamicActionBar);
 
@@ -1205,7 +1232,6 @@
       if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
 
       if (tier === "tier1") {
-        // TIER 1: Edge Auto-Scan
         tierBadge.textContent = "Tier 1: Edge";
         tierBadge.style.color = "#38bdf8";
         barModeTitle.textContent = "Tier 1: Standard Edge Scanning";
@@ -1217,8 +1243,19 @@
           loopTimer = setInterval(processFrame, SCAN_INTERVAL_MS);
         }
 
+      } else if (tier === "auto") {
+        tierBadge.textContent = "Smart Hybrid";
+        tierBadge.style.color = "#a7f3d0";
+        barModeTitle.textContent = "Smart Hybrid Auto-Escalation";
+        barModeSub.textContent = "Edge OCR with automatic Cloud AI Vision fallback";
+
+        tierActionBtn.textContent = isStreaming ? "🔴 Stop Auto-Scan" : "🟢 Start Auto-Scan";
+        tierActionBtn.style.background = isStreaming ? "#ef4444" : "#10b981";
+        if (isStreaming) {
+          loopTimer = setInterval(processFrame, SCAN_INTERVAL_MS);
+        }
+
       } else if (tier === "tier2") {
-        // TIER 2: Manual Shutter
         tierBadge.textContent = "Tier 2: Shutter";
         tierBadge.style.color = "#34d399";
         barModeTitle.textContent = "Tier 2: Manual Shutter Mode";
@@ -1228,7 +1265,6 @@
         tierActionBtn.style.background = "#2563eb";
 
       } else {
-        // TIER 3: Direct Cloud AI
         tierBadge.textContent = "Tier 3: Cloud AI";
         tierBadge.style.color = "#fbbf24";
         barModeTitle.textContent = "Tier 3: Cloud Multimodal AI Vision";
@@ -1242,8 +1278,7 @@
     tierActionBtn.addEventListener("click", async () => {
       const tier = pipelineTierSelect.value;
 
-      if (tier === "tier1") {
-        // Toggle continuous auto-scan loop
+      if (tier === "tier1" || tier === "auto") {
         if (isStreaming) {
           stopCamera();
         } else {
@@ -1251,7 +1286,6 @@
         }
         syncDynamicActionBar();
       } else {
-        // Shutter snap mode (Tier 2 or Tier 3)
         if (isProcessing) return;
         if (!isStreaming) {
           await startCamera();
@@ -1308,26 +1342,33 @@
       try { barcodeDetector = new BarcodeDetector(); } catch(e) {}
     }
 
-    // Connect & Introspect Google Sheet with User Email Auto-Discovery
+    // Connect & Introspect Google Sheet with Role & Allowlist Governance
     async function fetchSchema(preserveUserState = false) {
       try {
-        const res = await fetch(SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + "getSheets=1");
+        const userEmail = operatorInput.value || (currentUserSession ? currentUserSession.email : "");
+        const res = await fetch(SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + "getBootstrap=1&email=" + encodeURIComponent(userEmail));
         const data = await res.json();
         
-        // Auto-discover user login email of android/google session if available
-        if (data.userEmail && (!operatorInput.value || operatorInput.value === "Field Operator")) {
-          operatorInput.value = data.userEmail;
-          localStorage.setItem("hs_operator_name", data.userEmail);
-          headerUserEmail.textContent = data.userEmail.split("@")[0];
-          log(`Auto-detected system email: ${data.userEmail}`, "#38bdf8");
+        if (data.detectedEmail && (!operatorInput.value || operatorInput.value === "Field Operator")) {
+          operatorInput.value = data.detectedEmail;
+          localStorage.setItem("hs_operator_name", data.detectedEmail);
+          headerUserEmail.textContent = data.detectedEmail.split("@")[0];
         }
 
-        if (data.sheets && data.sheets.length > 0) {
-          globalSchema = data.sheets;
+        // Apply dynamic app settings configured by Admin in 'App_Settings' sheet
+        if (data.appSettings) {
+          if (!localStorage.getItem("hs_hold_duration_ms") && data.appSettings.holdOnMatchMs) {
+            holdOnMatchDuration = data.appSettings.holdOnMatchMs;
+            holdDurationInput.value = holdOnMatchDuration;
+          }
+        }
+
+        if (data.accessibleSheets && data.accessibleSheets.length > 0) {
+          globalSchema = data.accessibleSheets;
           const currentSelectedSheet = sheetSelect.value;
           
           sheetSelect.innerHTML = "";
-          data.sheets.forEach(s => {
+          data.accessibleSheets.forEach(s => {
             const opt = document.createElement("option");
             opt.value = s.sheetName;
             opt.textContent = `${s.sheetName} (${s.columns.length} cols)`;
@@ -1335,17 +1376,16 @@
             sheetSelect.appendChild(opt);
           });
 
-          const activeSheetMeta = data.sheets.find(s => s.sheetName === sheetSelect.value) || data.sheets[0];
+          const activeSheetMeta = data.accessibleSheets.find(s => s.sheetName === sheetSelect.value) || data.accessibleSheets[0];
           populateColumns(activeSheetMeta, preserveUserState);
           refreshCustomFieldDropdowns(activeSheetMeta);
-          log("Connected: loaded " + data.sheets.length + " sheet(s).", "#34d399");
+          log(`Connected: ${data.accessibleSheets.length} sheet(s) governed for role ${data.userRole || 'Operator'}.`, "#34d399");
         }
       } catch (e) {
         log("Schema fetch warning: " + e.message, "#fbbf24");
       }
     }
 
-    // Populate columns with at most ONE default match column among first 5
     function populateColumns(sheetMeta, preserveUserState = false) {
       if (!sheetMeta || !sheetMeta.columns) return;
       const cols = sheetMeta.columns;
@@ -1357,7 +1397,6 @@
       displayColumnsSelect.innerHTML = "";
       if (!preserveUserState) orderedHierarchy = [];
 
-      // Find at most ONE default candidate among first 5 columns
       let defaultSelectedColIndex = -1;
       for (let i = 0; i < Math.min(cols.length, 5); i++) {
         if (/id|code|dise|invoice|barcode|roll/i.test(cols[i].name)) {
@@ -1372,7 +1411,6 @@
       cols.forEach((col) => {
         const label = `[Col ${col.index}] ${col.name}`;
 
-        // Match Column Option
         const optMatch = document.createElement("option");
         optMatch.value = col.index;
         optMatch.dataset.name = col.name;
@@ -1385,7 +1423,6 @@
         }
         matchColumnsSelect.appendChild(optMatch);
 
-        // Display Column Option
         const optDisp = document.createElement("option");
         optDisp.value = col.index;
         optDisp.dataset.name = col.name;
@@ -1447,9 +1484,7 @@
       }
     });
 
-    // =========================================================================
-    // 3. DYNAMIC FIELD EXTRACTOR (EXISTING SHEET COLUMN DROPDOWNS + PRESETS)
-    // =========================================================================
+    // Dynamic Field Extractor with Sheet Column Dropdown
     function refreshCustomFieldDropdowns(activeSheetMeta) {
       if (!activeSheetMeta || !activeSheetMeta.columns) return;
       const cards = document.querySelectorAll(".custom-field-card");
@@ -1785,8 +1820,23 @@
           setHUD("Cloud AI Vision parsing document...", "hud-scanning");
           log("Direct Cloud AI invoked...", "#fbbf24");
           await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
+        } else if (mode === "auto") {
+          // Smart Hybrid Auto-Escalation
+          setHUD("Reading document details...", "hud-scanning");
+          enhanceCanvasForOcr(ctx, cW, cH);
+          const { data: { text } } = await Tesseract.recognize(canvas, "eng");
+          const clean = text.trim();
+
+          if (clean.length >= 3) {
+            log(`Read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
+            await dispatchToBackend({ scannedText: clean, imageBase64: b64Image, directAiMode: false }, tStart);
+          } else {
+            log("Local scan faint; auto-escalating to Gemini Cloud AI...", "#fbbf24");
+            setHUD("Faint text: analyzing via Gemini Cloud AI...", "hud-scanning");
+            await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
+          }
         } else {
-          // Tier 1 (Edge) and Tier 2 (Manual Shutter): Local Tesseract OCR
+          // Standard Edge Tier 1 & Tier 2: Local Tesseract OCR
           setHUD("Reading document details...", "hud-scanning");
           enhanceCanvasForOcr(ctx, cW, cH);
           const { data: { text } } = await Tesseract.recognize(canvas, "eng");
@@ -1829,7 +1879,7 @@
         scannedText: payload.scannedText || "",
         imageBase64: payload.imageBase64 || "",
         directAiMode: payload.directAiMode === true,
-        userEmail: operatorInput.value || "Field Operator",
+        userEmail: operatorInput.value || (currentUserSession ? currentUserSession.email : "Field Operator"),
         manualChosenRowIndex: payload.manualChosenRowIndex || null,
         matchRules: {
           matchColumns: selectedMatchCols.length > 0 ? selectedMatchCols : [1],
@@ -1907,7 +1957,7 @@
           `;
 
           setHUD(bannerHtml, "hud-match");
-          speakText(voiceText);
+          speakText(voiceText); // Plays cleanly once
 
           let customLogDetails = "";
           if (data.extractedCustomFields && Object.keys(data.extractedCustomFields).length > 0) {
@@ -1915,14 +1965,14 @@
           }
           log(`Row #${data.rowIndex} sorted [${data.engineUsed || 'OCR'}]${customLogDetails} (${durationSec}s)`, "#34d399");
 
-          if (pipelineTierSelect.value === "tier1" && loopTimer) {
+          if ((pipelineTierSelect.value === "tier1" || pipelineTierSelect.value === "auto") && loopTimer) {
             clearInterval(loopTimer);
             setTimeout(() => {
               if (isStreaming) {
                 setHUD("Sensor active: align next document...", "hud-standby");
                 loopTimer = setInterval(processFrame, SCAN_INTERVAL_MS);
               }
-            }, HOLD_ON_MATCH_MS);
+            }, holdOnMatchDuration);
           }
 
         } else {

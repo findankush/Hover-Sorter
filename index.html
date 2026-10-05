@@ -7,6 +7,8 @@
 
   <!-- Client-side OCR Engine -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <!-- Google Identity Services (GSI) SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
     :root {
@@ -154,7 +156,7 @@
       border: 1px solid var(--border-active);
     }
 
-    /* Shift Performance & User Strip */
+    /* Shift Performance Strip */
     #metrics-strip {
       background: #020617;
       padding: 4px 12px;
@@ -216,6 +218,12 @@
       border-radius: 8px;
       box-shadow: 0 0 16px rgba(37, 99, 235, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-locked-guard {
+      background: #d97706 !important;
+      box-shadow: 0 0 16px rgba(217, 119, 6, 0.45) !important;
+      color: #ffffff !important;
     }
 
     /* Configuration Sliding Drawer */
@@ -611,7 +619,7 @@
       text-align: left;
     }
 
-    /* Modal for Disambiguation */
+    /* Disambiguation Modal */
     #disambiguation-modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -716,17 +724,16 @@
           <rect x="5" y="5" width="90" height="90" rx="20" fill="#0f172a" stroke="#38bdf8" stroke-width="4"/>
           <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="4" stroke-linejoin="round"/>
           <circle cx="50" cy="50" r="14" fill="#1e293b" stroke="#10b981" stroke-width="4"/>
-          <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
           <circle cx="50" cy="50" r="4" fill="#fef08a"/>
         </svg>
       </div>
 
       <div>
         <h2 style="font-size:1.15rem; font-weight:800; color:#f8fafc;">Hover-Sorter Enterprise</h2>
-        <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">v3.0 Production • Multi-Level Governance System</p>
+        <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">v3.5 Enterprise • Multi-Sheet Governance</p>
       </div>
 
-      <!-- Quick 1-Click Android / Gmail Authenticator -->
       <button id="google-auth-btn" class="google-signin-btn">
         <svg width="18" height="18" viewBox="0 0 48 48">
           <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -740,17 +747,17 @@
       <div class="auth-divider">OR VERIFY OPERATOR GMAIL</div>
 
       <div class="auth-manual-box">
-        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Android / Operator Gmail Address:</label>
+        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Operator Gmail / Work Email:</label>
         <input type="email" id="auth-email-input" placeholder="e.g. operator.zone@gmail.com">
-        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Operator Full Name:</label>
-        <input type="text" id="auth-name-input" placeholder="e.g. Ankush Saha (Terminal 1)">
+        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Full Name:</label>
+        <input type="text" id="auth-name-input" placeholder="e.g. Ankush Saha">
         <button id="auth-confirm-btn" class="btn" style="width:100%; justify-content:center; padding:10px; margin-top:4px;">
           ✓ Authorize &amp; Launch Terminal
         </button>
       </div>
 
       <p style="font-size:0.65rem; color:#64748b; line-height:1.4;">
-        Multi-Tenant Security: Device fingerprints &amp; login records are stored automatically in the <code style="color:#38bdf8;">User_Login_Audit_Logs</code> sheet tab.
+        Security Notice: Sessions are monitored under the <code style="color:#38bdf8;">User_Login_Audit_Logs</code> sheet.
       </p>
     </div>
   </div>
@@ -758,10 +765,10 @@
   <header>
     <div class="brand-cluster">
       <svg class="brand-svg-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="5" y="5" width="90" height="90" rx="20" fill="url(#logo_grad_bg)" stroke="#38bdf8" stroke-width="2"/>
-        <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/>
-        <circle cx="50" cy="50" r="14" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
-        <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="5" y="5" width="90" height="90" rx="20" fill="#0f172a" stroke="#38bdf8" stroke-width="4"/>
+        <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="50" cy="50" r="14" fill="#1e293b" stroke="#10b981" stroke-width="4"/>
+        <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
         <circle cx="50" cy="50" r="4" fill="#fef08a"/>
         <defs>
           <linearGradient id="logo_grad_bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
@@ -788,29 +795,29 @@
     </div>
   </header>
 
-  <!-- Shift Performance & Status Strip -->
+  <!-- Shift Performance Strip -->
   <div id="metrics-strip">
     <span class="metric-item">Shift Total: <strong id="metric-total">0</strong></span>
     <span class="metric-item">Rate: <strong id="metric-rate">0</strong>/min</span>
     <span class="metric-item">Speed: <strong id="metric-speed">0.0</strong>s</span>
-    <span id="cloud-status" class="cloud-status-badge">✓ Governance Active</span>
+    <span id="cloud-status" class="cloud-status-badge">✓ RBAC Governed</span>
   </div>
 
-  <!-- Dynamic Contextual Action Bar (Activated strictly as per Tier) -->
+  <!-- Dynamic Contextual Action Bar -->
   <div id="mode-action-bar">
     <div class="mode-desc-text">
       <strong id="bar-mode-title">Tier 1: Standard Edge Scanning</strong>
-      <span id="bar-mode-sub" class="mode-desc-subtitle">Continuous Real-Time Camera Loop ($0 / Free / Unlimited Tokens)</span>
+      <span id="bar-mode-sub" class="mode-desc-subtitle">Continuous Camera Loop ($0 / Free / Unlimited Tokens)</span>
     </div>
     <button id="tier-action-btn" class="btn dynamic-primary-trigger" style="background:#10b981;">
       🟢 Start Auto-Scan
     </button>
   </div>
 
-  <!-- Complete Sliding Config Drawer -->
+  <!-- Configuration Sliding Drawer -->
   <div id="settings-drawer">
     <div class="drawer-sec-header">
-      <span>1. Governance: Active Sheet &amp; Sensor</span>
+      <span>1. Target Spreadsheet &amp; Camera Lens</span>
     </div>
     
     <div class="grid-duo">
@@ -824,12 +831,11 @@
       </div>
     </div>
 
-    <!-- Scanning Mode Defaults to Tier 1 -->
     <div class="pipeline-strategy-card">
       <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ Scanning Mode &amp; Strategy:</div>
       <select id="pipeline-tier-select">
         <option value="tier1" selected>Tier 1: Standard Edge (Continuous Camera Loop - $0 / Unlimited Tokens)</option>
-        <option value="auto">✨ Smart Hybrid Auto-Escalate (Local OCR first; auto-calls Cloud AI if faint)</option>
+        <option value="auto">✨ Smart Hybrid Auto-Escalate (Local OCR first; auto-calls Gemini AI if faint)</option>
         <option value="tier2">Tier 2: Manual Shutter (Tap Snap to Scan - Zero battery &amp; Zero blur)</option>
         <option value="tier3">Tier 3: Direct Cloud AI Vision (Gemini Multimodal for Faint/Handwritten)</option>
       </select>
@@ -855,7 +861,7 @@
       </div>
     </div>
     <div class="setting-group">
-      <label class="setting-label">Match Banner Display Hold Duration (ms):</label>
+      <label class="setting-label">Match Banner Hold Duration (ms):</label>
       <input type="number" id="hold-duration-input" min="1500" max="15000" step="500" value="4500">
     </div>
 
@@ -872,7 +878,6 @@
       </div>
       <div class="setting-group">
         <label class="setting-label">Filter Processed Rows:</label>
-        <!-- DEFAULT IS ALLOW RE-SCAN -->
         <select id="skip-processed">
           <option value="false" selected>No (Allow Re-scan / Active Update)</option>
           <option value="true">Yes (Prevent Re-scan)</option>
@@ -880,7 +885,6 @@
       </div>
     </div>
 
-    <!-- Match Columns (Minimised: Selects at most ONE default among first 5) -->
     <div class="setting-group">
       <label class="setting-label">Match Columns (Document ID / Unique Key):</label>
       <select id="match-columns-select" multiple size="3"></select>
@@ -902,7 +906,7 @@
       <div id="hierarchy-flow-chips" class="chip-sequence-bar">-- Tap columns above to build flow --</div>
     </div>
 
-    <!-- 5. User-Friendly Dynamic Document Field Extractor (Pick Existing or Create New) -->
+    <!-- 5. User-Friendly Dynamic Document Field Extractor -->
     <div class="drawer-sec-header">
       <span>5. Custom Document Fields to Write-Back to Sheet</span>
       <button id="add-custom-field-btn" class="btn btn-secondary" style="padding:2px 8px; font-size:0.68rem;">+ Add Document Field</button>
@@ -967,7 +971,7 @@
     // =========================================================================
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6jngSeasRs_Fy2C8IU0Pz6oJ0DEhnKIppK_6oVhMScD7TcTRxtVkiZuDFSSj1d3iP/exec";
     const SCAN_INTERVAL_MS = 3000;
-    let holdOnMatchDuration = 4500; // Configurable duration
+    let holdOnMatchDuration = 4500;
 
     // DOM Elements
     const video = document.getElementById("video-feed");
@@ -1025,7 +1029,6 @@
 
     let isStreaming = false;
     let isProcessing = false;
-    let isSpeaking = false;
     let activeStream = null;
     let loopTimer = null;
     let barcodeDetector = null;
@@ -1039,7 +1042,7 @@
     let shiftStartTime = Date.now();
 
     // =========================================================================
-    // 1. ENTERPRISE AUTHENTICATION & LOGIN SESSION AUDIT
+    // 1. ENTERPRISE AUTHENTICATION & SESSION PERSISTENCE
     // =========================================================================
     let currentUserSession = null;
 
@@ -1075,6 +1078,7 @@
       operatorInput.value = session.email;
       localStorage.setItem("hs_operator_name", session.email);
       log(`Authenticated as ${session.email} (${session.name})`, "#34d399");
+      validateConfigurationPreFlight();
     }
 
     async function recordLoginAuditToBackend(session) {
@@ -1109,7 +1113,7 @@
       const session = {
         email: detectedEmail,
         name: detectedEmail.split("@")[0].toUpperCase() + " (Google Verified)",
-        provider: "Google One-Tap / Android SSO",
+        provider: "Google Identity (GIS)",
         timestamp: Date.now()
       };
       saveAndCompleteAuth(session);
@@ -1137,6 +1141,7 @@
       applyAuthenticatedUser(session);
       authModal.style.display = "none";
       recordLoginAuditToBackend(session);
+      fetchSchema(false);
     }
 
     activeUserBadge.addEventListener("click", () => {
@@ -1145,13 +1150,34 @@
       authModal.style.display = "flex";
     });
 
+    // =========================================================================
+    // 2. PRE-FLIGHT CONFIGURATION ENFORCEMENT GUARD
+    // =========================================================================
+    function validateConfigurationPreFlight() {
+      const hasAuth = !!currentUserSession;
+      const hasSheet = !!sheetSelect.value;
+      const hasMatchCol = getSelectedValues(matchColumnsSelect).length > 0;
+
+      if (!hasAuth || !hasSheet || !hasMatchCol) {
+        tierActionBtn.classList.add("btn-locked-guard");
+        tierActionBtn.textContent = "⚠️ COMPLETE CONFIG FIRST";
+        return false;
+      }
+
+      tierActionBtn.classList.remove("btn-locked-guard");
+      syncDynamicActionBar();
+      return true;
+    }
+
+    matchColumnsSelect.addEventListener("change", validateConfigurationPreFlight);
+    sheetSelect.addEventListener("change", validateConfigurationPreFlight);
+
     const savedStatusHeader = localStorage.getItem("hs_status_header");
     if (savedStatusHeader) statusHeaderInput.value = savedStatusHeader;
     statusHeaderInput.addEventListener("input", () => {
       localStorage.setItem("hs_status_header", statusHeaderInput.value);
     });
 
-    // Hold Duration Configuration
     const savedHoldTime = localStorage.getItem("hs_hold_duration_ms");
     if (savedHoldTime) {
       holdOnMatchDuration = parseInt(savedHoldTime, 10);
@@ -1160,7 +1186,28 @@
     holdDurationInput.addEventListener("input", () => {
       holdOnMatchDuration = parseInt(holdDurationInput.value, 10) || 4500;
       localStorage.setItem("hs_hold_duration_ms", holdOnMatchDuration);
+      saveUserPreferencesRemote();
     });
+
+    function saveUserPreferencesRemote() {
+      if (!currentUserSession) return;
+      const payload = {
+        action: "saveUserProfile",
+        userEmail: currentUserSession.email,
+        profileData: {
+          mode: pipelineTierSelect.value,
+          voice: ttsToggle.value === "true",
+          haptics: hapticToggle.value === "true",
+          holdDurationMs: holdOnMatchDuration,
+          lastSheet: sheetSelect.value
+        }
+      };
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      }).catch(() => {});
+    }
 
     function log(msg, color = "#94a3b8") {
       const line = document.createElement("div");
@@ -1183,11 +1230,11 @@
       disambiguationModal.style.display = "none";
     });
 
-    // Word-Based Smooth Speech Synthesis (Plays strictly once without repetition)
+    // Word-Based Smooth Speech Output (Speaks strictly once without echo)
     function speakText(rawText) {
       if (ttsToggle.value !== "true" || !("speechSynthesis" in window)) return;
       try {
-        window.speechSynthesis.cancel(); // Stop any pending utterances
+        window.speechSynthesis.cancel();
         const cleanWords = rawText.replace(/[^a-zA-Z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
         if (!cleanWords) return;
 
@@ -1223,11 +1270,16 @@
     });
 
     // =========================================================================
-    // 2. DYNAMIC SINGLE-BUTTON ACTION BAR BASED ON TIER
+    // 3. CONTEXT-ADAPTIVE ACTION BAR (STRICT TIER ACTIVATION)
     // =========================================================================
-    pipelineTierSelect.addEventListener("change", syncDynamicActionBar);
+    pipelineTierSelect.addEventListener("change", () => {
+      syncDynamicActionBar();
+      saveUserPreferencesRemote();
+    });
 
     function syncDynamicActionBar() {
+      if (!validateConfigurationPreFlight()) return;
+
       const tier = pipelineTierSelect.value;
       if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
 
@@ -1247,7 +1299,7 @@
         tierBadge.textContent = "Smart Hybrid";
         tierBadge.style.color = "#a7f3d0";
         barModeTitle.textContent = "Smart Hybrid Auto-Escalation";
-        barModeSub.textContent = "Edge OCR with automatic Cloud AI Vision fallback";
+        barModeSub.textContent = "Edge OCR with automatic Gemini Cloud AI fallback if faint";
 
         tierActionBtn.textContent = isStreaming ? "🔴 Stop Auto-Scan" : "🟢 Start Auto-Scan";
         tierActionBtn.style.background = isStreaming ? "#ef4444" : "#10b981";
@@ -1276,6 +1328,12 @@
     }
 
     tierActionBtn.addEventListener("click", async () => {
+      if (!validateConfigurationPreFlight()) {
+        settingsDrawer.style.display = "flex";
+        setHUD("⚠️ Please select active sheet and match columns first.", "hud-error");
+        return;
+      }
+
       const tier = pipelineTierSelect.value;
 
       if (tier === "tier1" || tier === "auto") {
@@ -1342,7 +1400,7 @@
       try { barcodeDetector = new BarcodeDetector(); } catch(e) {}
     }
 
-    // Connect & Introspect Google Sheet with Role & Allowlist Governance
+    // Connect & Introspect Google Sheet with Dynamic RBAC Governance
     async function fetchSchema(preserveUserState = false) {
       try {
         const userEmail = operatorInput.value || (currentUserSession ? currentUserSession.email : "");
@@ -1355,10 +1413,11 @@
           headerUserEmail.textContent = data.detectedEmail.split("@")[0];
         }
 
-        // Apply dynamic app settings configured by Admin in 'App_Settings' sheet
-        if (data.appSettings) {
-          if (!localStorage.getItem("hs_hold_duration_ms") && data.appSettings.holdOnMatchMs) {
-            holdOnMatchDuration = data.appSettings.holdOnMatchMs;
+        // Apply saved user profile from User_Profiles sheet
+        if (data.userProfile) {
+          if (data.userProfile.mode) pipelineTierSelect.value = data.userProfile.mode;
+          if (data.userProfile.holdDurationMs) {
+            holdOnMatchDuration = data.userProfile.holdDurationMs;
             holdDurationInput.value = holdOnMatchDuration;
           }
         }
@@ -1379,6 +1438,7 @@
           const activeSheetMeta = data.accessibleSheets.find(s => s.sheetName === sheetSelect.value) || data.accessibleSheets[0];
           populateColumns(activeSheetMeta, preserveUserState);
           refreshCustomFieldDropdowns(activeSheetMeta);
+          validateConfigurationPreFlight();
           log(`Connected: ${data.accessibleSheets.length} sheet(s) governed for role ${data.userRole || 'Operator'}.`, "#34d399");
         }
       } catch (e) {
@@ -1482,6 +1542,7 @@
         populateColumns(selected, false);
         refreshCustomFieldDropdowns(selected);
       }
+      saveUserPreferencesRemote();
     });
 
     // Dynamic Field Extractor with Sheet Column Dropdown
@@ -1777,7 +1838,7 @@
       } catch(e) {}
     }
 
-    // High-Speed Frame Processing
+    // High-Speed Frame Processing Pipeline
     async function processFrame() {
       if (!isStreaming || isProcessing || video.readyState < 2) return;
       isProcessing = true;
@@ -1818,7 +1879,7 @@
         if (mode === "tier3") {
           // Direct Cloud AI Vision
           setHUD("Cloud AI Vision parsing document...", "hud-scanning");
-          log("Direct Cloud AI invoked...", "#fbbf24");
+          log("Direct Gemini Vision invoked...", "#fbbf24");
           await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
         } else if (mode === "auto") {
           // Smart Hybrid Auto-Escalation
@@ -1957,7 +2018,7 @@
           `;
 
           setHUD(bannerHtml, "hud-match");
-          speakText(voiceText); // Plays cleanly once
+          speakText(voiceText);
 
           let customLogDetails = "";
           if (data.extractedCustomFields && Object.keys(data.extractedCustomFields).length > 0) {

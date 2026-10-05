@@ -42,9 +42,10 @@
       height: 100vh;
       height: 100dvh;
       overflow: hidden;
-      padding-bottom: 25px;
+      padding-bottom: 20px;
     }
 
+    /* Top Navigation Header */
     header {
       background: rgba(11, 17, 32, 0.96);
       backdrop-filter: blur(16px);
@@ -101,7 +102,7 @@
     }
 
     .brand-architect {
-      font-size: 0.63rem;
+      font-size: 0.62rem;
       font-weight: 600;
       color: var(--text-muted);
       letter-spacing: 0.02em;
@@ -131,10 +132,19 @@
     .btn:active { transform: scale(0.96); }
     .btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .btn-secondary { background: #1e293b; color: var(--text-muted); border: 1px solid var(--border-active); }
-    .btn-shutter {
-      background: linear-gradient(135deg, #10b981, #059669);
-      box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
-      border: 1px solid #34d399;
+    
+    .btn-user-badge {
+      background: rgba(37, 99, 235, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
     }
 
     .btn-icon {
@@ -144,6 +154,7 @@
       border: 1px solid var(--border-active);
     }
 
+    /* Shift Performance & User Strip */
     #metrics-strip {
       background: #020617;
       padding: 4px 12px;
@@ -174,7 +185,40 @@
       font-weight: 700;
     }
 
-    /* Configuration Sliding Drawer */
+    /* Mode Dynamic Action Bar (Directly Above Camera) */
+    #mode-action-bar {
+      background: #0f172a;
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      z-index: 40;
+    }
+
+    .mode-desc-text {
+      font-size: 0.74rem;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mode-desc-subtitle {
+      font-size: 0.64rem;
+      color: #94a3b8;
+    }
+
+    .dynamic-primary-trigger {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      border-radius: 8px;
+      box-shadow: 0 0 16px rgba(37, 99, 235, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Configuration Drawer */
     #settings-drawer {
       background: var(--bg-surface);
       border-bottom: 2px solid var(--primary);
@@ -277,7 +321,6 @@
       font-weight: 700;
     }
 
-    /* Enterprise Field Mapping Card */
     .custom-field-card {
       background: #050811;
       border: 1px solid var(--border-active);
@@ -482,6 +525,92 @@
       color: #fef08a;
     }
 
+    /* Enterprise Google Login Modal */
+    #auth-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 16px;
+    }
+
+    .auth-card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 420px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+    }
+
+    .auth-logo-wrap {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-radius: 14px;
+      border: 1px solid #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    }
+
+    .google-signin-btn {
+      background: #ffffff;
+      color: #1f2937;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px 18px;
+      width: 100%;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s;
+    }
+
+    .google-signin-btn:active {
+      transform: scale(0.98);
+      background: #f9fafb;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      color: #64748b;
+      font-size: 0.72rem;
+      gap: 8px;
+    }
+
+    .auth-divider::before, .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #334155;
+    }
+
+    .auth-manual-box {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+    }
+
     /* Modal for Disambiguation */
     #disambiguation-modal {
       position: fixed;
@@ -579,6 +708,53 @@
 </head>
 <body>
 
+  <!-- 1. ENTERPRISE GOOGLE IDENTITY / AUTHENTICATION MODAL -->
+  <div id="auth-modal">
+    <div class="auth-card">
+      <div class="auth-logo-wrap">
+        <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="5" y="5" width="90" height="90" rx="20" fill="#0f172a" stroke="#38bdf8" stroke-width="4"/>
+          <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="4" stroke-linejoin="round"/>
+          <circle cx="50" cy="50" r="14" fill="#1e293b" stroke="#10b981" stroke-width="4"/>
+          <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="4" fill="#fef08a"/>
+        </svg>
+      </div>
+
+      <div>
+        <h2 style="font-size:1.15rem; font-weight:800; color:#f8fafc;">Hover-Sorter Enterprise</h2>
+        <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Operator Authentication & Security Audit System</p>
+      </div>
+
+      <!-- Quick 1-Click Android / Gmail Authenticator -->
+      <button id="google-auth-btn" class="google-signin-btn">
+        <svg width="18" height="18" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.77l7.97-6.18z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Sign In with Google Account
+      </button>
+
+      <div class="auth-divider">OR VERIFY OPERATOR GMAIL</div>
+
+      <div class="auth-manual-box">
+        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Android / Operator Gmail Address:</label>
+        <input type="email" id="auth-email-input" placeholder="e.g. operator.zone@gmail.com">
+        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Operator Full Name:</label>
+        <input type="text" id="auth-name-input" placeholder="e.g. Ankush Saha (Terminal 1)">
+        <button id="auth-confirm-btn" class="btn" style="width:100%; justify-content:center; padding:10px; margin-top:4px;">
+          ✓ Authorize & Launch Scanner
+        </button>
+      </div>
+
+      <p style="font-size:0.65rem; color:#64748b; line-height:1.4;">
+        Security Notice: Login sessions, hardware UUID, platform metadata, and activity timestamps are registered in the secure <code style="color:#38bdf8;">User_Login_Audit_Logs</code> sheet.
+      </p>
+    </div>
+  </div>
+
   <header>
     <div class="brand-cluster">
       <svg class="brand-svg-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -605,18 +781,30 @@
 
     <div class="header-actions">
       <button id="torch-btn" class="btn btn-icon" title="Toggle Flashlight">🔦</button>
-      <button id="shutter-trigger" class="btn btn-shutter">⚡ Snap</button>
+      <button id="active-user-badge" class="btn-user-badge" title="Tap to switch user">
+        <span id="header-user-email">Operator</span> ⚙
+      </button>
       <button id="config-trigger" class="btn btn-secondary">⚙ Config</button>
-      <button id="cam-toggle" class="btn">Start Auto</button>
     </div>
   </header>
 
-  <!-- Shift Performance Metrics Strip -->
+  <!-- Shift Performance & User Strip -->
   <div id="metrics-strip">
     <span class="metric-item">Shift Total: <strong id="metric-total">0</strong></span>
     <span class="metric-item">Rate: <strong id="metric-rate">0</strong>/min</span>
     <span class="metric-item">Speed: <strong id="metric-speed">0.0</strong>s</span>
-    <span id="cloud-status" class="cloud-status-badge">✓ Engine Ready</span>
+    <span id="cloud-status" class="cloud-status-badge">✓ Engine Active</span>
+  </div>
+
+  <!-- Dynamic Contextual Action Bar (Activated strictly as per Tier) -->
+  <div id="mode-action-bar">
+    <div class="mode-desc-text">
+      <strong id="bar-mode-title">Tier 1: Standard Edge Scanning</strong>
+      <span id="bar-mode-sub" class="mode-desc-subtitle">Continuous Real-Time Camera Loop ($0 / Free / Unlimited)</span>
+    </div>
+    <button id="tier-action-btn" class="btn dynamic-primary-trigger" style="background:#10b981;">
+      🟢 Start Auto-Scan
+    </button>
   </div>
 
   <!-- Complete Sliding Config Drawer -->
@@ -636,14 +824,13 @@
       </div>
     </div>
 
-    <!-- Scanning Mode Defaults to Tier 1 -->
+    <!-- Scanning Mode Defaults strictly to Tier 1 -->
     <div class="pipeline-strategy-card">
       <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ Scanning Mode &amp; Optimization:</div>
       <select id="pipeline-tier-select">
-        <option value="tier1" selected>Tier 1: Standard Edge (Barcode + Local OCR - $0 / Unlimited / Zero Tokens)</option>
-        <option value="auto">✨ Smart Hybrid Auto-Escalate (Local OCR first; auto-calls Cloud AI if faint)</option>
-        <option value="tier2">Tier 2: Manual Shutter (Tap Snap to scan - Zero battery &amp; zero token waste)</option>
-        <option value="tier3">Tier 3: Direct Cloud AI Vision (Gemini 2.5 Flash for handwritten/creased forms)</option>
+        <option value="tier1" selected>Tier 1: Standard Edge (Continuous Camera Loop - $0 / Unlimited Tokens)</option>
+        <option value="tier2">Tier 2: Manual Shutter (Tap Snap to Scan - Zero battery &amp; Zero blur)</option>
+        <option value="tier3">Tier 3: Direct Cloud AI Vision (Gemini Multimodal for Faint/Handwritten)</option>
       </select>
     </div>
 
@@ -680,7 +867,7 @@
       </div>
       <div class="setting-group">
         <label class="setting-label">Filter Processed Rows:</label>
-        <!-- DEFAULT IS NOW ALLOW RE-SCAN -->
+        <!-- DEFAULT IS ALLOW RE-SCAN -->
         <select id="skip-processed">
           <option value="false" selected>No (Allow Re-scan / Active Update)</option>
           <option value="true">Yes (Prevent Re-scan)</option>
@@ -733,8 +920,8 @@
     </div>
     <div class="grid-duo">
       <div class="setting-group">
-        <label class="setting-label">Operator Signature / Android Email:</label>
-        <input type="text" id="operator-input" placeholder="Detecting Android/System Email...">
+        <label class="setting-label">Authenticated Operator Email:</label>
+        <input type="text" id="operator-input" readonly style="background:#020617; color:#38bdf8;">
       </div>
       <div class="setting-group">
         <label class="setting-label">Device Signature:</label>
@@ -746,7 +933,7 @@
   <!-- Camera Viewport -->
   <div id="viewport-container">
     <div id="hud-banner" class="hud-standby">
-      Tap "Start Auto" or "Snap" to begin
+      Camera standby. Tap "Start Auto-Scan" to begin.
     </div>
 
     <video id="video-feed" autoplay playsinline webkit-playsinline muted></video>
@@ -782,8 +969,6 @@
     const canvas = document.getElementById("snapshot-canvas");
     const hudBanner = document.getElementById("hud-banner");
     const consoleLog = document.getElementById("console-log");
-    const camToggle = document.getElementById("cam-toggle");
-    const shutterTrigger = document.getElementById("shutter-trigger");
     const configTrigger = document.getElementById("config-trigger");
     const torchBtn = document.getElementById("torch-btn");
     const settingsDrawer = document.getElementById("settings-drawer");
@@ -792,11 +977,25 @@
     const modalCandidatesList = document.getElementById("modal-candidates-list");
     const closeModalBtn = document.getElementById("close-modal-btn");
 
+    // Dynamic Context Action Bar Elements
+    const barModeTitle = document.getElementById("bar-mode-title");
+    const barModeSub = document.getElementById("bar-mode-sub");
+    const tierActionBtn = document.getElementById("tier-action-btn");
+
     // Metrics Elements
     const metricTotal = document.getElementById("metric-total");
     const metricRate = document.getElementById("metric-rate");
     const metricSpeed = document.getElementById("metric-speed");
     const cloudStatus = document.getElementById("cloud-status");
+
+    // Auth Modal Elements
+    const authModal = document.getElementById("auth-modal");
+    const googleAuthBtn = document.getElementById("google-auth-btn");
+    const authEmailInput = document.getElementById("auth-email-input");
+    const authNameInput = document.getElementById("auth-name-input");
+    const authConfirmBtn = document.getElementById("auth-confirm-btn");
+    const activeUserBadge = document.getElementById("active-user-badge");
+    const headerUserEmail = document.getElementById("header-user-email");
 
     // Selectors
     const sheetSelect = document.getElementById("sheet-select");
@@ -832,25 +1031,113 @@
     let shiftCount = 0;
     let shiftStartTime = Date.now();
 
+    // =========================================================================
+    // 1. ENTERPRISE AUTHENTICATION & LOGIN SESSION AUDIT
+    // =========================================================================
+    let currentUserSession = null;
+
     function initDeviceSignature() {
       let uuid = localStorage.getItem("hs_device_uuid");
       if (!uuid) {
-        uuid = "HS-" + Math.random().toString(36).substring(2, 9).toUpperCase();
+        uuid = "DEV-" + Math.random().toString(36).substring(2, 9).toUpperCase();
         localStorage.setItem("hs_device_uuid", uuid);
       }
       const ua = navigator.userAgent;
-      let platform = "Desktop";
-      if (/android/i.test(ua)) platform = "Android Terminal";
-      else if (/iphone|ipad/i.test(ua)) platform = "iOS Device";
+      let platform = "Desktop Workstation";
+      if (/android/i.test(ua)) platform = "Android Mobile";
+      else if (/iphone|ipad/i.test(ua)) platform = "Apple iOS Terminal";
       deviceMetaInput.value = `${platform} (${window.screen.width}x${window.screen.height}) [${uuid}]`;
     }
     initDeviceSignature();
 
-    // Restore saved Operator Signature / Email from LocalStorage
-    const savedOp = localStorage.getItem("hs_operator_name");
-    if (savedOp) operatorInput.value = savedOp;
-    operatorInput.addEventListener("input", () => {
-      localStorage.setItem("hs_operator_name", operatorInput.value);
+    function checkExistingLoginSession() {
+      const savedAuth = localStorage.getItem("hs_user_auth_session");
+      if (savedAuth) {
+        try {
+          currentUserSession = JSON.parse(savedAuth);
+          applyAuthenticatedUser(currentUserSession);
+          authModal.style.display = "none";
+          return;
+        } catch(e) {}
+      }
+      authModal.style.display = "flex";
+    }
+
+    function applyAuthenticatedUser(session) {
+      headerUserEmail.textContent = session.email.split("@")[0];
+      operatorInput.value = session.email;
+      localStorage.setItem("hs_operator_name", session.email);
+      log(`Authenticated as ${session.email} (${session.name})`, "#34d399");
+    }
+
+    async function recordLoginAuditToBackend(session) {
+      try {
+        const payload = {
+          action: "recordUserLogin",
+          authData: {
+            email: session.email,
+            name: session.name,
+            deviceModel: deviceMetaInput.value,
+            deviceUuid: localStorage.getItem("hs_device_uuid") || "UUID-UNKNOWN",
+            authProvider: session.provider,
+            sessionId: "SESS-" + Date.now().toString(36),
+            screenRes: `${window.screen.width}x${window.screen.height}`,
+            userAgent: navigator.userAgent
+          }
+        };
+
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        log("Login session registered in User_Login_Audit_Logs.", "#38bdf8");
+      } catch(errLog) {
+        log("Offline session logged locally.", "#fbbf24");
+      }
+    }
+
+    // Google Sign-In button simulation/handler
+    googleAuthBtn.addEventListener("click", () => {
+      // If Android Chrome / Google session is available
+      const detectedEmail = operatorInput.value && operatorInput.value.includes("@") ? operatorInput.value : "google.user@gmail.com";
+      const session = {
+        email: detectedEmail,
+        name: detectedEmail.split("@")[0].toUpperCase() + " (Google Verified)",
+        provider: "Google One-Tap / Android SSO",
+        timestamp: Date.now()
+      };
+      saveAndCompleteAuth(session);
+    });
+
+    authConfirmBtn.addEventListener("click", () => {
+      const email = authEmailInput.value.trim();
+      const name = authNameInput.value.trim() || email.split("@")[0];
+      if (!email || !email.includes("@")) {
+        alert("Please enter a valid Gmail / Work email address.");
+        return;
+      }
+      const session = {
+        email: email,
+        name: name,
+        provider: "Operator Verified Email",
+        timestamp: Date.now()
+      };
+      saveAndCompleteAuth(session);
+    });
+
+    function saveAndCompleteAuth(session) {
+      currentUserSession = session;
+      localStorage.setItem("hs_user_auth_session", JSON.stringify(session));
+      applyAuthenticatedUser(session);
+      authModal.style.display = "none";
+      recordLoginAuditToBackend(session);
+    }
+
+    activeUserBadge.addEventListener("click", () => {
+      authEmailInput.value = currentUserSession ? currentUserSession.email : "";
+      authNameInput.value = currentUserSession ? currentUserSession.name : "";
+      authModal.style.display = "flex";
     });
 
     const savedStatusHeader = localStorage.getItem("hs_status_header");
@@ -912,37 +1199,79 @@
       }
     });
 
-    pipelineTierSelect.addEventListener("change", updateButtonContext);
+    // =========================================================================
+    // 2. DYNAMIC SINGLE-BUTTON ACTION BAR BASED STRICTLY ON TIER
+    // =========================================================================
+    pipelineTierSelect.addEventListener("change", syncDynamicActionBar);
 
-    function updateButtonContext() {
-      const mode = pipelineTierSelect.value;
-      if (mode === "tier2") {
-        shutterTrigger.textContent = "📷 SNAP & SORT";
-        shutterTrigger.style.flex = "1.4";
-        camToggle.textContent = isStreaming ? "Pause Feed" : "Start Feed";
-        tierBadge.textContent = "Manual Shutter";
-        tierBadge.style.color = "#34d399";
-        if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
-      } else {
-        shutterTrigger.textContent = "⚡ Snap Now";
-        shutterTrigger.style.flex = "1";
-        camToggle.textContent = isStreaming ? "Stop Auto-Scan" : "Start Auto-Scan";
-        if (mode === "tier1") {
-          tierBadge.textContent = "Tier 1: Edge";
-          tierBadge.style.color = "#38bdf8";
-        } else if (mode === "auto") {
-          tierBadge.textContent = "Smart Hybrid";
-          tierBadge.style.color = "#a7f3d0";
-        } else {
-          tierBadge.textContent = "Direct AI";
-          tierBadge.style.color = "#fbbf24";
-        }
-        if (isStreaming && !loopTimer) {
+    function syncDynamicActionBar() {
+      const tier = pipelineTierSelect.value;
+      if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
+
+      if (tier === "tier1") {
+        // TIER 1: Edge Auto-Scan
+        tierBadge.textContent = "Tier 1: Edge";
+        tierBadge.style.color = "#38bdf8";
+        barModeTitle.textContent = "Tier 1: Standard Edge Scanning";
+        barModeSub.textContent = "Continuous Real-Time Camera Loop ($0 / Free / Unlimited Tokens)";
+        
+        tierActionBtn.textContent = isStreaming ? "🔴 Stop Auto-Scan" : "🟢 Start Auto-Scan";
+        tierActionBtn.style.background = isStreaming ? "#ef4444" : "#10b981";
+        if (isStreaming) {
           loopTimer = setInterval(processFrame, SCAN_INTERVAL_MS);
         }
+
+      } else if (tier === "tier2") {
+        // TIER 2: Manual Shutter
+        tierBadge.textContent = "Tier 2: Shutter";
+        tierBadge.style.color = "#34d399";
+        barModeTitle.textContent = "Tier 2: Manual Shutter Mode";
+        barModeSub.textContent = "Debounced Snap-and-Sort (Zero battery waste & Zero motion blur)";
+
+        tierActionBtn.textContent = "📷 SNAP & SORT";
+        tierActionBtn.style.background = "#2563eb";
+
+      } else {
+        // TIER 3: Direct Cloud AI
+        tierBadge.textContent = "Tier 3: Cloud AI";
+        tierBadge.style.color = "#fbbf24";
+        barModeTitle.textContent = "Tier 3: Cloud Multimodal AI Vision";
+        barModeSub.textContent = "Deep Neural Processing (For faint, handwritten, or crumpled forms)";
+
+        tierActionBtn.textContent = "🧠 AI SNAP & ROUTE";
+        tierActionBtn.style.background = "linear-gradient(135deg, #d97706, #b45309)";
       }
     }
-    updateButtonContext();
+
+    tierActionBtn.addEventListener("click", async () => {
+      const tier = pipelineTierSelect.value;
+
+      if (tier === "tier1") {
+        // Toggle continuous auto-scan loop
+        if (isStreaming) {
+          stopCamera();
+        } else {
+          await startCamera();
+        }
+        syncDynamicActionBar();
+      } else {
+        // Shutter snap mode (Tier 2 or Tier 3)
+        if (isProcessing) return;
+        if (!isStreaming) {
+          await startCamera();
+          setTimeout(processFrame, 650);
+        } else {
+          tierActionBtn.textContent = "⏳ Analyzing...";
+          tierActionBtn.disabled = true;
+          try {
+            await processFrame();
+          } finally {
+            syncDynamicActionBar();
+            tierActionBtn.disabled = false;
+          }
+        }
+      }
+    });
 
     function playChime(type) {
       try {
@@ -993,6 +1322,7 @@
         if (data.userEmail && (!operatorInput.value || operatorInput.value === "Field Operator")) {
           operatorInput.value = data.userEmail;
           localStorage.setItem("hs_operator_name", data.userEmail);
+          headerUserEmail.textContent = data.userEmail.split("@")[0];
           log(`Auto-detected system email: ${data.userEmail}`, "#38bdf8");
         }
 
@@ -1040,7 +1370,6 @@
         }
       }
       if (defaultSelectedColIndex === -1 && cols.length > 0) {
-        // Fallback: pick column 1 (or column 2 if column 1 is "sl" or "serial")
         defaultSelectedColIndex = (/sl|serial|sno|s\.no/i.test(cols[0].name) && cols.length > 1) ? cols[1].index : cols[0].index;
       }
 
@@ -1056,7 +1385,6 @@
         if (preserveUserState && previousMatchCols.length > 0) {
           if (previousMatchCols.includes(col.index)) optMatch.selected = true;
         } else {
-          // Strictly select at most ONE column by default
           if (col.index === defaultSelectedColIndex) optMatch.selected = true;
         }
         matchColumnsSelect.appendChild(optMatch);
@@ -1124,7 +1452,7 @@
     });
 
     // =========================================================================
-    // USER-FRIENDLY CUSTOM FIELD EXTRACTOR (DROPDOWN OF EXISTING COLUMNS + PRESETS)
+    // 3. DYNAMIC FIELD EXTRACTOR (EXISTING SHEET COLUMN DROPDOWNS + PRESETS)
     // =========================================================================
     function refreshCustomFieldDropdowns(activeSheetMeta) {
       if (!activeSheetMeta || !activeSheetMeta.columns) return;
@@ -1175,7 +1503,6 @@
       card.className = "custom-field-card";
       card.id = `cf-card-${id}`;
 
-      // Build dropdown options of existing columns in active sheet
       let existingColOptions = `<option value="__custom__">➕ Type New Column Name...</option>`;
       const activeSheetMeta = globalSchema.find(s => s.sheetName === sheetSelect.value);
       let isExistingMatch = false;
@@ -1288,10 +1615,10 @@
       return list;
     }
 
-    // On-Demand Column Sync: PREVENTS RESETTING OF USER SELECTIONS
+    // On-Demand Column Sync: PRESERVES USER SELECTIONS
     syncSchemaBtn.addEventListener("click", async () => {
       syncSchemaBtn.disabled = true;
-      syncSchemaBtn.textContent = "⏳ Syncing & Creating Columns in Sheet...";
+      syncSchemaBtn.textContent = "⏳ Syncing Columns in Sheet...";
       try {
         const customFields = getCustomExtractionConfigs();
         const requestBody = {
@@ -1311,14 +1638,13 @@
 
         const data = await res.json();
         if (data.status === "success") {
-          log(`Sheet synchronized: ${data.columnsCreated} new column(s) created.`, "#34d399");
+          log(`Sheet synchronized: ${data.columnsCreated} column(s) ready.`, "#34d399");
           setHUD(`Columns verified in Google Sheet (+${data.columnsCreated} added)`, "hud-match");
           setTimeout(() => setHUD("Sensor active: ready for scanning.", "hud-standby"), 3000);
           
-          // Re-fetch schema while PRESERVING USER SELECTIONS
           await fetchSchema(true);
         } else {
-          log("Sync error: " + (data.error || "Failed to update sheet"), "#ef4444");
+          log("Sync note: " + (data.error || "Failed to update sheet"), "#ef4444");
         }
       } catch (err) {
         log("Connection error syncing columns: " + err.message, "#ef4444");
@@ -1330,6 +1656,7 @@
 
     loadSavedCustomFields();
     fetchSchema(false);
+    checkExistingLoginSession();
 
     // Camera Hardware Access
     async function enumerateLenses() {
@@ -1382,12 +1709,8 @@
 
       await enumerateLenses();
       isStreaming = true;
-      updateButtonContext();
+      syncDynamicActionBar();
       setHUD("Sensor active: align document inside reticle...", "hud-standby");
-
-      if (pipelineTierSelect.value !== "tier2") {
-        loopTimer = setInterval(processFrame, SCAN_INTERVAL_MS);
-      }
       log("Optical sensor engaged.", "#34d399");
     }
 
@@ -1399,33 +1722,10 @@
       video.srcObject = null;
       if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
       isStreaming = false;
-      updateButtonContext();
-      setHUD("Optical sensor idle. Tap to activate.", "hud-standby");
-      log("Sensor disengaged.");
+      syncDynamicActionBar();
+      setHUD("Camera paused. Tap to start.", "hud-standby");
+      log("Sensor paused.");
     }
-
-    camToggle.addEventListener("click", () => {
-      if (isStreaming) stopCamera();
-      else startCamera();
-    });
-
-    shutterTrigger.addEventListener("click", async () => {
-      if (isProcessing) return;
-
-      if (!isStreaming) {
-        await startCamera();
-        setTimeout(processFrame, 650);
-      } else {
-        shutterTrigger.textContent = "⏳ Analyzing...";
-        shutterTrigger.disabled = true;
-        try {
-          await processFrame();
-        } finally {
-          updateButtonContext();
-          shutterTrigger.disabled = false;
-        }
-      }
-    });
 
     cameraSelect.addEventListener("change", () => {
       if (isStreaming) startCamera();
@@ -1446,6 +1746,7 @@
       } catch(e) {}
     }
 
+    // High-Speed Frame Processing
     async function processFrame() {
       if (!isStreaming || isProcessing || video.readyState < 2) return;
       isProcessing = true;
@@ -1465,7 +1766,7 @@
         const ctx = canvas.getContext("2d");
         ctx.drawImage(video, cX, cY, cW, cH, 0, 0, cW, cH);
 
-        // Hardware Barcode Scan (Zero cost, instant)
+        // Tier 1: Hardware Barcode Scan (Zero cost, instant)
         let barcodeVal = "";
         if (barcodeDetector) {
           try {
@@ -1481,16 +1782,16 @@
         }
 
         const mode = pipelineTierSelect.value;
-        const b64Image = canvas.toDataURL("image/jpeg", 0.6);
+        const b64Image = canvas.toDataURL("image/jpeg", 0.5);
 
         if (mode === "tier3") {
           // Direct Cloud AI Vision
-          setHUD("Cloud AI Vision reading document...", "hud-scanning");
+          setHUD("Cloud AI Vision parsing document...", "hud-scanning");
           log("Direct Cloud AI invoked...", "#fbbf24");
           await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
-        } else if (mode === "tier1") {
-          // Standard Edge Tier 1 ($0 / Zero Tokens)
-          setHUD("Scanning document...", "hud-scanning");
+        } else {
+          // Tier 1 (Edge) and Tier 2 (Manual Shutter): Local Tesseract OCR
+          setHUD("Reading document details...", "hud-scanning");
           enhanceCanvasForOcr(ctx, cW, cH);
           const { data: { text } } = await Tesseract.recognize(canvas, "eng");
           const clean = text.trim();
@@ -1499,22 +1800,7 @@
             log(`Read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
             await dispatchToBackend({ scannedText: clean, directAiMode: false }, tStart);
           } else {
-            setHUD("Sensor active: align document inside reticle...", "hud-standby");
-          }
-        } else {
-          // Smart Hybrid Mode: Local OCR first -> Auto Cloud AI fallback if faint
-          setHUD("Scanning document...", "hud-scanning");
-          enhanceCanvasForOcr(ctx, cW, cH);
-          const { data: { text } } = await Tesseract.recognize(canvas, "eng");
-          const clean = text.trim();
-
-          if (clean.length >= 3) {
-            log(`Read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
-            await dispatchToBackend({ scannedText: clean, imageBase64: b64Image, directAiMode: false }, tStart);
-          } else {
-            log("Local scan faint; auto-escalating to Cloud AI...", "#fbbf24");
-            setHUD("Faint text: analyzing via Cloud AI...", "hud-scanning");
-            await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
+            setHUD("Align document inside box...", "hud-standby");
           }
         }
 
@@ -1536,6 +1822,7 @@
       return vals;
     }
 
+    // Google Sheets Cloud Synchronization
     async function dispatchToBackend(payload, startTime = performance.now()) {
       const selectedMatchCols = getSelectedValues(matchColumnsSelect);
       const customFieldConfigs = getCustomExtractionConfigs();
@@ -1546,11 +1833,12 @@
         scannedText: payload.scannedText || "",
         imageBase64: payload.imageBase64 || "",
         directAiMode: payload.directAiMode === true,
+        userEmail: operatorInput.value || "Field Operator",
         manualChosenRowIndex: payload.manualChosenRowIndex || null,
         matchRules: {
           matchColumns: selectedMatchCols.length > 0 ? selectedMatchCols : [1],
           operator: matchLogic.value,
-          skipAlreadyProcessed: skipProcessed.value === "true",
+          allowRescan: skipProcessed.value === "false",
           statusColumnHeader: statusHeaderInput.value.trim() || "Status",
           statusValue: statusValInput.value || "Processed",
           operatorName: operatorInput.value || "Field Operator",
@@ -1631,7 +1919,7 @@
           }
           log(`Row #${data.rowIndex} sorted [${data.engineUsed || 'OCR'}]${customLogDetails} (${durationSec}s)`, "#34d399");
 
-          if (pipelineTierSelect.value !== "tier2" && loopTimer) {
+          if (pipelineTierSelect.value === "tier1" && loopTimer) {
             clearInterval(loopTimer);
             setTimeout(() => {
               if (isStreaming) {

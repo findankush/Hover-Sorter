@@ -45,7 +45,6 @@
       padding-bottom: 25px;
     }
 
-    /* Technocratic Header */
     header {
       background: rgba(11, 17, 32, 0.96);
       backdrop-filter: blur(16px);
@@ -145,7 +144,6 @@
       border: 1px solid var(--border-active);
     }
 
-    /* Shift Performance Metrics Bar */
     #metrics-strip {
       background: #020617;
       padding: 4px 12px;
@@ -279,6 +277,7 @@
       font-weight: 700;
     }
 
+    /* Enterprise Field Mapping Card */
     .custom-field-card {
       background: #050811;
       border: 1px solid var(--border-active);
@@ -564,7 +563,6 @@
       gap: 4px;
     }
 
-    /* Diagnostics Log */
     #console-log {
       height: 60px;
       background: #020617;
@@ -599,7 +597,7 @@
       <div class="brand-meta">
         <div class="brand-title-wrap">
           <span class="brand-name">Hover-Sorter</span>
-          <span id="tier-badge" class="tier-indicator-pill">Auto Smart</span>
+          <span id="tier-badge" class="tier-indicator-pill">Tier 1: Edge</span>
         </div>
         <span class="brand-architect">Architected by Ankush Saha</span>
       </div>
@@ -613,7 +611,7 @@
     </div>
   </header>
 
-  <!-- Live Shift Performance Metrics Strip -->
+  <!-- Shift Performance Metrics Strip -->
   <div id="metrics-strip">
     <span class="metric-item">Shift Total: <strong id="metric-total">0</strong></span>
     <span class="metric-item">Rate: <strong id="metric-rate">0</strong>/min</span>
@@ -624,7 +622,7 @@
   <!-- Complete Sliding Config Drawer -->
   <div id="settings-drawer">
     <div class="drawer-sec-header">
-      <span>1. Target Spreadsheet & Camera Sensor</span>
+      <span>1. Target Spreadsheet &amp; Camera Sensor</span>
     </div>
     
     <div class="grid-duo">
@@ -638,17 +636,19 @@
       </div>
     </div>
 
+    <!-- Scanning Mode Defaults to Tier 1 -->
     <div class="pipeline-strategy-card">
-      <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ Scanning Mode (Zero-Config):</div>
+      <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ Scanning Mode &amp; Optimization:</div>
       <select id="pipeline-tier-select">
-        <option value="auto">✨ Smart Hybrid (Barcode + Local OCR + Auto Cloud AI Fallback)</option>
-        <option value="tier2">📷 Manual Shutter Only (Tap Snap to scan - Saves Battery)</option>
-        <option value="tier3">🧠 Direct Cloud AI Vision (For Difficult/Handwritten Documents)</option>
+        <option value="tier1" selected>Tier 1: Standard Edge (Barcode + Local OCR - $0 / Unlimited / Zero Tokens)</option>
+        <option value="auto">✨ Smart Hybrid Auto-Escalate (Local OCR first; auto-calls Cloud AI if faint)</option>
+        <option value="tier2">Tier 2: Manual Shutter (Tap Snap to scan - Zero battery &amp; zero token waste)</option>
+        <option value="tier3">Tier 3: Direct Cloud AI Vision (Gemini 2.5 Flash for handwritten/creased forms)</option>
       </select>
     </div>
 
     <div class="drawer-sec-header">
-      <span>2. Operator Guidance & Audio</span>
+      <span>2. Operator Guidance &amp; Audio</span>
     </div>
     <div class="grid-duo">
       <div class="setting-group">
@@ -680,13 +680,15 @@
       </div>
       <div class="setting-group">
         <label class="setting-label">Filter Processed Rows:</label>
+        <!-- DEFAULT IS NOW ALLOW RE-SCAN -->
         <select id="skip-processed">
+          <option value="false" selected>No (Allow Re-scan / Active Update)</option>
           <option value="true">Yes (Prevent Re-scan)</option>
-          <option value="false">No (Allow Re-scan)</option>
         </select>
       </div>
     </div>
 
+    <!-- Match Columns (Minimised: Selects at most ONE default among first 5) -->
     <div class="setting-group">
       <label class="setting-label">Match Columns (Document ID / Unique Key):</label>
       <select id="match-columns-select" multiple size="3"></select>
@@ -708,6 +710,7 @@
       <div id="hierarchy-flow-chips" class="chip-sequence-bar">-- Tap columns above to build flow --</div>
     </div>
 
+    <!-- 5. User-Friendly Dynamic Document Field Extractor (Pick Existing or Create New) -->
     <div class="drawer-sec-header">
       <span>5. Custom Document Fields to Write-Back to Sheet</span>
       <button id="add-custom-field-btn" class="btn btn-secondary" style="padding:2px 8px; font-size:0.68rem;">+ Add Document Field</button>
@@ -716,7 +719,7 @@
     <button id="sync-schema-btn" class="sync-schema-btn">⚡ Create / Sync Columns in Google Sheet Now</button>
 
     <div class="drawer-sec-header">
-      <span>6. Provenance & Dynamic Status Header</span>
+      <span>6. Provenance &amp; Dynamic Status Header</span>
     </div>
     <div class="grid-duo">
       <div class="setting-group">
@@ -730,8 +733,8 @@
     </div>
     <div class="grid-duo">
       <div class="setting-group">
-        <label class="setting-label">Operator Signature:</label>
-        <input type="text" id="operator-input" value="Field Operator">
+        <label class="setting-label">Operator Signature / Android Email:</label>
+        <input type="text" id="operator-input" placeholder="Detecting Android/System Email...">
       </div>
       <div class="setting-group">
         <label class="setting-label">Device Signature:</label>
@@ -755,7 +758,7 @@
 
   <div id="console-log"></div>
 
-  <!-- Ambiguity Disambiguation Modal Popup -->
+  <!-- Disambiguation Modal Popup -->
   <div id="disambiguation-modal">
     <div class="modal-dialog">
       <div class="modal-head">
@@ -837,12 +840,13 @@
       }
       const ua = navigator.userAgent;
       let platform = "Desktop";
-      if (/android/i.test(ua)) platform = "Android";
-      else if (/iphone|ipad/i.test(ua)) platform = "iOS";
+      if (/android/i.test(ua)) platform = "Android Terminal";
+      else if (/iphone|ipad/i.test(ua)) platform = "iOS Device";
       deviceMetaInput.value = `${platform} (${window.screen.width}x${window.screen.height}) [${uuid}]`;
     }
     initDeviceSignature();
 
+    // Restore saved Operator Signature / Email from LocalStorage
     const savedOp = localStorage.getItem("hs_operator_name");
     if (savedOp) operatorInput.value = savedOp;
     operatorInput.addEventListener("input", () => {
@@ -923,9 +927,12 @@
         shutterTrigger.textContent = "⚡ Snap Now";
         shutterTrigger.style.flex = "1";
         camToggle.textContent = isStreaming ? "Stop Auto-Scan" : "Start Auto-Scan";
-        if (mode === "auto") {
-          tierBadge.textContent = "Smart Hybrid";
+        if (mode === "tier1") {
+          tierBadge.textContent = "Tier 1: Edge";
           tierBadge.style.color = "#38bdf8";
+        } else if (mode === "auto") {
+          tierBadge.textContent = "Smart Hybrid";
+          tierBadge.style.color = "#a7f3d0";
         } else {
           tierBadge.textContent = "Direct AI";
           tierBadge.style.color = "#fbbf24";
@@ -935,6 +942,7 @@
         }
       }
     }
+    updateButtonContext();
 
     function playChime(type) {
       try {
@@ -975,20 +983,35 @@
       try { barcodeDetector = new BarcodeDetector(); } catch(e) {}
     }
 
-    async function fetchSchema() {
+    // Connect & Introspect Google Sheet with User Email Auto-Discovery
+    async function fetchSchema(preserveUserState = false) {
       try {
         const res = await fetch(SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + "getSheets=1");
         const data = await res.json();
+        
+        // Auto-discover user login email of android/google session if available
+        if (data.userEmail && (!operatorInput.value || operatorInput.value === "Field Operator")) {
+          operatorInput.value = data.userEmail;
+          localStorage.setItem("hs_operator_name", data.userEmail);
+          log(`Auto-detected system email: ${data.userEmail}`, "#38bdf8");
+        }
+
         if (data.sheets && data.sheets.length > 0) {
           globalSchema = data.sheets;
+          const currentSelectedSheet = sheetSelect.value;
+          
           sheetSelect.innerHTML = "";
           data.sheets.forEach(s => {
             const opt = document.createElement("option");
             opt.value = s.sheetName;
             opt.textContent = `${s.sheetName} (${s.columns.length} cols)`;
+            if (s.sheetName === currentSelectedSheet) opt.selected = true;
             sheetSelect.appendChild(opt);
           });
-          populateColumns(data.sheets[0]);
+
+          const activeSheetMeta = data.sheets.find(s => s.sheetName === sheetSelect.value) || data.sheets[0];
+          populateColumns(activeSheetMeta, preserveUserState);
+          refreshCustomFieldDropdowns(activeSheetMeta);
           log("Connected: loaded " + data.sheets.length + " sheet(s).", "#34d399");
         }
       } catch (e) {
@@ -996,35 +1019,61 @@
       }
     }
 
-    function populateColumns(sheetMeta) {
+    // Populate columns with at most ONE default match column among first 5
+    function populateColumns(sheetMeta, preserveUserState = false) {
       if (!sheetMeta || !sheetMeta.columns) return;
       const cols = sheetMeta.columns;
 
+      const previousMatchCols = preserveUserState ? getSelectedValues(matchColumnsSelect) : [];
+      const previousDisplayCols = preserveUserState ? orderedHierarchy.slice() : [];
+
       matchColumnsSelect.innerHTML = "";
       displayColumnsSelect.innerHTML = "";
-      orderedHierarchy = [];
-      renderHierarchyChips();
+      if (!preserveUserState) orderedHierarchy = [];
 
-      cols.forEach((col, idx) => {
+      // Find at most ONE default candidate among first 5 columns
+      let defaultSelectedColIndex = -1;
+      for (let i = 0; i < Math.min(cols.length, 5); i++) {
+        if (/id|code|dise|invoice|barcode|roll/i.test(cols[i].name)) {
+          defaultSelectedColIndex = cols[i].index;
+          break;
+        }
+      }
+      if (defaultSelectedColIndex === -1 && cols.length > 0) {
+        // Fallback: pick column 1 (or column 2 if column 1 is "sl" or "serial")
+        defaultSelectedColIndex = (/sl|serial|sno|s\.no/i.test(cols[0].name) && cols.length > 1) ? cols[1].index : cols[0].index;
+      }
+
+      cols.forEach((col) => {
         const label = `[Col ${col.index}] ${col.name}`;
 
+        // Match Column Option
         const optMatch = document.createElement("option");
         optMatch.value = col.index;
         optMatch.dataset.name = col.name;
         optMatch.textContent = label;
-        if (/id|code|dise|invoice|barcode|sl/i.test(col.name) || idx === 1) {
-          optMatch.selected = true;
+
+        if (preserveUserState && previousMatchCols.length > 0) {
+          if (previousMatchCols.includes(col.index)) optMatch.selected = true;
+        } else {
+          // Strictly select at most ONE column by default
+          if (col.index === defaultSelectedColIndex) optMatch.selected = true;
         }
         matchColumnsSelect.appendChild(optMatch);
 
+        // Display Column Option
         const optDisp = document.createElement("option");
         optDisp.value = col.index;
         optDisp.dataset.name = col.name;
         optDisp.textContent = label;
+        if (preserveUserState && previousDisplayCols.some(item => item.index === col.index)) {
+          optDisp.selected = true;
+        }
         displayColumnsSelect.appendChild(optDisp);
       });
 
       renderMatchChips();
+      renderHierarchyChips();
     }
 
     function renderMatchChips() {
@@ -1068,10 +1117,34 @@
 
     sheetSelect.addEventListener("change", () => {
       const selected = globalSchema.find(s => s.sheetName === sheetSelect.value);
-      if (selected) populateColumns(selected);
+      if (selected) {
+        populateColumns(selected, false);
+        refreshCustomFieldDropdowns(selected);
+      }
     });
 
-    // Custom Fields Configuration
+    // =========================================================================
+    // USER-FRIENDLY CUSTOM FIELD EXTRACTOR (DROPDOWN OF EXISTING COLUMNS + PRESETS)
+    // =========================================================================
+    function refreshCustomFieldDropdowns(activeSheetMeta) {
+      if (!activeSheetMeta || !activeSheetMeta.columns) return;
+      const cards = document.querySelectorAll(".custom-field-card");
+      cards.forEach(card => {
+        const select = card.querySelector(".cf-col-select");
+        if (!select) return;
+        const currentVal = select.value;
+        
+        select.innerHTML = `<option value="__custom__">➕ Type New Column Name...</option>`;
+        activeSheetMeta.columns.forEach(col => {
+          const opt = document.createElement("option");
+          opt.value = col.name;
+          opt.textContent = `[Col ${col.index}] ${col.name}`;
+          if (col.name === currentVal) opt.selected = true;
+          select.appendChild(opt);
+        });
+      });
+    }
+
     function loadSavedCustomFields() {
       customFieldsContainer.innerHTML = "";
       const raw = localStorage.getItem("hs_custom_extraction_fields");
@@ -1102,6 +1175,19 @@
       card.className = "custom-field-card";
       card.id = `cf-card-${id}`;
 
+      // Build dropdown options of existing columns in active sheet
+      let existingColOptions = `<option value="__custom__">➕ Type New Column Name...</option>`;
+      const activeSheetMeta = globalSchema.find(s => s.sheetName === sheetSelect.value);
+      let isExistingMatch = false;
+
+      if (activeSheetMeta && activeSheetMeta.columns) {
+        activeSheetMeta.columns.forEach(col => {
+          const isSelected = (col.name.toLowerCase() === (colHeader || "").toLowerCase());
+          if (isSelected) isExistingMatch = true;
+          existingColOptions += `<option value="${col.name}" ${isSelected ? 'selected' : ''}>[Col ${col.index}] ${col.name}</option>`;
+        });
+      }
+
       card.innerHTML = `
         <div class="custom-field-card-header">
           <span>📄 Target Document Field Mapping</span>
@@ -1113,13 +1199,14 @@
             <input type="text" class="cf-label" placeholder="e.g. Total Fees, Student Count, Roll" value="${fieldLabel}">
           </div>
           <div class="setting-group">
-            <label class="setting-label">Target Sheet Column Header:</label>
-            <input type="text" class="cf-col" placeholder="e.g. Fees Paid, Roll No" value="${colHeader}">
+            <label class="setting-label">Target Sheet Column:</label>
+            <select class="cf-col-select">${existingColOptions}</select>
+            <input type="text" class="cf-col-custom" placeholder="Type new column title..." value="${colHeader}" style="${isExistingMatch ? 'display:none;' : 'margin-top:4px;'}">
           </div>
         </div>
         <div class="custom-field-grid">
           <div class="setting-group">
-            <label class="setting-label">Pattern Type Preset:</label>
+            <label class="setting-label">Data Pattern Type:</label>
             <select class="cf-preset">
               <option value="digits" ${patternType === 'digits' ? 'selected' : ''}>Numbers / Roll / Count (\d+)</option>
               <option value="udise" ${patternType === 'udise' ? 'selected' : ''}>11-Digit Code / UDISE (\d{11})</option>
@@ -1127,20 +1214,33 @@
               <option value="date" ${patternType === 'date' ? 'selected' : ''}>Date (DD/MM/YYYY or DD-MM-YYYY)</option>
               <option value="alphanumeric" ${patternType === 'alphanumeric' ? 'selected' : ''}>Alphanumeric / Invoice Code</option>
               <option value="phone" ${patternType === 'phone' ? 'selected' : ''}>Phone / Mobile Number (10 Digits)</option>
-              <option value="custom" ${patternType === 'custom' ? 'selected' : ''}>Custom Regex Pattern / Free Match</option>
+              <option value="custom" ${patternType === 'custom' ? 'selected' : ''}>Custom Regex / Specialized Pattern</option>
             </select>
           </div>
-          <div class="setting-group cf-custom-box" style="${patternType === 'custom' ? '' : 'opacity:0.6;'}">
-            <label class="setting-label">Custom Regex (Optional):</label>
+          <div class="setting-group cf-custom-box" style="${patternType === 'custom' ? '' : 'display:none;'}">
+            <label class="setting-label">Custom Regex Pattern:</label>
             <input type="text" class="cf-reg" placeholder="e.g. ([A-Z]{3}-\d{4})" value="${regexPattern}">
           </div>
         </div>
       `;
 
+      const colSelect = card.querySelector(".cf-col-select");
+      const colCustomInput = card.querySelector(".cf-col-custom");
+      colSelect.addEventListener("change", () => {
+        if (colSelect.value === "__custom__") {
+          colCustomInput.style.display = "block";
+          colCustomInput.focus();
+        } else {
+          colCustomInput.style.display = "none";
+          colCustomInput.value = colSelect.value;
+        }
+        saveCustomFieldsToStorage();
+      });
+
       const presetSelect = card.querySelector(".cf-preset");
       const customBox = card.querySelector(".cf-custom-box");
       presetSelect.addEventListener("change", () => {
-        customBox.style.opacity = presetSelect.value === "custom" ? "1" : "0.6";
+        customBox.style.display = presetSelect.value === "custom" ? "block" : "none";
         saveCustomFieldsToStorage();
       });
 
@@ -1163,13 +1263,23 @@
       const list = [];
       cards.forEach(c => {
         const label = c.querySelector(".cf-label").value.trim();
-        const col = c.querySelector(".cf-col").value.trim() || label;
+        const colSelect = c.querySelector(".cf-col-select");
+        const colCustom = c.querySelector(".cf-col-custom");
+        
+        let targetCol = "";
+        if (colSelect && colSelect.value !== "__custom__") {
+          targetCol = colSelect.value;
+        } else if (colCustom) {
+          targetCol = colCustom.value.trim();
+        }
+        if (!targetCol) targetCol = label;
+
         const preset = c.querySelector(".cf-preset").value;
         const reg = c.querySelector(".cf-reg").value.trim();
-        if (col || label) {
+        if (targetCol || label) {
           list.push({
             fieldLabel: label,
-            colHeader: col,
+            colHeader: targetCol,
             patternType: preset,
             regexPattern: reg
           });
@@ -1178,7 +1288,7 @@
       return list;
     }
 
-    // On-Demand Column Sync
+    // On-Demand Column Sync: PREVENTS RESETTING OF USER SELECTIONS
     syncSchemaBtn.addEventListener("click", async () => {
       syncSchemaBtn.disabled = true;
       syncSchemaBtn.textContent = "⏳ Syncing & Creating Columns in Sheet...";
@@ -1204,7 +1314,9 @@
           log(`Sheet synchronized: ${data.columnsCreated} new column(s) created.`, "#34d399");
           setHUD(`Columns verified in Google Sheet (+${data.columnsCreated} added)`, "hud-match");
           setTimeout(() => setHUD("Sensor active: ready for scanning.", "hud-standby"), 3000);
-          await fetchSchema();
+          
+          // Re-fetch schema while PRESERVING USER SELECTIONS
+          await fetchSchema(true);
         } else {
           log("Sync error: " + (data.error || "Failed to update sheet"), "#ef4444");
         }
@@ -1217,7 +1329,7 @@
     });
 
     loadSavedCustomFields();
-    fetchSchema();
+    fetchSchema(false);
 
     // Camera Hardware Access
     async function enumerateLenses() {
@@ -1319,15 +1431,12 @@
       if (isStreaming) startCamera();
     });
 
-    // Built-in Adaptive Image Preprocessor for High OCR Accuracy
     function enhanceCanvasForOcr(ctx, w, h) {
       try {
         const imgData = ctx.getImageData(0, 0, w, h);
         const d = imgData.data;
         for (let i = 0; i < d.length; i += 4) {
-          // High-contrast grayscale conversion
           const gray = d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114;
-          // Adaptive binarization stretch
           const contrast = gray > 135 ? Math.min(255, gray * 1.25) : Math.max(0, gray * 0.7);
           d[i] = contrast;
           d[i + 1] = contrast;
@@ -1337,7 +1446,6 @@
       } catch(e) {}
     }
 
-    // Frame Processing Engine
     async function processFrame() {
       if (!isStreaming || isProcessing || video.readyState < 2) return;
       isProcessing = true;
@@ -1380,8 +1488,21 @@
           setHUD("Cloud AI Vision reading document...", "hud-scanning");
           log("Direct Cloud AI invoked...", "#fbbf24");
           await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
+        } else if (mode === "tier1") {
+          // Standard Edge Tier 1 ($0 / Zero Tokens)
+          setHUD("Scanning document...", "hud-scanning");
+          enhanceCanvasForOcr(ctx, cW, cH);
+          const { data: { text } } = await Tesseract.recognize(canvas, "eng");
+          const clean = text.trim();
+
+          if (clean.length >= 3) {
+            log(`Read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
+            await dispatchToBackend({ scannedText: clean, directAiMode: false }, tStart);
+          } else {
+            setHUD("Sensor active: align document inside reticle...", "hud-standby");
+          }
         } else {
-          // Smart Hybrid Mode: Run local on-device OCR first
+          // Smart Hybrid Mode: Local OCR first -> Auto Cloud AI fallback if faint
           setHUD("Scanning document...", "hud-scanning");
           enhanceCanvasForOcr(ctx, cW, cH);
           const { data: { text } } = await Tesseract.recognize(canvas, "eng");
@@ -1391,8 +1512,7 @@
             log(`Read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
             await dispatchToBackend({ scannedText: clean, imageBase64: b64Image, directAiMode: false }, tStart);
           } else {
-            // If local OCR read nothing on Smart Hybrid, automatically fallback to Cloud Vision
-            log("Local scan faint; auto-escalating to Cloud AI Vision...", "#fbbf24");
+            log("Local scan faint; auto-escalating to Cloud AI...", "#fbbf24");
             setHUD("Faint text: analyzing via Cloud AI...", "hud-scanning");
             await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
           }
@@ -1416,7 +1536,6 @@
       return vals;
     }
 
-    // Google Sheets Cloud Synchronization
     async function dispatchToBackend(payload, startTime = performance.now()) {
       const selectedMatchCols = getSelectedValues(matchColumnsSelect);
       const customFieldConfigs = getCustomExtractionConfigs();
@@ -1454,14 +1573,13 @@
         updateShiftMetrics(durationSec);
 
         if (data.error) {
-          setHUD(`<strong>Error:</strong> ${data.error}`, "hud-error");
-          log("Backend note: " + data.error, "#ef4444");
+          setHUD(`<strong>Notice:</strong> ${data.error}`, "hud-error");
+          log("Notice: " + data.error, "#ef4444");
           playChime("error");
           triggerHaptic("error");
           return;
         }
 
-        // Multiple Ambiguous Matches Found
         if (data.ambiguous && data.candidates && data.candidates.length > 1) {
           playChime("error");
           triggerHaptic("ambiguous");
@@ -1469,7 +1587,6 @@
           return;
         }
 
-        // Confirmed Match
         if (data.match) {
           playChime("match");
           triggerHaptic("match");
@@ -1534,12 +1651,11 @@
         }
 
       } catch (netErr) {
-        log("Connection warning: " + netErr.message, "#fbbf24");
-        setHUD("Connection interrupted. Check network.", "hud-standby");
+        log("Connection notice: " + netErr.message, "#fbbf24");
+        setHUD("Connection interrupted. Retrying...", "hud-standby");
       }
     }
 
-    // Modal Disambiguation
     function promptDisambiguationModal(candidates, originalPayload) {
       modalCandidatesList.innerHTML = "";
       candidates.forEach(c => {

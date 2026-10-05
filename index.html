@@ -163,7 +163,7 @@
       color: #38bdf8;
     }
 
-    .offline-sync-badge {
+    .cloud-status-badge {
       display: inline-flex;
       align-items: center;
       gap: 4px;
@@ -279,7 +279,6 @@
       font-weight: 700;
     }
 
-    /* Enterprise Field Mapping Card */
     .custom-field-card {
       background: #050811;
       border: 1px solid var(--border-active);
@@ -289,7 +288,6 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      position: relative;
     }
 
     .custom-field-card-header {
@@ -372,7 +370,7 @@
 
     canvas { display: none; }
 
-    /* HUD Top Routing Alert */
+    /* Top HUD Routing Alert */
     #hud-banner {
       position: absolute;
       top: 10px;
@@ -601,7 +599,7 @@
       <div class="brand-meta">
         <div class="brand-title-wrap">
           <span class="brand-name">Hover-Sorter</span>
-          <span id="tier-badge" class="tier-indicator-pill">Tier 1: Auto Edge</span>
+          <span id="tier-badge" class="tier-indicator-pill">Auto Smart</span>
         </div>
         <span class="brand-architect">Architected by Ankush Saha</span>
       </div>
@@ -620,13 +618,13 @@
     <span class="metric-item">Shift Total: <strong id="metric-total">0</strong></span>
     <span class="metric-item">Rate: <strong id="metric-rate">0</strong>/min</span>
     <span class="metric-item">Speed: <strong id="metric-speed">0.0</strong>s</span>
-    <span id="offline-badge" class="offline-sync-badge">✓ Cloud Online</span>
+    <span id="cloud-status" class="cloud-status-badge">✓ Engine Ready</span>
   </div>
 
   <!-- Complete Sliding Config Drawer -->
   <div id="settings-drawer">
     <div class="drawer-sec-header">
-      <span>1. Database & High-Volume Strategy</span>
+      <span>1. Target Spreadsheet & Camera Sensor</span>
     </div>
     
     <div class="grid-duo">
@@ -641,37 +639,27 @@
     </div>
 
     <div class="pipeline-strategy-card">
-      <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ High-Volume Execution Strategy:</div>
+      <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ Scanning Mode (Zero-Config):</div>
       <select id="pipeline-tier-select">
-        <option value="tier1">Tier 1: Hybrid Edge (Barcode + On-Device OCR - 0 Cost / Unlimited)</option>
-        <option value="tier2">Tier 2: Debounced On-Demand Shutter (Saves 95% Battery & Tokens)</option>
-        <option value="tier3">Tier 3: Direct Multimodal AI Vision (Gemini 2.5 Flash / Complex Forms)</option>
+        <option value="auto">✨ Smart Hybrid (Barcode + Local OCR + Auto Cloud AI Fallback)</option>
+        <option value="tier2">📷 Manual Shutter Only (Tap Snap to scan - Saves Battery)</option>
+        <option value="tier3">🧠 Direct Cloud AI Vision (For Difficult/Handwritten Documents)</option>
       </select>
     </div>
 
-    <!-- Tier 3: Direct Gemini Vision Key & Diagnostics -->
-    <div class="setting-group" style="background:#020617; border:1px solid #1e293b; padding:8px; border-radius:6px;">
-      <label class="setting-label" style="color:#fef08a;">🔑 Gemini API Key (For Tier 3 AI Vision):</label>
-      <div style="display:flex; gap:6px;">
-        <input type="password" id="gemini-key-input" placeholder="Paste Google AI Studio API Key (AIza...)" style="flex:1;">
-        <button id="test-gemini-btn" class="btn btn-secondary" style="padding:6px 10px; font-size:0.75rem;">Test Key</button>
-      </div>
-      <span style="font-size:0.65rem; color:#64748b;">Key is stored safely on your phone (localStorage) and passed securely to the backend.</span>
-    </div>
-
     <div class="drawer-sec-header">
-      <span>2. Operator Guidance & Accessibility</span>
+      <span>2. Operator Guidance & Audio</span>
     </div>
     <div class="grid-duo">
       <div class="setting-group">
-        <label class="setting-label">Voice Readout (TTS Guidance):</label>
+        <label class="setting-label">Voice Readout (Speaks Sorting Bin):</label>
         <select id="tts-toggle">
-          <option value="true">Enabled (Audibly announce sorting bin)</option>
+          <option value="true">Enabled (Voice announces destination)</option>
           <option value="false">Muted / Silent</option>
         </select>
       </div>
       <div class="setting-group">
-        <label class="setting-label">Haptic Vibration Cadence:</label>
+        <label class="setting-label">Haptic Confirmation Vibrate:</label>
         <select id="haptic-toggle">
           <option value="true">Active (Double-pulse on match)</option>
           <option value="false">Disabled</option>
@@ -720,14 +708,11 @@
       <div id="hierarchy-flow-chips" class="chip-sequence-bar">-- Tap columns above to build flow --</div>
     </div>
 
-    <!-- 5. DYNAMIC FIELD-LABEL EXTRACTION BUILDER WITH PRESET DROPDOWNS -->
     <div class="drawer-sec-header">
       <span>5. Custom Document Fields to Write-Back to Sheet</span>
       <button id="add-custom-field-btn" class="btn btn-secondary" style="padding:2px 8px; font-size:0.68rem;">+ Add Document Field</button>
     </div>
-    <div id="custom-fields-container">
-      <!-- Dynamic rows auto-populated from localStorage -->
-    </div>
+    <div id="custom-fields-container"></div>
     <button id="sync-schema-btn" class="sync-schema-btn">⚡ Create / Sync Columns in Google Sheet Now</button>
 
     <div class="drawer-sec-header">
@@ -746,7 +731,7 @@
     <div class="grid-duo">
       <div class="setting-group">
         <label class="setting-label">Operator Signature:</label>
-        <input type="text" id="operator-input" value="Ankush Saha">
+        <input type="text" id="operator-input" value="Field Operator">
       </div>
       <div class="setting-group">
         <label class="setting-label">Device Signature:</label>
@@ -777,9 +762,7 @@
         <h3>⚠️ Multiple Matching Records Found</h3>
         <button id="close-modal-btn" class="btn btn-secondary" style="padding:2px 6px;">✕</button>
       </div>
-      <div class="modal-body" id="modal-candidates-list">
-        <!-- Candidate buttons -->
-      </div>
+      <div class="modal-body" id="modal-candidates-list"></div>
     </div>
   </div>
 
@@ -810,14 +793,12 @@
     const metricTotal = document.getElementById("metric-total");
     const metricRate = document.getElementById("metric-rate");
     const metricSpeed = document.getElementById("metric-speed");
-    const offlineBadge = document.getElementById("offline-badge");
+    const cloudStatus = document.getElementById("cloud-status");
 
     // Selectors
     const sheetSelect = document.getElementById("sheet-select");
     const cameraSelect = document.getElementById("camera-select");
     const pipelineTierSelect = document.getElementById("pipeline-tier-select");
-    const geminiKeyInput = document.getElementById("gemini-key-input");
-    const testGeminiBtn = document.getElementById("test-gemini-btn");
     const ttsToggle = document.getElementById("tts-toggle");
     const hapticToggle = document.getElementById("haptic-toggle");
     const matchLogic = document.getElementById("match-logic");
@@ -847,26 +828,6 @@
     // Shift Performance Metrics State
     let shiftCount = 0;
     let shiftStartTime = Date.now();
-    let lastScanDuration = 0;
-
-    // IndexedDB Offline Queue Storage
-    const DB_NAME = "HoverSorterOfflineDB";
-    let db = null;
-    initIndexedDB();
-
-    function initIndexedDB() {
-      const req = indexedDB.open(DB_NAME, 1);
-      req.onupgradeneeded = (e) => {
-        db = e.target.result;
-        if (!db.objectStoreNames.contains("sync_queue")) {
-          db.createObjectStore("sync_queue", { autoIncrement: true });
-        }
-      };
-      req.onsuccess = (e) => {
-        db = e.target.result;
-        flushOfflineQueue();
-      };
-    }
 
     function initDeviceSignature() {
       let uuid = localStorage.getItem("hs_device_uuid");
@@ -892,39 +853,6 @@
     if (savedStatusHeader) statusHeaderInput.value = savedStatusHeader;
     statusHeaderInput.addEventListener("input", () => {
       localStorage.setItem("hs_status_header", statusHeaderInput.value);
-    });
-
-    const savedGeminiKey = localStorage.getItem("hs_gemini_api_key");
-    if (savedGeminiKey) geminiKeyInput.value = savedGeminiKey;
-    geminiKeyInput.addEventListener("input", () => {
-      localStorage.setItem("hs_gemini_api_key", geminiKeyInput.value.trim());
-    });
-
-    // Test Gemini API Key
-    testGeminiBtn.addEventListener("click", async () => {
-      const keyToTest = geminiKeyInput.value.trim();
-      if (!keyToTest) {
-        alert("Please paste your Gemini API Key first.");
-        return;
-      }
-      testGeminiBtn.textContent = "Testing...";
-      testGeminiBtn.disabled = true;
-      try {
-        const res = await fetch(SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + "testGemini=1&key=" + encodeURIComponent(keyToTest));
-        const data = await res.json();
-        if (data.status === "success") {
-          alert("✓ SUCCESS: " + data.message);
-          log("Gemini API connection verified.", "#34d399");
-        } else {
-          alert("✕ FAILED: " + data.message);
-          log("Gemini test failed: " + data.message, "#ef4444");
-        }
-      } catch(e) {
-        alert("Test error: " + e.message);
-      } finally {
-        testGeminiBtn.textContent = "Test Key";
-        testGeminiBtn.disabled = false;
-      }
     });
 
     function log(msg, color = "#94a3b8") {
@@ -967,7 +895,7 @@
       if (!activeStream) return;
       const track = activeStream.getVideoTracks()[0];
       if (!track || !track.getCapabilities || !track.getCapabilities().torch) {
-        log("Torch feature not supported on this lens.", "#fbbf24");
+        log("Torch not supported on this lens.", "#fbbf24");
         return;
       }
       try {
@@ -983,23 +911,23 @@
     pipelineTierSelect.addEventListener("change", updateButtonContext);
 
     function updateButtonContext() {
-      const tier = pipelineTierSelect.value;
-      if (tier === "tier2") {
+      const mode = pipelineTierSelect.value;
+      if (mode === "tier2") {
         shutterTrigger.textContent = "📷 SNAP & SORT";
         shutterTrigger.style.flex = "1.4";
         camToggle.textContent = isStreaming ? "Pause Feed" : "Start Feed";
-        tierBadge.textContent = "Tier 2: Manual Shutter";
+        tierBadge.textContent = "Manual Shutter";
         tierBadge.style.color = "#34d399";
         if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
       } else {
         shutterTrigger.textContent = "⚡ Snap Now";
         shutterTrigger.style.flex = "1";
         camToggle.textContent = isStreaming ? "Stop Auto-Scan" : "Start Auto-Scan";
-        if (tier === "tier1") {
-          tierBadge.textContent = "Tier 1: Auto Edge";
+        if (mode === "auto") {
+          tierBadge.textContent = "Smart Hybrid";
           tierBadge.style.color = "#38bdf8";
         } else {
-          tierBadge.textContent = "Tier 3: Auto AI";
+          tierBadge.textContent = "Direct AI";
           tierBadge.style.color = "#fbbf24";
         }
         if (isStreaming && !loopTimer) {
@@ -1143,9 +1071,7 @@
       if (selected) populateColumns(selected);
     });
 
-    // =========================================================================
-    // DYNAMIC ENTERPRISE FIELD EXTRACTOR (PRESET DROPDOWNS + CUSTOM REGEX)
-    // =========================================================================
+    // Custom Fields Configuration
     function loadSavedCustomFields() {
       customFieldsContainer.innerHTML = "";
       const raw = localStorage.getItem("hs_custom_extraction_fields");
@@ -1205,8 +1131,8 @@
             </select>
           </div>
           <div class="setting-group cf-custom-box" style="${patternType === 'custom' ? '' : 'opacity:0.6;'}">
-            <label class="setting-label">Custom Regex / Specific Override:</label>
-            <input type="text" class="cf-reg" placeholder="e.g. ([A-Z]{3}-\d{4}) or optional pattern" value="${regexPattern}">
+            <label class="setting-label">Custom Regex (Optional):</label>
+            <input type="text" class="cf-reg" placeholder="e.g. ([A-Z]{3}-\d{4})" value="${regexPattern}">
           </div>
         </div>
       `;
@@ -1214,11 +1140,7 @@
       const presetSelect = card.querySelector(".cf-preset");
       const customBox = card.querySelector(".cf-custom-box");
       presetSelect.addEventListener("change", () => {
-        if (presetSelect.value === "custom") {
-          customBox.style.opacity = "1";
-        } else {
-          customBox.style.opacity = "0.6";
-        }
+        customBox.style.opacity = presetSelect.value === "custom" ? "1" : "0.6";
         saveCustomFieldsToStorage();
       });
 
@@ -1256,7 +1178,7 @@
       return list;
     }
 
-    // On-Demand Column Sync with Google Sheet
+    // On-Demand Column Sync
     syncSchemaBtn.addEventListener("click", async () => {
       syncSchemaBtn.disabled = true;
       syncSchemaBtn.textContent = "⏳ Syncing & Creating Columns in Sheet...";
@@ -1265,7 +1187,6 @@
         const requestBody = {
           action: "syncColumns",
           sheetName: sheetSelect.value,
-          geminiApiKey: geminiKeyInput.value.trim(),
           matchRules: {
             statusColumnHeader: statusHeaderInput.value.trim() || "Status",
             customExtractionFields: customFields
@@ -1280,7 +1201,7 @@
 
         const data = await res.json();
         if (data.status === "success") {
-          log(`Sheet schema synchronized: ${data.columnsCreated} new column(s) created.`, "#34d399");
+          log(`Sheet synchronized: ${data.columnsCreated} new column(s) created.`, "#34d399");
           setHUD(`Columns verified in Google Sheet (+${data.columnsCreated} added)`, "hud-match");
           setTimeout(() => setHUD("Sensor active: ready for scanning.", "hud-standby"), 3000);
           await fetchSchema();
@@ -1398,7 +1319,25 @@
       if (isStreaming) startCamera();
     });
 
-    // Frame Processing
+    // Built-in Adaptive Image Preprocessor for High OCR Accuracy
+    function enhanceCanvasForOcr(ctx, w, h) {
+      try {
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const d = imgData.data;
+        for (let i = 0; i < d.length; i += 4) {
+          // High-contrast grayscale conversion
+          const gray = d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114;
+          // Adaptive binarization stretch
+          const contrast = gray > 135 ? Math.min(255, gray * 1.25) : Math.max(0, gray * 0.7);
+          d[i] = contrast;
+          d[i + 1] = contrast;
+          d[i + 2] = contrast;
+        }
+        ctx.putImageData(imgData, 0, 0);
+      } catch(e) {}
+    }
+
+    // Frame Processing Engine
     async function processFrame() {
       if (!isStreaming || isProcessing || video.readyState < 2) return;
       isProcessing = true;
@@ -1418,7 +1357,7 @@
         const ctx = canvas.getContext("2d");
         ctx.drawImage(video, cX, cY, cW, cH, 0, 0, cW, cH);
 
-        // Hardware Barcode Scan
+        // Hardware Barcode Scan (Zero cost, instant)
         let barcodeVal = "";
         if (barcodeDetector) {
           try {
@@ -1433,28 +1372,34 @@
           return;
         }
 
-        const tier = pipelineTierSelect.value;
+        const mode = pipelineTierSelect.value;
+        const b64Image = canvas.toDataURL("image/jpeg", 0.6);
 
-        if (tier === "tier3") {
-          setHUD("Direct AI Vision parsing frame...", "hud-scanning");
-          log("Direct Gemini Vision invoked...", "#fbbf24");
-          const b64 = canvas.toDataURL("image/jpeg", 0.55);
-          await dispatchToBackend({ imageBase64: b64, directAiMode: true }, tStart);
+        if (mode === "tier3") {
+          // Direct Cloud AI Vision
+          setHUD("Cloud AI Vision reading document...", "hud-scanning");
+          log("Direct Cloud AI invoked...", "#fbbf24");
+          await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
         } else {
-          setHUD("Edge OCR analyzing frame...", "hud-scanning");
+          // Smart Hybrid Mode: Run local on-device OCR first
+          setHUD("Scanning document...", "hud-scanning");
+          enhanceCanvasForOcr(ctx, cW, cH);
           const { data: { text } } = await Tesseract.recognize(canvas, "eng");
           const clean = text.trim();
 
           if (clean.length >= 3) {
-            log(`OCR read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
-            await dispatchToBackend({ scannedText: clean, directAiMode: false }, tStart);
+            log(`Read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
+            await dispatchToBackend({ scannedText: clean, imageBase64: b64Image, directAiMode: false }, tStart);
           } else {
-            setHUD("Sensor active: align document inside reticle...", "hud-standby");
+            // If local OCR read nothing on Smart Hybrid, automatically fallback to Cloud Vision
+            log("Local scan faint; auto-escalating to Cloud AI Vision...", "#fbbf24");
+            setHUD("Faint text: analyzing via Cloud AI...", "hud-scanning");
+            await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
           }
         }
 
       } catch (err) {
-        log("Scan exception: " + err.message, "#ef4444");
+        log("Scan notice: " + err.message, "#ef4444");
       } finally {
         isProcessing = false;
       }
@@ -1482,7 +1427,6 @@
         scannedText: payload.scannedText || "",
         imageBase64: payload.imageBase64 || "",
         directAiMode: payload.directAiMode === true,
-        geminiApiKey: geminiKeyInput.value.trim(),
         manualChosenRowIndex: payload.manualChosenRowIndex || null,
         matchRules: {
           matchColumns: selectedMatchCols.length > 0 ? selectedMatchCols : [1],
@@ -1490,7 +1434,7 @@
           skipAlreadyProcessed: skipProcessed.value === "true",
           statusColumnHeader: statusHeaderInput.value.trim() || "Status",
           statusValue: statusValInput.value || "Processed",
-          operatorName: operatorInput.value || "Ankush Saha",
+          operatorName: operatorInput.value || "Field Operator",
           deviceName: deviceMetaInput.value,
           deviceId: localStorage.getItem("hs_device_uuid") || "DEV-UNKNOWN",
           displayActionColumns: orderedHierarchy,
@@ -1509,10 +1453,9 @@
         const durationSec = ((performance.now() - startTime) / 1000).toFixed(1);
         updateShiftMetrics(durationSec);
 
-        // Display transparent error messages
         if (data.error) {
           setHUD(`<strong>Error:</strong> ${data.error}`, "hud-error");
-          log("Backend error: " + data.error, "#ef4444");
+          log("Backend note: " + data.error, "#ef4444");
           playChime("error");
           triggerHaptic("error");
           return;
@@ -1569,7 +1512,7 @@
           if (data.extractedCustomFields && Object.keys(data.extractedCustomFields).length > 0) {
             customLogDetails = " + Fields: " + JSON.stringify(data.extractedCustomFields);
           }
-          log(`Write-back saved Row #${data.rowIndex} [${data.writeBackAudit ? data.writeBackAudit.statusColumn : 'Status'}]${customLogDetails} (${durationSec}s)`, "#34d399");
+          log(`Row #${data.rowIndex} sorted [${data.engineUsed || 'OCR'}]${customLogDetails} (${durationSec}s)`, "#34d399");
 
           if (pipelineTierSelect.value !== "tier2" && loopTimer) {
             clearInterval(loopTimer);
@@ -1582,9 +1525,8 @@
           }
 
         } else {
-          // If Gemini extracted text but no row in sheet matched
           if (data.rawExtractedText) {
-            log(`Extracted text: "${data.rawExtractedText.substring(0, 40)}..." (no sheet row matched)`, "#fbbf24");
+            log(`Detected: "${data.rawExtractedText.substring(0, 35)}..." (No matching row)`, "#fbbf24");
             setHUD(`Read: "${data.rawExtractedText.substring(0, 25)}..." — No matching row in sheet`, "hud-standby");
           } else {
             setHUD("Sensor active... (No matching criteria in sheet)", "hud-standby");
@@ -1592,12 +1534,8 @@
         }
 
       } catch (netErr) {
-        log("Network connection lost. Saving to local offline queue...", "#fbbf24");
-        saveToOfflineQueue(requestBody);
-        offlineBadge.textContent = "⚡ Offline Queued";
-        offlineBadge.style.background = "rgba(245, 158, 11, 0.2)";
-        offlineBadge.style.color = "#fbbf24";
-        setHUD("Offline: scanned document queued for auto-sync.", "hud-standby");
+        log("Connection warning: " + netErr.message, "#fbbf24");
+        setHUD("Connection interrupted. Check network.", "hud-standby");
       }
     }
 
@@ -1621,7 +1559,7 @@
         btn.addEventListener("click", async () => {
           disambiguationModal.style.display = "none";
           originalPayload.manualChosenRowIndex = c.rowIndex;
-          log(`Manual operator selected Row #${c.rowIndex}`, "#38bdf8");
+          log(`Operator chose Row #${c.rowIndex}`, "#38bdf8");
           await dispatchToBackend(originalPayload);
         });
 
@@ -1640,42 +1578,6 @@
       const rate = elapsedMins > 0 ? (shiftCount / elapsedMins).toFixed(0) : shiftCount;
       metricRate.textContent = rate;
     }
-
-    function saveToOfflineQueue(reqData) {
-      if (!db) return;
-      const tx = db.transaction("sync_queue", "readwrite");
-      tx.objectStore("sync_queue").add(reqData);
-    }
-
-    async function flushOfflineQueue() {
-      if (!db || !navigator.onLine) return;
-      const tx = db.transaction("sync_queue", "readonly");
-      const store = tx.objectStore("sync_queue");
-      const req = store.getAll();
-      req.onsuccess = async () => {
-        const items = req.result;
-        if (items && items.length > 0) {
-          log(`Flushing ${items.length} queued offline scans...`, "#38bdf8");
-          for (let item of items) {
-            try {
-              await fetch(SCRIPT_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(item)
-              });
-            } catch(e) {}
-          }
-          const delTx = db.transaction("sync_queue", "readwrite");
-          delTx.objectStore("sync_queue").clear();
-          offlineBadge.textContent = "✓ Cloud Online";
-          offlineBadge.style.background = "rgba(16, 185, 129, 0.15)";
-          offlineBadge.style.color = "#34d399";
-          log("Offline queue synced to Google Sheets successfully.", "#34d399");
-        }
-      };
-    }
-
-    window.addEventListener("online", flushOfflineQueue);
   </script>
 </body>
 </html>

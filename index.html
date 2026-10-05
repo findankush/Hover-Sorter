@@ -406,7 +406,8 @@
       background: rgba(153, 27, 27, 0.95);
       border: 1px solid var(--accent-red);
       color: #fee2e2;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
+      line-height: 1.35;
     }
 
     .hud-match {
@@ -648,6 +649,16 @@
       </select>
     </div>
 
+    <!-- Tier 3: Direct Gemini Vision Key & Diagnostics -->
+    <div class="setting-group" style="background:#020617; border:1px solid #1e293b; padding:8px; border-radius:6px;">
+      <label class="setting-label" style="color:#fef08a;">🔑 Gemini API Key (For Tier 3 AI Vision):</label>
+      <div style="display:flex; gap:6px;">
+        <input type="password" id="gemini-key-input" placeholder="Paste Google AI Studio API Key (AIza...)" style="flex:1;">
+        <button id="test-gemini-btn" class="btn btn-secondary" style="padding:6px 10px; font-size:0.75rem;">Test Key</button>
+      </div>
+      <span style="font-size:0.65rem; color:#64748b;">Key is stored safely on your phone (localStorage) and passed securely to the backend.</span>
+    </div>
+
     <div class="drawer-sec-header">
       <span>2. Operator Guidance & Accessibility</span>
     </div>
@@ -805,6 +816,8 @@
     const sheetSelect = document.getElementById("sheet-select");
     const cameraSelect = document.getElementById("camera-select");
     const pipelineTierSelect = document.getElementById("pipeline-tier-select");
+    const geminiKeyInput = document.getElementById("gemini-key-input");
+    const testGeminiBtn = document.getElementById("test-gemini-btn");
     const ttsToggle = document.getElementById("tts-toggle");
     const hapticToggle = document.getElementById("haptic-toggle");
     const matchLogic = document.getElementById("match-logic");
@@ -879,6 +892,39 @@
     if (savedStatusHeader) statusHeaderInput.value = savedStatusHeader;
     statusHeaderInput.addEventListener("input", () => {
       localStorage.setItem("hs_status_header", statusHeaderInput.value);
+    });
+
+    const savedGeminiKey = localStorage.getItem("hs_gemini_api_key");
+    if (savedGeminiKey) geminiKeyInput.value = savedGeminiKey;
+    geminiKeyInput.addEventListener("input", () => {
+      localStorage.setItem("hs_gemini_api_key", geminiKeyInput.value.trim());
+    });
+
+    // Test Gemini API Key
+    testGeminiBtn.addEventListener("click", async () => {
+      const keyToTest = geminiKeyInput.value.trim();
+      if (!keyToTest) {
+        alert("Please paste your Gemini API Key first.");
+        return;
+      }
+      testGeminiBtn.textContent = "Testing...";
+      testGeminiBtn.disabled = true;
+      try {
+        const res = await fetch(SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + "testGemini=1&key=" + encodeURIComponent(keyToTest));
+        const data = await res.json();
+        if (data.status === "success") {
+          alert("✓ SUCCESS: " + data.message);
+          log("Gemini API connection verified.", "#34d399");
+        } else {
+          alert("✕ FAILED: " + data.message);
+          log("Gemini test failed: " + data.message, "#ef4444");
+        }
+      } catch(e) {
+        alert("Test error: " + e.message);
+      } finally {
+        testGeminiBtn.textContent = "Test Key";
+        testGeminiBtn.disabled = false;
+      }
     });
 
     function log(msg, color = "#94a3b8") {
@@ -1219,6 +1265,7 @@
         const requestBody = {
           action: "syncColumns",
           sheetName: sheetSelect.value,
+          geminiApiKey: geminiKeyInput.value.trim(),
           matchRules: {
             statusColumnHeader: statusHeaderInput.value.trim() || "Status",
             customExtractionFields: customFields
@@ -1435,6 +1482,7 @@
         scannedText: payload.scannedText || "",
         imageBase64: payload.imageBase64 || "",
         directAiMode: payload.directAiMode === true,
+        geminiApiKey: geminiKeyInput.value.trim(),
         manualChosenRowIndex: payload.manualChosenRowIndex || null,
         matchRules: {
           matchColumns: selectedMatchCols.length > 0 ? selectedMatchCols : [1],
@@ -1461,8 +1509,10 @@
         const durationSec = ((performance.now() - startTime) / 1000).toFixed(1);
         updateShiftMetrics(durationSec);
 
+        // Display transparent error messages
         if (data.error) {
-          setHUD(`<strong>Sync Error:</strong> ${data.error}`, "hud-error");
+          setHUD(`<strong>Error:</strong> ${data.error}`, "hud-error");
+          log("Backend error: " + data.error, "#ef4444");
           playChime("error");
           triggerHaptic("error");
           return;
@@ -1515,7 +1565,6 @@
           setHUD(bannerHtml, "hud-match");
           speakText(voiceText);
 
-          // Log write-back with custom extracted fields info
           let customLogDetails = "";
           if (data.extractedCustomFields && Object.keys(data.extractedCustomFields).length > 0) {
             customLogDetails = " + Fields: " + JSON.stringify(data.extractedCustomFields);
@@ -1533,7 +1582,13 @@
           }
 
         } else {
-          setHUD("Sensor active... (No matching criteria in sheet)", "hud-standby");
+          // If Gemini extracted text but no row in sheet matched
+          if (data.rawExtractedText) {
+            log(`Extracted text: "${data.rawExtractedText.substring(0, 40)}..." (no sheet row matched)`, "#fbbf24");
+            setHUD(`Read: "${data.rawExtractedText.substring(0, 25)}..." — No matching row in sheet`, "hud-standby");
+          } else {
+            setHUD("Sensor active... (No matching criteria in sheet)", "hud-standby");
+          }
         }
 
       } catch (netErr) {
@@ -1576,7 +1631,6 @@
       disambiguationModal.style.display = "flex";
     }
 
-    // Shift Metrics Tracker
     function updateShiftMetrics(lastSpeedSec) {
       shiftCount++;
       metricTotal.textContent = shiftCount;
@@ -1587,7 +1641,6 @@
       metricRate.textContent = rate;
     }
 
-    // Offline Store-and-Forward
     function saveToOfflineQueue(reqData) {
       if (!db) return;
       const tx = db.transaction("sync_queue", "readwrite");

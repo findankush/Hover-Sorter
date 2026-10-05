@@ -45,7 +45,6 @@
       padding-bottom: 20px;
     }
 
-    /* Top Navigation Header */
     header {
       background: rgba(11, 17, 32, 0.96);
       backdrop-filter: blur(16px);
@@ -154,7 +153,6 @@
       border: 1px solid var(--border-active);
     }
 
-    /* Shift Performance & User Strip */
     #metrics-strip {
       background: #020617;
       padding: 4px 12px;
@@ -723,7 +721,7 @@
 
       <div>
         <h2 style="font-size:1.15rem; font-weight:800; color:#f8fafc;">Hover-Sorter Enterprise</h2>
-        <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">Operator Authentication & Security Audit System</p>
+        <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">v2.6-PROD-VERIFIED • Session Audit System</p>
       </div>
 
       <!-- Quick 1-Click Android / Gmail Authenticator -->
@@ -800,7 +798,7 @@
   <div id="mode-action-bar">
     <div class="mode-desc-text">
       <strong id="bar-mode-title">Tier 1: Standard Edge Scanning</strong>
-      <span id="bar-mode-sub" class="mode-desc-subtitle">Continuous Real-Time Camera Loop ($0 / Free / Unlimited)</span>
+      <span id="bar-mode-sub" class="mode-desc-subtitle">Continuous Real-Time Camera Loop ($0 / Free / Unlimited Tokens)</span>
     </div>
     <button id="tier-action-btn" class="btn dynamic-primary-trigger" style="background:#10b981;">
       🟢 Start Auto-Scan
@@ -1097,9 +1095,7 @@
       }
     }
 
-    // Google Sign-In button simulation/handler
     googleAuthBtn.addEventListener("click", () => {
-      // If Android Chrome / Google session is available
       const detectedEmail = operatorInput.value && operatorInput.value.includes("@") ? operatorInput.value : "google.user@gmail.com";
       const session = {
         email: detectedEmail,

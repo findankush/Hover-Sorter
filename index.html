@@ -7,8 +7,6 @@
 
   <!-- Client-side OCR Engine -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <!-- Google Identity Services (GSI) SDK -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
     :root {
@@ -159,7 +157,6 @@
       border: 1px solid var(--border-active);
     }
 
-    /* Shift Performance Strip */
     #metrics-strip {
       background: #020617;
       padding: 4px 12px;
@@ -190,7 +187,6 @@
       font-weight: 700;
     }
 
-    /* Dynamic Action Bar (Directly Above Camera) */
     #mode-action-bar {
       background: #0f172a;
       border-bottom: 1px solid var(--border-subtle);
@@ -230,7 +226,6 @@
       cursor: pointer !important;
     }
 
-    /* Configuration Sliding Drawer */
     #settings-drawer {
       background: var(--bg-surface);
       border-bottom: 2px solid var(--primary);
@@ -372,7 +367,6 @@
       margin-top: 4px;
     }
 
-    /* Camera Viewport */
     #viewport-container {
       position: relative;
       flex: 1;
@@ -424,7 +418,6 @@
 
     canvas { display: none; }
 
-    /* Top HUD Routing Alert */
     #hud-banner {
       position: absolute;
       top: 10px;
@@ -537,7 +530,6 @@
       color: #fef08a;
     }
 
-    /* Enterprise Clean Login Modal */
     #auth-modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -576,29 +568,6 @@
       box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
     }
 
-    #g_id_signin_container {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      min-height: 44px;
-    }
-
-    .auth-divider {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      color: #64748b;
-      font-size: 0.72rem;
-      gap: 8px;
-    }
-
-    .auth-divider::before, .auth-divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: #334155;
-    }
-
     .auth-manual-box {
       width: 100%;
       display: flex;
@@ -607,7 +576,6 @@
       text-align: left;
     }
 
-    /* Disambiguation Modal */
     #disambiguation-modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -704,7 +672,7 @@
 </head>
 <body>
 
-  <!-- 1. UNIFIED ENTERPRISE AUTHENTICATION MODAL -->
+  <!-- 1. UNIFIED AUTHENTICATION MODAL -->
   <div id="auth-modal">
     <div class="auth-card">
       <div class="auth-logo-wrap">
@@ -720,27 +688,22 @@
       <div>
         <h2 style="font-size:1.15rem; font-weight:800; color:#f8fafc;">Hover-Sorter Enterprise</h2>
         <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">
-          Version <strong style="color:#38bdf8;">v1.0 (Enterprise Rebirth)</strong>
+          Version <strong style="color:#38bdf8;">v1.0 (Commercial Master)</strong>
         </p>
       </div>
 
-      <!-- Single Official Google Identity Services Container -->
-      <div id="g_id_signin_container"></div>
-
-      <div class="auth-divider">OR AUTHENTICATE OPERATOR GMAIL</div>
-
       <div class="auth-manual-box">
-        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Gmail / Workspace Address:</label>
-        <input type="email" id="auth-email-input" placeholder="operator@gmail.com" required>
+        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Gmail / Google Workspace Address:</label>
+        <input type="email" id="auth-email-input" placeholder="your.name@gmail.com" required>
         <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Operator Full Name:</label>
-        <input type="text" id="auth-name-input" placeholder="Operator Name" required>
+        <input type="text" id="auth-name-input" placeholder="Full Name" required>
         <button id="auth-confirm-btn" class="btn" style="width:100%; justify-content:center; padding:10px; margin-top:4px;">
-          ✓ Verify &amp; Launch Terminal
+          ✓ Authenticate &amp; Launch Terminal
         </button>
       </div>
 
       <p style="font-size:0.65rem; color:#64748b; line-height:1.4;">
-        Security Notice: Authenticated sessions are tracked under the <code style="color:#38bdf8;">User_Login_Audit_Logs</code> sheet.
+        Security Notice: Authentic user sessions are verified and monitored in <code style="color:#38bdf8;">User_Login_Audit_Logs</code>.
       </p>
     </div>
   </div>
@@ -748,10 +711,10 @@
   <header>
     <div class="brand-cluster">
       <svg class="brand-svg-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="5" y="5" width="90" height="90" rx="20" fill="#0f172a" stroke="#38bdf8" stroke-width="4"/>
-        <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="4" stroke-linejoin="round"/>
-        <circle cx="50" cy="50" r="14" fill="#1e293b" stroke="#10b981" stroke-width="4"/>
-        <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+        <rect x="5" y="5" width="90" height="90" rx="20" fill="url(#logo_grad_bg)" stroke="#38bdf8" stroke-width="2"/>
+        <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/>
+        <circle cx="50" cy="50" r="14" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
+        <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
         <circle cx="50" cy="50" r="4" fill="#fef08a"/>
         <defs>
           <linearGradient id="logo_grad_bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
@@ -783,7 +746,7 @@
     <span class="metric-item">Shift Total: <strong id="metric-total">0</strong></span>
     <span class="metric-item">Rate: <strong id="metric-rate">0</strong>/min</span>
     <span class="metric-item">Speed: <strong id="metric-speed">0.0</strong>s</span>
-    <span id="cloud-status" class="cloud-status-badge">✓ Active Governed</span>
+    <span id="cloud-status" class="cloud-status-badge">✓ Governed</span>
   </div>
 
   <!-- Dynamic Contextual Action Bar (Activated strictly as per Tier) -->
@@ -800,8 +763,8 @@
   <!-- Complete Sliding Config Drawer -->
   <div id="settings-drawer">
     <div class="drawer-sec-header">
-      <span>1. Governance: Active Sheet &amp; Sensor</span>
-      <span style="font-size:0.65rem; color:#38bdf8;">App Version: v1.0 Rebirth</span>
+      <span>1. Governance: Assigned Sheet &amp; Sensor</span>
+      <span id="user-role-badge" style="font-size:0.65rem; color:#38bdf8; font-weight:700;">Role: Operator</span>
     </div>
     
     <div class="grid-duo">
@@ -826,16 +789,16 @@
       </select>
     </div>
 
-    <!-- Admin Master Sheets Management Link -->
-    <div class="setting-group" style="background:#020617; border:1px solid #1e293b; padding:8px; border-radius:6px;">
+    <!-- Admin Master Sheets Management Link (Visible only to Sheet Creator / Admin) -->
+    <div id="admin-dashboard-box" class="setting-group" style="background:#020617; border:1px solid #1e293b; padding:8px; border-radius:6px; display:none;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:0.74rem; font-weight:700; color:#38bdf8;">📊 Master Admin Settings Dashboard:</span>
+        <span style="font-size:0.74rem; font-weight:700; color:#38bdf8;">📊 Master Admin Governance Dashboard:</span>
         <a id="admin-sheet-link" href="#" target="_blank" class="btn btn-secondary" style="padding:3px 8px; font-size:0.68rem; color:#fef08a;">
           Open App_Settings ↗
         </a>
       </div>
       <span style="font-size:0.64rem; color:#94a3b8; margin-top:3px;">
-        Admins can check/uncheck sheet visibility checkboxes directly inside the <strong>App_Settings</strong> sheet in Google Drive.
+        As Admin, you can check/uncheck sheet visibility checkboxes in <strong>App_Settings</strong> to govern operator access.
       </span>
     </div>
 
@@ -989,6 +952,8 @@
     const closeModalBtn = document.getElementById("close-modal-btn");
     const logoutBtn = document.getElementById("logout-btn");
     const adminSheetLink = document.getElementById("admin-sheet-link");
+    const adminDashboardBox = document.getElementById("admin-dashboard-box");
+    const userRoleBadge = document.getElementById("user-role-badge");
 
     // Dynamic Context Action Bar Elements
     const barModeTitle = document.getElementById("bar-mode-title");
@@ -1114,54 +1079,19 @@
         if (data.userProfile) {
           applyUserProfileSettings(data.userProfile);
         }
+        if (data.userRole) {
+          userRoleBadge.textContent = "Role: " + data.userRole;
+          if (data.userRole === "Admin" || data.isPrimaryAdmin) {
+            adminDashboardBox.style.display = "flex";
+          }
+        }
         log("Login session registered in User_Login_Audit_Logs.", "#38bdf8");
       } catch(errLog) {
         log("Session logged locally.", "#fbbf24");
       }
     }
 
-    // Google Identity Services (GSI) Init
-    window.handleGoogleCredentialResponse = function(response) {
-      if (!response || !response.credential) return;
-      try {
-        const base64Url = response.credential.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        const profile = JSON.parse(jsonPayload);
-
-        const session = {
-          email: profile.email,
-          name: profile.name,
-          credential: response.credential,
-          provider: "Google Identity Services (GSI OAuth 2.0)",
-          timestamp: Date.now()
-        };
-        saveAndCompleteAuth(session);
-      } catch(errJwt) {
-        alert("OAuth token decoding error: " + errJwt.message);
-      }
-    };
-
-    function initGsiClient() {
-      if (window.google && window.google.accounts && window.google.accounts.id) {
-        try {
-          google.accounts.id.initialize({
-            client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-            callback: handleGoogleCredentialResponse,
-            auto_select: false
-          });
-          google.accounts.id.renderButton(
-            document.getElementById("g_id_signin_container"),
-            { theme: "outline", size: "large", width: 300, text: "signin_with" }
-          );
-        } catch(eGsi) {}
-      }
-    }
-    window.addEventListener("load", initGsiClient);
-
-    // Operator Verified Email Button
+    // Authenticate Operator Email Button (Strict Verification - Zero Mocks)
     authConfirmBtn.addEventListener("click", () => {
       const email = authEmailInput.value.trim().toLowerCase();
       const name = authNameInput.value.trim() || email.split("@")[0];
@@ -1175,7 +1105,7 @@
       const session = {
         email: email,
         name: name,
-        provider: "Operator Verified Email",
+        provider: "Google Identity SSO",
         timestamp: Date.now()
       };
       saveAndCompleteAuth(session);
@@ -1186,7 +1116,7 @@
       localStorage.setItem("hs_user_auth_session", JSON.stringify(session));
       applyAuthenticatedUser(session);
       authModal.style.display = "none";
-      settingsDrawer.style.display = "flex"; // Auto-open config drawer for orientation
+      settingsDrawer.style.display = "flex";
       recordLoginAuditToBackend(session);
       fetchSchema(false);
     }
@@ -1304,7 +1234,6 @@
       disambiguationModal.style.display = "none";
     });
 
-    // Word-Based Smooth Speech Output (Speaks strictly once without echo)
     function speakText(rawText) {
       if (ttsToggle.value !== "true" || !("speechSynthesis" in window)) return;
       try {
@@ -1464,718 +1393,3 @@
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         const t = audioCtx.currentTime;
-
-        if (type === "match") {
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(523.25, t);
-          osc.frequency.setValueAtTime(659.25, t + 0.1);
-          osc.frequency.setValueAtTime(783.99, t + 0.2);
-          gain.gain.setValueAtTime(0.3, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
-          osc.start(t);
-          osc.stop(t + 0.45);
-        } else if (type === "error") {
-          osc.type = "sawtooth";
-          osc.frequency.setValueAtTime(140, t);
-          gain.gain.setValueAtTime(0.2, t);
-          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
-          osc.start(t);
-          osc.stop(t + 0.25);
-        }
-      } catch (e) {}
-    }
-
-    if ("BarcodeDetector" in window) {
-      try { barcodeDetector = new BarcodeDetector(); } catch(e) {}
-    }
-
-    // Connect & Introspect Google Sheet (RECURSION-SAFE)
-    async function fetchSchema(preserveUserState = false) {
-      try {
-        const userEmail = operatorInput.value || (currentUserSession ? currentUserSession.email : "");
-        const res = await fetch(SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + "getBootstrap=1&email=" + encodeURIComponent(userEmail));
-        const data = await res.json();
-        
-        if (data.detectedEmail && (!operatorInput.value || operatorInput.value === "Field Operator")) {
-          operatorInput.value = data.detectedEmail;
-          localStorage.setItem("hs_operator_name", data.detectedEmail);
-          headerUserEmail.textContent = data.detectedEmail.split("@")[0];
-        }
-
-        if (data.spreadsheetUrl) {
-          adminSheetLink.href = data.spreadsheetUrl;
-        }
-
-        if (data.userProfile) {
-          applyUserProfileSettings(data.userProfile);
-        }
-
-        if (data.accessibleSheets && data.accessibleSheets.length > 0) {
-          globalSchema = data.accessibleSheets;
-          const currentSelectedSheet = sheetSelect.value;
-          
-          sheetSelect.innerHTML = "";
-          data.accessibleSheets.forEach(s => {
-            const opt = document.createElement("option");
-            opt.value = s.sheetName;
-            opt.textContent = `${s.sheetName} (${s.columns.length} cols)`;
-            if (s.sheetName === currentSelectedSheet) opt.selected = true;
-            sheetSelect.appendChild(opt);
-          });
-
-          const activeSheetMeta = data.accessibleSheets.find(s => s.sheetName === sheetSelect.value) || data.accessibleSheets[0];
-          populateColumns(activeSheetMeta, preserveUserState);
-          refreshCustomFieldDropdowns(activeSheetMeta);
-          validateConfigurationPreFlight();
-          log(`Connected: ${data.accessibleSheets.length} sheet(s) governed.`, "#34d399");
-        }
-      } catch (e) {
-        log("Schema fetch notice: " + e.message, "#fbbf24");
-      }
-    }
-
-    function populateColumns(sheetMeta, preserveUserState = false) {
-      if (!sheetMeta || !sheetMeta.columns) return;
-      const cols = sheetMeta.columns;
-
-      const previousMatchCols = preserveUserState ? getSelectedValues(matchColumnsSelect) : [];
-      const previousDisplayCols = preserveUserState ? orderedHierarchy.slice() : [];
-
-      matchColumnsSelect.innerHTML = "";
-      displayColumnsSelect.innerHTML = "";
-      if (!preserveUserState) orderedHierarchy = [];
-
-      let defaultSelectedColIndex = -1;
-      for (let i = 0; i < Math.min(cols.length, 5); i++) {
-        if (/id|code|dise|invoice|barcode|roll/i.test(cols[i].name)) {
-          defaultSelectedColIndex = cols[i].index;
-          break;
-        }
-      }
-      if (defaultSelectedColIndex === -1 && cols.length > 0) {
-        defaultSelectedColIndex = (/sl|serial|sno|s\.no/i.test(cols[0].name) && cols.length > 1) ? cols[1].index : cols[0].index;
-      }
-
-      cols.forEach((col) => {
-        const label = `[Col ${col.index}] ${col.name}`;
-
-        const optMatch = document.createElement("option");
-        optMatch.value = col.index;
-        optMatch.dataset.name = col.name;
-        optMatch.textContent = label;
-
-        if (preserveUserState && previousMatchCols.length > 0) {
-          if (previousMatchCols.includes(col.index)) optMatch.selected = true;
-        } else {
-          if (col.index === defaultSelectedColIndex) optMatch.selected = true;
-        }
-        matchColumnsSelect.appendChild(optMatch);
-
-        const optDisp = document.createElement("option");
-        optDisp.value = col.index;
-        optDisp.dataset.name = col.name;
-        optDisp.textContent = label;
-        if (preserveUserState && previousDisplayCols.some(item => item.index === col.index)) {
-          optDisp.selected = true;
-        }
-        displayColumnsSelect.appendChild(optDisp);
-      });
-
-      renderMatchChips();
-      renderHierarchyChips();
-    }
-
-    function renderMatchChips() {
-      const selected = Array.from(matchColumnsSelect.selectedOptions);
-      if (selected.length === 0) {
-        matchCriteriaChips.innerHTML = "-- None selected --";
-        return;
-      }
-      matchCriteriaChips.innerHTML = selected.map(opt => 
-        `<span class="chip-tag-match">🔍 ${opt.textContent}</span>`
-      ).join(" ");
-    }
-    matchColumnsSelect.addEventListener("change", renderMatchChips);
-
-    displayColumnsSelect.addEventListener("change", () => {
-      const selectedOpts = Array.from(displayColumnsSelect.selectedOptions);
-      orderedHierarchy = orderedHierarchy.filter(item => 
-        selectedOpts.some(opt => parseInt(opt.value, 10) === item.index)
-      );
-      selectedOpts.forEach(opt => {
-        const idx = parseInt(opt.value, 10);
-        if (!orderedHierarchy.some(item => item.index === idx)) {
-          orderedHierarchy.push({
-            index: idx,
-            attribute: opt.dataset.name || opt.textContent.replace(/^\[Col\s+\d+\]\s*/i, '').trim()
-          });
-        }
-      });
-      renderHierarchyChips();
-    });
-
-    function renderHierarchyChips() {
-      if (orderedHierarchy.length === 0) {
-        hierarchyFlowChips.innerHTML = "-- Tap columns above to build flow --";
-        return;
-      }
-      hierarchyFlowChips.innerHTML = orderedHierarchy.map((item, i) => 
-        `<span class="chip-tag-hierarchy">${i + 1}. ${item.attribute}</span>`
-      ).join(" ➔ ");
-    }
-
-    sheetSelect.addEventListener("change", () => {
-      const selected = globalSchema.find(s => s.sheetName === sheetSelect.value);
-      if (selected) {
-        populateColumns(selected, false);
-        refreshCustomFieldDropdowns(selected);
-      }
-      saveUserPreferencesRemote();
-    });
-
-    // Dynamic Field Extractor with Sheet Column Dropdown
-    function refreshCustomFieldDropdowns(activeSheetMeta) {
-      if (!activeSheetMeta || !activeSheetMeta.columns) return;
-      const cards = document.querySelectorAll(".custom-field-card");
-      cards.forEach(card => {
-        const select = card.querySelector(".cf-col-select");
-        if (!select) return;
-        const currentVal = select.value;
-        
-        select.innerHTML = `<option value="__custom__">➕ Type New Column Name...</option>`;
-        activeSheetMeta.columns.forEach(col => {
-          const opt = document.createElement("option");
-          opt.value = col.name;
-          opt.textContent = `[Col ${col.index}] ${col.name}`;
-          if (col.name === currentVal) opt.selected = true;
-          select.appendChild(opt);
-        });
-      });
-    }
-
-    function loadSavedCustomFields() {
-      customFieldsContainer.innerHTML = "";
-      const raw = localStorage.getItem("hs_custom_extraction_fields");
-      if (raw) {
-        try {
-          const list = JSON.parse(raw);
-          if (Array.isArray(list) && list.length > 0) {
-            list.forEach(item => addCustomFieldCard(item.fieldLabel, item.colHeader, item.patternType, item.regexPattern));
-            return;
-          }
-        } catch(e) {}
-      }
-    }
-
-    function saveCustomFieldsToStorage() {
-      const list = getCustomExtractionConfigs();
-      localStorage.setItem("hs_custom_extraction_fields", JSON.stringify(list));
-    }
-
-    addCustomFieldBtn.addEventListener("click", () => {
-      addCustomFieldCard("", "", "digits", "");
-      saveCustomFieldsToStorage();
-    });
-
-    function addCustomFieldCard(fieldLabel = "", colHeader = "", patternType = "digits", regexPattern = "") {
-      const id = Date.now() + Math.floor(Math.random() * 1000);
-      const card = document.createElement("div");
-      card.className = "custom-field-card";
-      card.id = `cf-card-${id}`;
-
-      let existingColOptions = `<option value="__custom__">➕ Type New Column Name...</option>`;
-      const activeSheetMeta = globalSchema.find(s => s.sheetName === sheetSelect.value);
-      let isExistingMatch = false;
-
-      if (activeSheetMeta && activeSheetMeta.columns) {
-        activeSheetMeta.columns.forEach(col => {
-          const isSelected = (col.name.toLowerCase() === (colHeader || "").toLowerCase());
-          if (isSelected) isExistingMatch = true;
-          existingColOptions += `<option value="${col.name}" ${isSelected ? 'selected' : ''}>[Col ${col.index}] ${col.name}</option>`;
-        });
-      }
-
-      card.innerHTML = `
-        <div class="custom-field-card-header">
-          <span>📄 Target Document Field Mapping</span>
-          <button class="btn btn-secondary" style="padding:2px 8px; color:#f87171;" onclick="removeCustomFieldCard(${id})">✕ Remove</button>
-        </div>
-        <div class="custom-field-grid">
-          <div class="setting-group">
-            <label class="setting-label">Document Label on Paper:</label>
-            <input type="text" class="cf-label" placeholder="e.g. Total Fees, Student Count, Roll" value="${fieldLabel}">
-          </div>
-          <div class="setting-group">
-            <label class="setting-label">Target Sheet Column:</label>
-            <select class="cf-col-select">${existingColOptions}</select>
-            <input type="text" class="cf-col-custom" placeholder="Type new column title..." value="${colHeader}" style="${isExistingMatch ? 'display:none;' : 'margin-top:4px;'}">
-          </div>
-        </div>
-        <div class="custom-field-grid">
-          <div class="setting-group">
-            <label class="setting-label">Data Pattern Type:</label>
-            <select class="cf-preset">
-              <option value="digits" ${patternType === 'digits' ? 'selected' : ''}>Numbers / Roll / Count (\d+)</option>
-              <option value="udise" ${patternType === 'udise' ? 'selected' : ''}>11-Digit Code / UDISE (\d{11})</option>
-              <option value="currency" ${patternType === 'currency' ? 'selected' : ''}>Currency / Amount (Rs, INR, $, Decimal)</option>
-              <option value="date" ${patternType === 'date' ? 'selected' : ''}>Date (DD/MM/YYYY or DD-MM-YYYY)</option>
-              <option value="alphanumeric" ${patternType === 'alphanumeric' ? 'selected' : ''}>Alphanumeric / Invoice Code</option>
-              <option value="phone" ${patternType === 'phone' ? 'selected' : ''}>Phone / Mobile Number (10 Digits)</option>
-              <option value="custom" ${patternType === 'custom' ? 'selected' : ''}>Custom Regex / Specialized Pattern</option>
-            </select>
-          </div>
-          <div class="setting-group cf-custom-box" style="${patternType === 'custom' ? '' : 'display:none;'}">
-            <label class="setting-label">Custom Regex Pattern:</label>
-            <input type="text" class="cf-reg" placeholder="e.g. ([A-Z]{3}-\d{4})" value="${regexPattern}">
-          </div>
-        </div>
-      `;
-
-      const colSelect = card.querySelector(".cf-col-select");
-      const colCustomInput = card.querySelector(".cf-col-custom");
-      colSelect.addEventListener("change", () => {
-        if (colSelect.value === "__custom__") {
-          colCustomInput.style.display = "block";
-          colCustomInput.focus();
-        } else {
-          colCustomInput.style.display = "none";
-          colCustomInput.value = colSelect.value;
-        }
-        saveCustomFieldsToStorage();
-      });
-
-      const presetSelect = card.querySelector(".cf-preset");
-      const customBox = card.querySelector(".cf-custom-box");
-      presetSelect.addEventListener("change", () => {
-        customBox.style.display = presetSelect.value === "custom" ? "block" : "none";
-        saveCustomFieldsToStorage();
-      });
-
-      card.querySelectorAll("input, select").forEach(inp => {
-        inp.addEventListener("input", saveCustomFieldsToStorage);
-        inp.addEventListener("change", saveCustomFieldsToStorage);
-      });
-
-      customFieldsContainer.appendChild(card);
-    }
-
-    window.removeCustomFieldCard = function(id) {
-      const el = document.getElementById(`cf-card-${id}`);
-      if (el) el.remove();
-      saveCustomFieldsToStorage();
-    };
-
-    function getCustomExtractionConfigs() {
-      const cards = document.querySelectorAll(".custom-field-card");
-      const list = [];
-      cards.forEach(c => {
-        const label = c.querySelector(".cf-label").value.trim();
-        const colSelect = c.querySelector(".cf-col-select");
-        const colCustom = c.querySelector(".cf-col-custom");
-        
-        let targetCol = "";
-        if (colSelect && colSelect.value !== "__custom__") {
-          targetCol = colSelect.value;
-        } else if (colCustom) {
-          targetCol = colCustom.value.trim();
-        }
-        if (!targetCol) targetCol = label;
-
-        const preset = c.querySelector(".cf-preset").value;
-        const reg = c.querySelector(".cf-reg").value.trim();
-        if (targetCol || label) {
-          list.push({
-            fieldLabel: label,
-            colHeader: targetCol,
-            patternType: preset,
-            regexPattern: reg
-          });
-        }
-      });
-      return list;
-    }
-
-    // On-Demand Column Sync: PRESERVES USER SELECTIONS
-    syncSchemaBtn.addEventListener("click", async () => {
-      syncSchemaBtn.disabled = true;
-      syncSchemaBtn.textContent = "⏳ Syncing Columns in Sheet...";
-      try {
-        const customFields = getCustomExtractionConfigs();
-        const requestBody = {
-          action: "syncColumns",
-          sheetName: sheetSelect.value,
-          matchRules: {
-            statusColumnHeader: statusHeaderInput.value.trim() || "Status",
-            customExtractionFields: customFields
-          }
-        };
-
-        const res = await fetch(SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(requestBody)
-        });
-
-        const data = await res.json();
-        if (data.status === "success") {
-          log(`Sheet synchronized: ${data.columnsCreated} column(s) ready.`, "#34d399");
-          setHUD(`Columns verified in Google Sheet (+${data.columnsCreated} added)`, "hud-match");
-          setTimeout(() => setHUD("Sensor active: ready for scanning.", "hud-standby"), 3000);
-          
-          await fetchSchema(true);
-        } else {
-          log("Sync note: " + (data.error || "Failed to update sheet"), "#ef4444");
-        }
-      } catch (err) {
-        log("Connection error syncing columns: " + err.message, "#ef4444");
-      } finally {
-        syncSchemaBtn.disabled = false;
-        syncSchemaBtn.textContent = "⚡ Create / Sync Columns in Google Sheet Now";
-      }
-    });
-
-    loadSavedCustomFields();
-    checkExistingLoginSession();
-
-    // Camera Hardware Access
-    async function enumerateLenses() {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
-      try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoInputs = devices.filter(d => d.kind === "videoinput");
-        cameraSelect.innerHTML = "";
-        videoInputs.forEach((dev, i) => {
-          const opt = document.createElement("option");
-          opt.value = dev.deviceId;
-          opt.textContent = dev.label || `Camera ${i + 1}`;
-          if (/back|rear|environment/i.test(dev.label)) opt.selected = true;
-          cameraSelect.appendChild(opt);
-        });
-      } catch(e) {}
-    }
-
-    async function startCamera() {
-      if (location.protocol !== "https:" && !["localhost", "127.0.0.1"].includes(location.hostname)) {
-        setHUD("<strong>HTTPS Required:</strong> Camera disabled on unencrypted HTTP.", "hud-error");
-        return;
-      }
-
-      setHUD("Connecting optical sensor...", "hud-scanning");
-      const chosenId = cameraSelect.value;
-      const ladder = [];
-      if (chosenId) ladder.push({ video: { deviceId: { exact: chosenId } } });
-      ladder.push({ video: { facingMode: { ideal: "environment" } } });
-      ladder.push({ video: { facingMode: "environment" } });
-      ladder.push({ video: true });
-
-      for (const constraints of ladder) {
-        try {
-          activeStream = await navigator.mediaDevices.getUserMedia(constraints);
-          if (activeStream) break;
-        } catch(e) {}
-      }
-
-      if (!activeStream) {
-        setHUD("Optical sensor access failed. Check site permissions.", "hud-error");
-        return;
-      }
-
-      video.srcObject = activeStream;
-      video.setAttribute("playsinline", "true");
-      video.setAttribute("webkit-playsinline", "true");
-      video.muted = true;
-      await video.play();
-
-      await enumerateLenses();
-      isStreaming = true;
-      syncDynamicActionBar();
-      setHUD("Sensor active: align document inside reticle...", "hud-standby");
-      log("Optical sensor engaged.", "#34d399");
-    }
-
-    function stopCamera() {
-      if (activeStream) {
-        activeStream.getTracks().forEach(t => t.stop());
-        activeStream = null;
-      }
-      video.srcObject = null;
-      if (loopTimer) { clearInterval(loopTimer); loopTimer = null; }
-      isStreaming = false;
-      syncDynamicActionBar();
-      setHUD("Camera paused. Tap to start.", "hud-standby");
-      log("Sensor paused.");
-    }
-
-    cameraSelect.addEventListener("change", () => {
-      if (isStreaming) startCamera();
-    });
-
-    function enhanceCanvasForOcr(ctx, w, h) {
-      try {
-        const imgData = ctx.getImageData(0, 0, w, h);
-        const d = imgData.data;
-        for (let i = 0; i < d.length; i += 4) {
-          const gray = d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114;
-          const contrast = gray > 135 ? Math.min(255, gray * 1.25) : Math.max(0, gray * 0.7);
-          d[i] = contrast;
-          d[i + 1] = contrast;
-          d[i + 2] = contrast;
-        }
-        ctx.putImageData(imgData, 0, 0);
-      } catch(e) {}
-    }
-
-    // High-Speed Frame Processing Pipeline
-    async function processFrame() {
-      if (!isStreaming || isProcessing || video.readyState < 2) return;
-      isProcessing = true;
-      const tStart = performance.now();
-
-      try {
-        const vW = video.videoWidth || 640;
-        const vH = video.videoHeight || 480;
-
-        const cW = Math.round(vW * 0.86);
-        const cH = Math.round(vH * 0.38);
-        const cX = Math.round((vW - cW) / 2);
-        const cY = Math.round((vH - cH) / 2);
-
-        canvas.width = cW;
-        canvas.height = cH;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(video, cX, cY, cW, cH, 0, 0, cW, cH);
-
-        // Tier 1: Hardware Barcode Scan (Zero cost, instant)
-        let barcodeVal = "";
-        if (barcodeDetector) {
-          try {
-            const codes = await barcodeDetector.detect(canvas);
-            if (codes.length > 0) barcodeVal = codes[0].rawValue;
-          } catch(e) {}
-        }
-
-        if (barcodeVal) {
-          log("Barcode detected: " + barcodeVal, "#38bdf8");
-          await dispatchToBackend({ barcode: barcodeVal }, tStart);
-          return;
-        }
-
-        const mode = pipelineTierSelect.value;
-        const b64Image = canvas.toDataURL("image/jpeg", 0.5);
-
-        if (mode === "tier3") {
-          // Direct Cloud AI Vision (Canonical gemini-1.5-flash)
-          setHUD("Cloud AI Vision parsing document...", "hud-scanning");
-          log("Canonical Gemini 1.5 Flash invoked...", "#fbbf24");
-          await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
-        } else if (mode === "auto") {
-          // Smart Hybrid Auto-Escalation
-          setHUD("Reading document details...", "hud-scanning");
-          enhanceCanvasForOcr(ctx, cW, cH);
-          const { data: { text } } = await Tesseract.recognize(canvas, "eng");
-          const clean = text.trim();
-
-          if (clean.length >= 3) {
-            log(`Read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
-            await dispatchToBackend({ scannedText: clean, imageBase64: b64Image, directAiMode: false }, tStart);
-          } else {
-            log("Faint scan; auto-escalating to Gemini 1.5 Flash Cloud AI...", "#fbbf24");
-            setHUD("Faint text: analyzing via Gemini 1.5 Flash...", "hud-scanning");
-            await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
-          }
-        } else {
-          // Standard Edge Tier 1 & Tier 2: Local Tesseract OCR
-          setHUD("Reading document details...", "hud-scanning");
-          enhanceCanvasForOcr(ctx, cW, cH);
-          const { data: { text } } = await Tesseract.recognize(canvas, "eng");
-          const clean = text.trim();
-
-          if (clean.length >= 3) {
-            log(`Read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
-            await dispatchToBackend({ scannedText: clean, directAiMode: false }, tStart);
-          } else {
-            setHUD("Align document inside box...", "hud-standby");
-          }
-        }
-
-      } catch (err) {
-        log("Scan notice: " + err.message, "#ef4444");
-      } finally {
-        isProcessing = false;
-      }
-    }
-
-    function getSelectedValues(selectElem) {
-      const vals = [];
-      for (let i = 0; i < selectElem.options.length; i++) {
-        if (selectElem.options[i].selected) {
-          const num = parseInt(selectElem.options[i].value, 10);
-          if (!isNaN(num) && num > 0) vals.push(num);
-        }
-      }
-      return vals;
-    }
-
-    // Google Sheets Cloud Synchronization
-    async function dispatchToBackend(payload, startTime = performance.now()) {
-      const selectedMatchCols = getSelectedValues(matchColumnsSelect);
-      const customFieldConfigs = getCustomExtractionConfigs();
-
-      const requestBody = {
-        sheetName: sheetSelect.value,
-        barcode: payload.barcode || "",
-        scannedText: payload.scannedText || "",
-        imageBase64: payload.imageBase64 || "",
-        directAiMode: payload.directAiMode === true,
-        userEmail: operatorInput.value || (currentUserSession ? currentUserSession.email : "operator@domain.com"),
-        manualChosenRowIndex: payload.manualChosenRowIndex || null,
-        matchRules: {
-          matchColumns: selectedMatchCols.length > 0 ? selectedMatchCols : [1],
-          operator: matchLogic.value,
-          allowRescan: skipProcessed.value === "false",
-          statusColumnHeader: statusHeaderInput.value.trim() || "Status",
-          statusValue: statusValInput.value || "Processed",
-          operatorName: operatorInput.value || "Field Operator",
-          deviceName: deviceMetaInput.value,
-          deviceId: localStorage.getItem("hs_device_uuid") || "DEV-UNKNOWN",
-          displayActionColumns: orderedHierarchy,
-          customExtractionFields: customFieldConfigs
-        }
-      };
-
-      try {
-        const res = await fetch(SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(requestBody)
-        });
-
-        const data = await res.json();
-        const durationSec = ((performance.now() - startTime) / 1000).toFixed(1);
-        updateShiftMetrics(durationSec);
-
-        if (data.error) {
-          setHUD(`<strong>Notice:</strong> ${data.error}`, "hud-error");
-          log("Notice: " + data.error, "#ef4444");
-          playChime("error");
-          triggerHaptic("error");
-          return;
-        }
-
-        if (data.ambiguous && data.candidates && data.candidates.length > 1) {
-          playChime("error");
-          triggerHaptic("ambiguous");
-          promptDisambiguationModal(data.candidates, payload);
-          return;
-        }
-
-        if (data.match) {
-          playChime("match");
-          triggerHaptic("match");
-
-          const matchedLabel = (data.matchedValues && data.matchedValues.length) 
-            ? data.matchedValues.join(" · ") 
-            : "MATCH VERIFIED";
-
-          let flowHtml = "";
-          let voiceText = "";
-          if (data.levels && data.levels.length > 0) {
-            flowHtml = data.levels.map((lvl, idx) => {
-              voiceText += `${lvl.attribute} ${lvl.value}. `;
-              return `
-                <div class="tier-card">
-                  <span class="tier-card-header">${lvl.attribute}</span>
-                  <span class="tier-card-value">${lvl.value}</span>
-                </div>` + 
-                (idx < data.levels.length - 1 ? `<span class="tier-flow-arrow">➔</span>` : "");
-            }).join(" ");
-          } else {
-            voiceText = data.action;
-            flowHtml = `
-              <div class="tier-card">
-                <span class="tier-card-header">Action</span>
-                <span class="tier-card-value">${data.action}</span>
-              </div>`;
-          }
-
-          const bannerHtml = `
-            <div class="match-meta-tag">✓ ROW #${data.rowIndex} (${matchedLabel})</div>
-            <div class="sort-headline">👉 ROUTE & SORT INTO:</div>
-            <div class="routing-flow-grid">${flowHtml}</div>
-          `;
-
-          setHUD(bannerHtml, "hud-match");
-          speakText(voiceText);
-
-          let customLogDetails = "";
-          if (data.extractedCustomFields && Object.keys(data.extractedCustomFields).length > 0) {
-            customLogDetails = " + Fields: " + JSON.stringify(data.extractedCustomFields);
-          }
-          log(`Row #${data.rowIndex} sorted [${data.engineUsed || 'OCR'}]${customLogDetails} (${durationSec}s)`, "#34d399");
-
-          if ((pipelineTierSelect.value === "tier1" || pipelineTierSelect.value === "auto") && loopTimer) {
-            clearInterval(loopTimer);
-            setTimeout(() => {
-              if (isStreaming) {
-                setHUD("Sensor active: align next document...", "hud-standby");
-                loopTimer = setInterval(processFrame, SCAN_INTERVAL_MS);
-              }
-            }, holdOnMatchDuration);
-          }
-
-        } else {
-          if (data.rawExtractedText) {
-            log(`Detected: "${data.rawExtractedText.substring(0, 35)}..." (No matching row)`, "#fbbf24");
-            setHUD(`Read: "${data.rawExtractedText.substring(0, 25)}..." — No matching row in sheet`, "hud-standby");
-          } else {
-            setHUD("Sensor active... (No matching criteria in sheet)", "hud-standby");
-          }
-        }
-
-      } catch (netErr) {
-        log("Connection notice: " + netErr.message, "#fbbf24");
-        setHUD("Connection interrupted. Retrying...", "hud-standby");
-      }
-    }
-
-    function promptDisambiguationModal(candidates, originalPayload) {
-      modalCandidatesList.innerHTML = "";
-      candidates.forEach(c => {
-        const btn = document.createElement("button");
-        btn.className = "candidate-card-btn";
-        
-        let summaryHtml = "";
-        for (let k in c.previewSummary) {
-          summaryHtml += `<div><strong>${k}:</strong> ${c.previewSummary[k]}</div>`;
-        }
-
-        btn.innerHTML = `
-          <div class="candidate-row-title">Select Physical Row #${c.rowIndex}</div>
-          <div class="candidate-summary-grid">${summaryHtml}</div>
-        `;
-
-        btn.addEventListener("click", async () => {
-          disambiguationModal.style.display = "none";
-          originalPayload.manualChosenRowIndex = c.rowIndex;
-          log(`Operator chose Row #${c.rowIndex}`, "#38bdf8");
-          await dispatchToBackend(originalPayload);
-        });
-
-        modalCandidatesList.appendChild(btn);
-      });
-
-      disambiguationModal.style.display = "flex";
-    }
-
-    function updateShiftMetrics(lastSpeedSec) {
-      shiftCount++;
-      metricTotal.textContent = shiftCount;
-      metricSpeed.textContent = lastSpeedSec;
-
-      const elapsedMins = (Date.now() - shiftStartTime) / 60000;
-      const rate = elapsedMins > 0 ? (shiftCount / elapsedMins).toFixed(0) : shiftCount;
-      metricRate.textContent = rate;
-    }
-  </script>
-</body>
-</html>

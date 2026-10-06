@@ -7,8 +7,6 @@
 
   <!-- Client-side OCR Engine -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <!-- Google Identity Services (GSI) SDK -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
     :root {
@@ -190,7 +188,7 @@
       font-weight: 700;
     }
 
-    /* Dynamic Action Bar (Directly Above Camera) */
+    /* Dynamic Action Bar */
     #mode-action-bar {
       background: #0f172a;
       border-bottom: 1px solid var(--border-subtle);
@@ -372,6 +370,26 @@
       margin-top: 4px;
     }
 
+    /* Admin Console Cards */
+    .admin-roster-card {
+      background: #050811;
+      border: 1px solid var(--border-active);
+      border-radius: 6px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+
+    .admin-roster-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
     /* Camera Viewport */
     #viewport-container {
       position: relative;
@@ -537,8 +555,8 @@
       color: #fef08a;
     }
 
-    /* Enterprise Clean Login Modal */
-    #auth-modal {
+    /* Clean Authentication & Approval Modals */
+    #auth-modal, #approval-pending-modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
@@ -574,29 +592,6 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
-    }
-
-    #g_id_signin_container {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      min-height: 44px;
-    }
-
-    .auth-divider {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      color: #64748b;
-      font-size: 0.72rem;
-      gap: 8px;
-    }
-
-    .auth-divider::before, .auth-divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: #334155;
     }
 
     .auth-manual-box {
@@ -704,7 +699,7 @@
 </head>
 <body>
 
-  <!-- 1. UNIFIED ENTERPRISE AUTHENTICATION MODAL -->
+  <!-- 1. AUTHENTICATION MODAL -->
   <div id="auth-modal">
     <div class="auth-card">
       <div class="auth-logo-wrap">
@@ -720,28 +715,56 @@
       <div>
         <h2 style="font-size:1.15rem; font-weight:800; color:#f8fafc;">Hover-Sorter Enterprise</h2>
         <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">
-          Version <strong style="color:#38bdf8;">v1.0 (Enterprise Rebirth)</strong>
+          Version <strong style="color:#38bdf8;">v1.0 (Master Final)</strong>
         </p>
       </div>
 
-      <!-- Single Official Google Identity Services Container -->
-      <div id="g_id_signin_container"></div>
-
-      <div class="auth-divider">OR AUTHENTICATE OPERATOR GMAIL</div>
-
       <div class="auth-manual-box">
-        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Gmail / Workspace Address:</label>
-        <input type="email" id="auth-email-input" placeholder="operator@gmail.com" required>
-        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Operator Full Name:</label>
-        <input type="text" id="auth-name-input" placeholder="Operator Name" required>
-        <button id="auth-confirm-btn" class="btn" style="width:100%; justify-content:center; padding:10px; margin-top:4px;">
-          ✓ Verify &amp; Launch Terminal
+        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Gmail / Google Workspace Email:</label>
+        <input type="email" id="auth-email-input" placeholder="your.name@gmail.com" required>
+        
+        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Full Name:</label>
+        <input type="text" id="auth-name-input" placeholder="Ankush Saha" required>
+        
+        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Account Role:</label>
+        <select id="auth-role-select">
+          <option value="Operator">Sorting Operator</option>
+          <option value="Supervisor">Shift Supervisor</option>
+        </select>
+
+        <button id="auth-confirm-btn" class="btn" style="width:100%; justify-content:center; padding:10px; margin-top:6px;">
+          ✓ Authenticate &amp; Access Terminal
         </button>
       </div>
 
       <p style="font-size:0.65rem; color:#64748b; line-height:1.4;">
-        Security Notice: Authenticated sessions are tracked under the <code style="color:#38bdf8;">User_Login_Audit_Logs</code> sheet.
+        Security Notice: Sessions are verified and audited in <code style="color:#38bdf8;">User_Login_Audit_Logs</code>.
       </p>
+    </div>
+  </div>
+
+  <!-- 2. PENDING APPROVAL GATEKEEPER MODAL -->
+  <div id="approval-pending-modal" style="display:none;">
+    <div class="auth-card" style="border-color:#f59e0b;">
+      <div style="font-size:2rem;">🔒</div>
+      <h2 style="font-size:1.05rem; font-weight:800; color:#fef08a;">Registration Pending Approval</h2>
+      <p id="pending-msg-text" style="font-size:0.75rem; color:#cbd5e1; line-height:1.4;">
+        Your terminal registration has been received and is queued for Administrator approval in <strong>User_Directory</strong>.
+      </p>
+
+      <div style="background:#020617; padding:8px 12px; border-radius:6px; width:100%; font-size:0.72rem; text-align:left; color:#94a3b8;">
+        <div>User Email: <strong id="pending-email-disp" style="color:#38bdf8;">-</strong></div>
+        <div>Assigned Role: <strong id="pending-role-disp" style="color:#10b981;">Operator</strong></div>
+        <div>Terminal UUID: <strong id="pending-uuid-disp" style="color:#fef08a;">-</strong></div>
+      </div>
+
+      <button id="check-approval-btn" class="btn" style="width:100%; justify-content:center; background:#10b981;">
+        🔄 Check Approval Status Now
+      </button>
+
+      <button id="pending-logout-btn" class="btn btn-secondary" style="width:100%; justify-content:center; color:#f87171;">
+        🚪 Sign Out / Switch Account
+      </button>
     </div>
   </div>
 
@@ -786,7 +809,7 @@
     <span id="cloud-status" class="cloud-status-badge">✓ Active Governed</span>
   </div>
 
-  <!-- Dynamic Contextual Action Bar (Activated strictly as per Tier) -->
+  <!-- Dynamic Contextual Action Bar -->
   <div id="mode-action-bar">
     <div class="mode-desc-text">
       <strong id="bar-mode-title">Tier 1: Standard Edge Scanning</strong>
@@ -800,8 +823,8 @@
   <!-- Complete Sliding Config Drawer -->
   <div id="settings-drawer">
     <div class="drawer-sec-header">
-      <span>1. Governance: Active Sheet &amp; Sensor</span>
-      <span style="font-size:0.65rem; color:#38bdf8;">App Version: v1.0 Rebirth</span>
+      <span>1. Governance: Assigned Sheet &amp; Sensor</span>
+      <span id="user-role-badge" style="font-size:0.65rem; color:#38bdf8; font-weight:700;">Role: Operator</span>
     </div>
     
     <div class="grid-duo">
@@ -815,7 +838,6 @@
       </div>
     </div>
 
-    <!-- Scanning Mode Defaults strictly to Tier 1 -->
     <div class="pipeline-strategy-card">
       <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ Scanning Mode &amp; Strategy:</div>
       <select id="pipeline-tier-select">
@@ -826,17 +848,27 @@
       </select>
     </div>
 
-    <!-- Admin Master Sheets Management Link -->
-    <div class="setting-group" style="background:#020617; border:1px solid #1e293b; padding:8px; border-radius:6px;">
+    <!-- Admin Master Sheets Management Link (Visible only to Primary Admin) -->
+    <div id="admin-dashboard-box" class="setting-group" style="background:#020617; border:1px solid #1e293b; padding:8px; border-radius:6px; display:none;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:0.74rem; font-weight:700; color:#38bdf8;">📊 Master Admin Settings Dashboard:</span>
+        <span style="font-size:0.74rem; font-weight:700; color:#38bdf8;">📊 Master Admin Control:</span>
         <a id="admin-sheet-link" href="#" target="_blank" class="btn btn-secondary" style="padding:3px 8px; font-size:0.68rem; color:#fef08a;">
           Open App_Settings ↗
         </a>
       </div>
       <span style="font-size:0.64rem; color:#94a3b8; margin-top:3px;">
-        Admins can check/uncheck sheet visibility checkboxes directly inside the <strong>App_Settings</strong> sheet in Google Drive.
+        Click checkboxes in <strong>App_Settings</strong> to toggle sheet visibility for operators.
       </span>
+    </div>
+
+    <!-- Admin In-App User Approval & Roster (Visible only to Admin) -->
+    <div id="admin-roster-box" class="setting-group" style="display:none;">
+      <div class="drawer-sec-header" style="color:#10b981;">
+        <span>👑 In-App User Approvals &amp; Team Management</span>
+      </div>
+      <div id="admin-roster-list" style="max-height:160px; overflow-y:auto;">
+        <div style="font-size:0.72rem; color:#94a3b8;">Loading user roster...</div>
+      </div>
     </div>
 
     <div class="drawer-sec-header">
@@ -883,7 +915,6 @@
       </div>
     </div>
 
-    <!-- Match Columns (Minimised: Selects at most ONE default among first 5) -->
     <div class="setting-group">
       <label class="setting-label">Match Columns (Document ID / Unique Key):</label>
       <select id="match-columns-select" multiple size="3"></select>
@@ -905,7 +936,7 @@
       <div id="hierarchy-flow-chips" class="chip-sequence-bar">-- Tap columns above to build flow --</div>
     </div>
 
-    <!-- 5. User-Friendly Dynamic Document Field Extractor (Pick Existing or Create New) -->
+    <!-- 5. User-Friendly Dynamic Document Field Extractor -->
     <div class="drawer-sec-header">
       <span>5. Custom Document Fields to Write-Back to Sheet</span>
       <button id="add-custom-field-btn" class="btn btn-secondary" style="padding:2px 8px; font-size:0.68rem;">+ Add Document Field</button>
@@ -989,6 +1020,10 @@
     const closeModalBtn = document.getElementById("close-modal-btn");
     const logoutBtn = document.getElementById("logout-btn");
     const adminSheetLink = document.getElementById("admin-sheet-link");
+    const adminDashboardBox = document.getElementById("admin-dashboard-box");
+    const adminRosterBox = document.getElementById("admin-roster-box");
+    const adminRosterList = document.getElementById("admin-roster-list");
+    const userRoleBadge = document.getElementById("user-role-badge");
 
     // Dynamic Context Action Bar Elements
     const barModeTitle = document.getElementById("bar-mode-title");
@@ -1001,13 +1036,22 @@
     const metricSpeed = document.getElementById("metric-speed");
     const cloudStatus = document.getElementById("cloud-status");
 
-    // Auth Modal Elements
+    // Auth & Approval Modals
     const authModal = document.getElementById("auth-modal");
     const authEmailInput = document.getElementById("auth-email-input");
     const authNameInput = document.getElementById("auth-name-input");
+    const authRoleSelect = document.getElementById("auth-role-select");
     const authConfirmBtn = document.getElementById("auth-confirm-btn");
     const activeUserBadge = document.getElementById("active-user-badge");
     const headerUserEmail = document.getElementById("header-user-email");
+
+    const approvalPendingModal = document.getElementById("approval-pending-modal");
+    const pendingMsgText = document.getElementById("pending-msg-text");
+    const pendingEmailDisp = document.getElementById("pending-email-disp");
+    const pendingRoleDisp = document.getElementById("pending-role-disp");
+    const pendingUuidDisp = document.getElementById("pending-uuid-disp");
+    const checkApprovalBtn = document.getElementById("check-approval-btn");
+    const pendingLogoutBtn = document.getElementById("pending-logout-btn");
 
     // Selectors
     const sheetSelect = document.getElementById("sheet-select");
@@ -1045,7 +1089,7 @@
     let shiftStartTime = Date.now();
 
     // =========================================================================
-    // 1. ENTERPRISE AUTHENTICATION & LOGIN SESSION AUDIT
+    // 1. AUTHENTICATION, REGISTRATION & APPROVAL GATEKEEPER
     // =========================================================================
     let currentUserSession = null;
 
@@ -1084,21 +1128,36 @@
       headerUserEmail.textContent = session.email.split("@")[0];
       operatorInput.value = session.email;
       localStorage.setItem("hs_operator_name", session.email);
-      log(`Authenticated as ${session.email} (${session.name || 'Verified'})`, "#34d399");
+      log(`Session active: ${session.email} (${session.name || 'Verified'})`, "#34d399");
       validateConfigurationPreFlight();
     }
 
-    async function recordLoginAuditToBackend(session) {
+    // Authenticate / Register Button
+    authConfirmBtn.addEventListener("click", async () => {
+      const email = authEmailInput.value.trim().toLowerCase();
+      const name = authNameInput.value.trim() || email.split("@")[0];
+      const role = authRoleSelect.value;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      if (!email || !emailRegex.test(email)) {
+        alert("Please enter a valid Gmail / Google Workspace address.");
+        authEmailInput.focus();
+        return;
+      }
+
+      authConfirmBtn.disabled = true;
+      authConfirmBtn.textContent = "⏳ Contacting Server...";
+
       try {
         const payload = {
           action: "recordUserLogin",
           authData: {
-            email: session.email,
-            name: session.name,
-            credential: session.credential || null,
+            email: email,
+            name: name,
+            requestedRole: role,
             deviceModel: deviceMetaInput.value,
             deviceUuid: localStorage.getItem("hs_device_uuid") || "UUID-UNKNOWN",
-            authProvider: session.provider,
+            authProvider: "Google Verified Email",
             sessionId: "SESS-" + Date.now().toString(36),
             screenRes: `${window.screen.width}x${window.screen.height}`,
             userAgent: navigator.userAgent
@@ -1110,85 +1169,97 @@
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify(payload)
         });
-        const data = await res.json();
-        if (data.userProfile) {
-          applyUserProfileSettings(data.userProfile);
-        }
-        log("Login session registered in User_Login_Audit_Logs.", "#38bdf8");
-      } catch(errLog) {
-        log("Session logged locally.", "#fbbf24");
-      }
-    }
 
-    // Google Identity Services (GSI) Init
-    window.handleGoogleCredentialResponse = function(response) {
-      if (!response || !response.credential) return;
-      try {
-        const base64Url = response.credential.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        const profile = JSON.parse(jsonPayload);
+        const data = await res.json();
+
+        if (data.status === "error") {
+          alert(data.message || "Authentication error.");
+          return;
+        }
 
         const session = {
-          email: profile.email,
-          name: profile.name,
-          credential: response.credential,
-          provider: "Google Identity Services (GSI OAuth 2.0)",
+          email: data.verifiedEmail || email,
+          name: data.verifiedName || name,
+          role: data.userRole || "Operator",
+          status: data.approvalStatus || "Pending Approval",
+          assignedSheets: data.assignedSheets || "*",
           timestamp: Date.now()
         };
-        saveAndCompleteAuth(session);
-      } catch(errJwt) {
-        alert("OAuth token decoding error: " + errJwt.message);
-      }
-    };
 
-    function initGsiClient() {
-      if (window.google && window.google.accounts && window.google.accounts.id) {
-        try {
-          google.accounts.id.initialize({
-            client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
-            callback: handleGoogleCredentialResponse,
-            auto_select: false
-          });
-          google.accounts.id.renderButton(
-            document.getElementById("g_id_signin_container"),
-            { theme: "outline", size: "large", width: 300, text: "signin_with" }
-          );
-        } catch(eGsi) {}
-      }
-    }
-    window.addEventListener("load", initGsiClient);
+        currentUserSession = session;
+        localStorage.setItem("hs_user_auth_session", JSON.stringify(session));
 
-    // Operator Verified Email Button
-    authConfirmBtn.addEventListener("click", () => {
-      const email = authEmailInput.value.trim().toLowerCase();
-      const name = authNameInput.value.trim() || email.split("@")[0];
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      
-      if (!email || !emailRegex.test(email)) {
-        alert("Please enter a valid Gmail / Google Workspace email address.");
-        authEmailInput.focus();
-        return;
+        // Gatekeeper check: If status is Pending Approval, show approval screen
+        if (session.status !== "Active") {
+          authModal.style.display = "none";
+          showPendingApprovalScreen(session);
+          return;
+        }
+
+        // Active Approved User -> Launch App
+        approvalPendingModal.style.display = "none";
+        authModal.style.display = "none";
+        applyAuthenticatedUser(session);
+        settingsDrawer.style.display = "flex";
+        fetchSchema(false);
+
+      } catch (err) {
+        alert("Connection error: " + err.message);
+      } finally {
+        authConfirmBtn.disabled = false;
+        authConfirmBtn.textContent = "✓ Authenticate & Access Terminal";
       }
-      const session = {
-        email: email,
-        name: name,
-        provider: "Operator Verified Email",
-        timestamp: Date.now()
-      };
-      saveAndCompleteAuth(session);
     });
 
-    function saveAndCompleteAuth(session) {
-      currentUserSession = session;
-      localStorage.setItem("hs_user_auth_session", JSON.stringify(session));
-      applyAuthenticatedUser(session);
-      authModal.style.display = "none";
-      settingsDrawer.style.display = "flex"; // Auto-open config drawer for orientation
-      recordLoginAuditToBackend(session);
-      fetchSchema(false);
+    function showPendingApprovalScreen(session) {
+      pendingEmailDisp.textContent = session.email;
+      pendingRoleDisp.textContent = session.role;
+      pendingUuidDisp.textContent = localStorage.getItem("hs_device_uuid") || "UUID-DEV";
+      approvalPendingModal.style.display = "flex";
+    }
+
+    checkApprovalBtn.addEventListener("click", async () => {
+      checkApprovalBtn.disabled = true;
+      checkApprovalBtn.textContent = "⏳ Verifying in Google Sheets...";
+      try {
+        const userEmail = currentUserSession ? currentUserSession.email : authEmailInput.value.trim();
+        const res = await fetch(SCRIPT_URL + (SCRIPT_URL.includes("?") ? "&" : "?") + "getBootstrap=1&email=" + encodeURIComponent(userEmail));
+        const data = await res.json();
+
+        if (data.approvalStatus === "Active") {
+          currentUserSession.status = "Active";
+          currentUserSession.role = data.userRole || "Operator";
+          localStorage.setItem("hs_user_auth_session", JSON.stringify(currentUserSession));
+          approvalPendingModal.style.display = "none";
+          applyAuthenticatedUser(currentUserSession);
+          settingsDrawer.style.display = "flex";
+          fetchSchema(false);
+          alert("🎉 Congratulations! Your account has been approved by the Administrator.");
+        } else {
+          alert("Notice: Account is still " + (data.approvalStatus || "Pending Approval") + " in Google Sheets User_Directory.");
+        }
+      } catch (e) {
+        alert("Verification failed: " + e.message);
+      } finally {
+        checkApprovalBtn.disabled = false;
+        checkApprovalBtn.textContent = "🔄 Check Approval Status Now";
+      }
+    });
+
+    pendingLogoutBtn.addEventListener("click", doLogout);
+    logoutBtn.addEventListener("click", doLogout);
+
+    function doLogout() {
+      localStorage.removeItem("hs_user_auth_session");
+      currentUserSession = null;
+      headerUserEmail.textContent = "Sign In";
+      operatorInput.value = "";
+      settingsDrawer.style.display = "none";
+      approvalPendingModal.style.display = "none";
+      authModal.style.display = "flex";
+      authEmailInput.value = "";
+      authNameInput.value = "";
+      validateConfigurationPreFlight();
     }
 
     activeUserBadge.addEventListener("click", () => {
@@ -1199,23 +1270,11 @@
       authModal.style.display = "flex";
     });
 
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("hs_user_auth_session");
-      currentUserSession = null;
-      headerUserEmail.textContent = "Sign In";
-      operatorInput.value = "";
-      settingsDrawer.style.display = "none";
-      authModal.style.display = "flex";
-      authEmailInput.value = "";
-      authNameInput.value = "";
-      validateConfigurationPreFlight();
-    });
-
     // =========================================================================
     // 2. PRE-FLIGHT CONFIGURATION ENFORCEMENT GUARD
     // =========================================================================
     function validateConfigurationPreFlight() {
-      const hasAuth = !!currentUserSession && currentUserSession.email && currentUserSession.email.indexOf("@") !== -1;
+      const hasAuth = !!currentUserSession && currentUserSession.status === "Active" && currentUserSession.email.indexOf("@") !== -1;
       const hasSheet = !!sheetSelect.value;
       const hasMatchCol = getSelectedValues(matchColumnsSelect).length > 0;
 
@@ -1241,7 +1300,6 @@
       localStorage.setItem("hs_status_header", statusHeaderInput.value);
     });
 
-    // Hold Duration Configuration
     const savedHoldTime = localStorage.getItem("hs_hold_duration_ms");
     if (savedHoldTime) {
       holdOnMatchDuration = parseInt(savedHoldTime, 10);
@@ -1265,7 +1323,7 @@
     }
 
     function saveUserPreferencesRemote() {
-      if (!currentUserSession) return;
+      if (!currentUserSession || currentUserSession.status !== "Active") return;
       const payload = {
         action: "saveUserProfile",
         userEmail: currentUserSession.email,
@@ -1352,7 +1410,7 @@
     });
 
     function syncDynamicActionBar() {
-      const hasAuth = !!currentUserSession && currentUserSession.email && currentUserSession.email.indexOf("@") !== -1;
+      const hasAuth = !!currentUserSession && currentUserSession.status === "Active" && currentUserSession.email.indexOf("@") !== -1;
       const hasSheet = !!sheetSelect.value;
       const hasMatchCol = getSelectedValues(matchColumnsSelect).length > 0;
 
@@ -1361,7 +1419,7 @@
         tierActionBtn.textContent = "⚠️ COMPLETE CONFIG FIRST";
         barModeTitle.textContent = "Pre-Flight Guard Active";
         barModeSub.textContent = "Select sheet tab & match column in ⚙ Config before scanning.";
-        return;
+        return false;
       }
 
       tierActionBtn.classList.remove("btn-locked-guard");
@@ -1413,7 +1471,7 @@
     }
 
     tierActionBtn.addEventListener("click", async () => {
-      const hasAuth = !!currentUserSession && currentUserSession.email && currentUserSession.email.indexOf("@") !== -1;
+      const hasAuth = !!currentUserSession && currentUserSession.status === "Active" && currentUserSession.email.indexOf("@") !== -1;
       const hasSheet = !!sheetSelect.value;
       const hasMatchCol = getSelectedValues(matchColumnsSelect).length > 0;
 
@@ -1489,7 +1547,7 @@
       try { barcodeDetector = new BarcodeDetector(); } catch(e) {}
     }
 
-    // Connect & Introspect Google Sheet (RECURSION-SAFE)
+    // Connect & Introspect Google Sheet
     async function fetchSchema(preserveUserState = false) {
       try {
         const userEmail = operatorInput.value || (currentUserSession ? currentUserSession.email : "");
@@ -1508,6 +1566,15 @@
 
         if (data.userProfile) {
           applyUserProfileSettings(data.userProfile);
+        }
+
+        if (data.userRole) {
+          userRoleBadge.textContent = "Role: " + data.userRole;
+          if (data.userRole === "Admin" || data.isPrimaryAdmin) {
+            adminDashboardBox.style.display = "flex";
+            adminRosterBox.style.display = "flex";
+            renderAdminRoster(data.teamRoster || []);
+          }
         }
 
         if (data.accessibleSheets && data.accessibleSheets.length > 0) {
@@ -1533,6 +1600,57 @@
         log("Schema fetch notice: " + e.message, "#fbbf24");
       }
     }
+
+    function renderAdminRoster(roster) {
+      if (!adminRosterList) return;
+      if (!roster || roster.length === 0) {
+        adminRosterList.innerHTML = "<div style='font-size:0.72rem; color:#94a3b8;'>No users registered in User_Directory.</div>";
+        return;
+      }
+
+      adminRosterList.innerHTML = roster.map(u => `
+        <div class="admin-roster-card">
+          <div class="admin-roster-header">
+            <span style="color:#f8fafc;">${u.email}</span>
+            <span style="color:${u.status === 'Active' ? '#34d399' : '#f59e0b'}; font-size:0.68rem; font-weight:700;">[${u.status}]</span>
+          </div>
+          <div style="font-size:0.68rem; color:#94a3b8;">Role: <strong>${u.role}</strong> | Sheets: <strong>${u.assignedSheets || '*'}</strong></div>
+          ${u.status !== 'Active' ? `
+            <div style="display:flex; gap:6px; margin-top:4px;">
+              <button class="btn" style="padding:3px 6px; font-size:0.65rem; background:#10b981;" onclick="approveUser('${u.email}', 'Operator')">Approve as Operator</button>
+              <button class="btn" style="padding:3px 6px; font-size:0.65rem; background:#3b82f6;" onclick="approveUser('${u.email}', 'Supervisor')">Approve as Supervisor</button>
+            </div>
+          ` : ''}
+        </div>
+      `).join("");
+    }
+
+    window.approveUser = async function(targetEmail, targetRole) {
+      if (!currentUserSession || currentUserSession.email !== "findankush@gmail.com") {
+        alert("Only the Primary Administrator can approve accounts.");
+        return;
+      }
+      try {
+        const payload = {
+          action: "adminUpdateUser",
+          adminEmail: currentUserSession.email,
+          targetEmail: targetEmail,
+          newRole: targetRole,
+          newStatus: "Active",
+          newAssignedSheets: "*"
+        };
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        alert(data.message || "User approved!");
+        fetchSchema(true);
+      } catch (e) {
+        alert("Approval failed: " + e.message);
+      }
+    };
 
     function populateColumns(sheetMeta, preserveUserState = false) {
       if (!sheetMeta || !sheetMeta.columns) return;
@@ -1633,7 +1751,6 @@
       saveUserPreferencesRemote();
     });
 
-    // Dynamic Field Extractor with Sheet Column Dropdown
     function refreshCustomFieldDropdowns(activeSheetMeta) {
       if (!activeSheetMeta || !activeSheetMeta.columns) return;
       const cards = document.querySelectorAll(".custom-field-card");
@@ -1795,7 +1912,6 @@
       return list;
     }
 
-    // On-Demand Column Sync: PRESERVES USER SELECTIONS
     syncSchemaBtn.addEventListener("click", async () => {
       syncSchemaBtn.disabled = true;
       syncSchemaBtn.textContent = "⏳ Syncing Columns in Sheet...";
@@ -1821,7 +1937,6 @@
           log(`Sheet synchronized: ${data.columnsCreated} column(s) ready.`, "#34d399");
           setHUD(`Columns verified in Google Sheet (+${data.columnsCreated} added)`, "hud-match");
           setTimeout(() => setHUD("Sensor active: ready for scanning.", "hud-standby"), 3000);
-          
           await fetchSchema(true);
         } else {
           log("Sync note: " + (data.error || "Failed to update sheet"), "#ef4444");
@@ -1945,7 +2060,7 @@
         const ctx = canvas.getContext("2d");
         ctx.drawImage(video, cX, cY, cW, cH, 0, 0, cW, cH);
 
-        // Tier 1: Hardware Barcode Scan (Zero cost, instant)
+        // Hardware Barcode Scan (Zero cost, instant)
         let barcodeVal = "";
         if (barcodeDetector) {
           try {
@@ -1964,9 +2079,9 @@
         const b64Image = canvas.toDataURL("image/jpeg", 0.5);
 
         if (mode === "tier3") {
-          // Direct Cloud AI Vision (Canonical gemini-1.5-flash)
+          // Direct Cloud AI Vision
           setHUD("Cloud AI Vision parsing document...", "hud-scanning");
-          log("Canonical Gemini 1.5 Flash invoked...", "#fbbf24");
+          log("Gemini 1.5 Flash Cloud AI invoked...", "#fbbf24");
           await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
         } else if (mode === "auto") {
           // Smart Hybrid Auto-Escalation

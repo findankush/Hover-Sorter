@@ -7,6 +7,8 @@
 
   <!-- Client-side OCR Engine -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <!-- Google Identity Services (GSI) SDK -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
     :root {
@@ -574,6 +576,29 @@
       box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
     }
 
+    #g_id_signin_container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      min-height: 44px;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      color: #64748b;
+      font-size: 0.72rem;
+      gap: 8px;
+    }
+
+    .auth-divider::before, .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #334155;
+    }
+
     .auth-manual-box {
       width: 100%;
       display: flex;
@@ -695,22 +720,27 @@
       <div>
         <h2 style="font-size:1.15rem; font-weight:800; color:#f8fafc;">Hover-Sorter Enterprise</h2>
         <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">
-          Version <strong style="color:#38bdf8;">v1.0 (Commercial Master)</strong>
+          Version <strong style="color:#38bdf8;">v1.0 (Enterprise Rebirth)</strong>
         </p>
       </div>
 
+      <!-- Single Official Google Identity Services Container -->
+      <div id="g_id_signin_container"></div>
+
+      <div class="auth-divider">OR AUTHENTICATE OPERATOR GMAIL</div>
+
       <div class="auth-manual-box">
-        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Gmail / Google Workspace Address:</label>
-        <input type="email" id="auth-email-input" placeholder="your.name@gmail.com" required>
+        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Gmail / Workspace Address:</label>
+        <input type="email" id="auth-email-input" placeholder="operator@gmail.com" required>
         <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Operator Full Name:</label>
-        <input type="text" id="auth-name-input" placeholder="Full Name" required>
+        <input type="text" id="auth-name-input" placeholder="Operator Name" required>
         <button id="auth-confirm-btn" class="btn" style="width:100%; justify-content:center; padding:10px; margin-top:4px;">
-          ✓ Authenticate &amp; Launch Terminal
+          ✓ Verify &amp; Launch Terminal
         </button>
       </div>
 
       <p style="font-size:0.65rem; color:#64748b; line-height:1.4;">
-        Security Notice: Authentic user sessions are verified and monitored in <code style="color:#38bdf8;">User_Login_Audit_Logs</code>.
+        Security Notice: Authenticated sessions are tracked under the <code style="color:#38bdf8;">User_Login_Audit_Logs</code> sheet.
       </p>
     </div>
   </div>
@@ -718,10 +748,10 @@
   <header>
     <div class="brand-cluster">
       <svg class="brand-svg-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="5" y="5" width="90" height="90" rx="20" fill="url(#logo_grad_bg)" stroke="#38bdf8" stroke-width="2"/>
-        <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/>
-        <circle cx="50" cy="50" r="14" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
-        <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="5" y="5" width="90" height="90" rx="20" fill="#0f172a" stroke="#38bdf8" stroke-width="4"/>
+        <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="50" cy="50" r="14" fill="#1e293b" stroke="#10b981" stroke-width="4"/>
+        <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
         <circle cx="50" cy="50" r="4" fill="#fef08a"/>
         <defs>
           <linearGradient id="logo_grad_bg" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
@@ -753,7 +783,7 @@
     <span class="metric-item">Shift Total: <strong id="metric-total">0</strong></span>
     <span class="metric-item">Rate: <strong id="metric-rate">0</strong>/min</span>
     <span class="metric-item">Speed: <strong id="metric-speed">0.0</strong>s</span>
-    <span id="cloud-status" class="cloud-status-badge">✓ Governed</span>
+    <span id="cloud-status" class="cloud-status-badge">✓ Active Governed</span>
   </div>
 
   <!-- Dynamic Contextual Action Bar (Activated strictly as per Tier) -->
@@ -770,8 +800,8 @@
   <!-- Complete Sliding Config Drawer -->
   <div id="settings-drawer">
     <div class="drawer-sec-header">
-      <span>1. Governance: Assigned Sheet &amp; Sensor</span>
-      <span id="user-role-badge" style="font-size:0.65rem; color:#38bdf8; font-weight:700;">Role: Operator</span>
+      <span>1. Governance: Active Sheet &amp; Sensor</span>
+      <span style="font-size:0.65rem; color:#38bdf8;">App Version: v1.0 Rebirth</span>
     </div>
     
     <div class="grid-duo">
@@ -796,16 +826,16 @@
       </select>
     </div>
 
-    <!-- Admin Master Sheets Management Link (Visible only to Sheet Creator / Admin) -->
-    <div id="admin-dashboard-box" class="setting-group" style="background:#020617; border:1px solid #1e293b; padding:8px; border-radius:6px; display:none;">
+    <!-- Admin Master Sheets Management Link -->
+    <div class="setting-group" style="background:#020617; border:1px solid #1e293b; padding:8px; border-radius:6px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:0.74rem; font-weight:700; color:#38bdf8;">📊 Master Admin Governance Dashboard:</span>
+        <span style="font-size:0.74rem; font-weight:700; color:#38bdf8;">📊 Master Admin Settings Dashboard:</span>
         <a id="admin-sheet-link" href="#" target="_blank" class="btn btn-secondary" style="padding:3px 8px; font-size:0.68rem; color:#fef08a;">
           Open App_Settings ↗
         </a>
       </div>
       <span style="font-size:0.64rem; color:#94a3b8; margin-top:3px;">
-        As Admin, you can check/uncheck sheet visibility checkboxes in <strong>App_Settings</strong> to govern operator access.
+        Admins can check/uncheck sheet visibility checkboxes directly inside the <strong>App_Settings</strong> sheet in Google Drive.
       </span>
     </div>
 
@@ -959,8 +989,6 @@
     const closeModalBtn = document.getElementById("close-modal-btn");
     const logoutBtn = document.getElementById("logout-btn");
     const adminSheetLink = document.getElementById("admin-sheet-link");
-    const adminDashboardBox = document.getElementById("admin-dashboard-box");
-    const userRoleBadge = document.getElementById("user-role-badge");
 
     // Dynamic Context Action Bar Elements
     const barModeTitle = document.getElementById("bar-mode-title");
@@ -1067,6 +1095,7 @@
           authData: {
             email: session.email,
             name: session.name,
+            credential: session.credential || null,
             deviceModel: deviceMetaInput.value,
             deviceUuid: localStorage.getItem("hs_device_uuid") || "UUID-UNKNOWN",
             authProvider: session.provider,
@@ -1085,19 +1114,54 @@
         if (data.userProfile) {
           applyUserProfileSettings(data.userProfile);
         }
-        if (data.userRole) {
-          userRoleBadge.textContent = "Role: " + data.userRole;
-          if (data.userRole === "Admin") {
-            adminDashboardBox.style.display = "flex";
-          }
-        }
         log("Login session registered in User_Login_Audit_Logs.", "#38bdf8");
       } catch(errLog) {
         log("Session logged locally.", "#fbbf24");
       }
     }
 
-    // Authenticate Operator Email Button (Strict Verification - Zero Mocks)
+    // Google Identity Services (GSI) Init
+    window.handleGoogleCredentialResponse = function(response) {
+      if (!response || !response.credential) return;
+      try {
+        const base64Url = response.credential.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        const profile = JSON.parse(jsonPayload);
+
+        const session = {
+          email: profile.email,
+          name: profile.name,
+          credential: response.credential,
+          provider: "Google Identity Services (GSI OAuth 2.0)",
+          timestamp: Date.now()
+        };
+        saveAndCompleteAuth(session);
+      } catch(errJwt) {
+        alert("OAuth token decoding error: " + errJwt.message);
+      }
+    };
+
+    function initGsiClient() {
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        try {
+          google.accounts.id.initialize({
+            client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+            callback: handleGoogleCredentialResponse,
+            auto_select: false
+          });
+          google.accounts.id.renderButton(
+            document.getElementById("g_id_signin_container"),
+            { theme: "outline", size: "large", width: 300, text: "signin_with" }
+          );
+        } catch(eGsi) {}
+      }
+    }
+    window.addEventListener("load", initGsiClient);
+
+    // Operator Verified Email Button
     authConfirmBtn.addEventListener("click", () => {
       const email = authEmailInput.value.trim().toLowerCase();
       const name = authNameInput.value.trim() || email.split("@")[0];
@@ -1111,7 +1175,7 @@
       const session = {
         email: email,
         name: name,
-        provider: "Google Identity SSO",
+        provider: "Operator Verified Email",
         timestamp: Date.now()
       };
       saveAndCompleteAuth(session);
@@ -1444,13 +1508,6 @@
 
         if (data.userProfile) {
           applyUserProfileSettings(data.userProfile);
-        }
-
-        if (data.userRole) {
-          userRoleBadge.textContent = "Role: " + data.userRole;
-          if (data.userRole === "Admin" || data.isPrimaryAdmin) {
-            adminDashboardBox.style.display = "flex";
-          }
         }
 
         if (data.accessibleSheets && data.accessibleSheets.length > 0) {

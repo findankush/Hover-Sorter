@@ -533,7 +533,7 @@
       color: #fef08a;
     }
 
-    /* Enterprise Google Identity / Login Modal */
+    /* Enterprise Google Login Modal */
     #auth-modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -712,7 +712,7 @@
       background: #020617;
       border-top: 1px solid var(--border-subtle);
       padding: 5px 10px;
-      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
       font-size: 0.68rem;
       overflow-y: auto;
       z-index: 10;
@@ -738,13 +738,15 @@
 
       <div>
         <h2 style="font-size:1.15rem; font-weight:800; color:#f8fafc;">Hover-Sorter Enterprise</h2>
-        <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">v4.0 Production • Multi-Level Governance System</p>
+        <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">
+          Version <strong style="color:#38bdf8;">v5.0-Master-Verified</strong> • Governance System
+        </p>
       </div>
 
       <!-- Official Google Identity Services Container -->
       <div id="g_id_signin_container"></div>
 
-      <!-- Quick Fallback Google Sign-In Button -->
+      <!-- Fallback Quick Google Sign-In Button -->
       <button id="google-auth-btn" class="google-signin-btn">
         <svg width="18" height="18" viewBox="0 0 48 48">
           <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -776,9 +778,9 @@
   <header>
     <div class="brand-cluster">
       <svg class="brand-svg-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="5" y="5" width="90" height="90" rx="20" fill="#0f172a" stroke="#38bdf8" stroke-width="4"/>
+        <rect x="5" y="5" width="90" height="90" rx="20" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
         <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/>
-        <circle cx="50" cy="50" r="14" fill="#1e293b" stroke="#10b981" stroke-width="4"/>
+        <circle cx="50" cy="50" r="14" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
         <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
         <circle cx="50" cy="50" r="4" fill="#fef08a"/>
         <defs>
@@ -793,7 +795,7 @@
           <span class="brand-name">Hover-Sorter</span>
           <span id="tier-badge" class="tier-indicator-pill">Tier 1: Edge</span>
         </div>
-        <span class="brand-architect">Architected by Ankush Saha</span>
+        <span class="brand-architect">v5.0-Master | Architected by Ankush Saha</span>
       </div>
     </div>
 
@@ -811,7 +813,7 @@
     <span class="metric-item">Shift Total: <strong id="metric-total">0</strong></span>
     <span class="metric-item">Rate: <strong id="metric-rate">0</strong>/min</span>
     <span class="metric-item">Speed: <strong id="metric-speed">0.0</strong>s</span>
-    <span id="cloud-status" class="cloud-status-badge">✓ RBAC Governed</span>
+    <span id="cloud-status" class="cloud-status-badge">✓ Governed</span>
   </div>
 
   <!-- Dynamic Contextual Action Bar (Activated strictly as per Tier) -->
@@ -829,6 +831,7 @@
   <div id="settings-drawer">
     <div class="drawer-sec-header">
       <span>1. Governance: Active Sheet &amp; Sensor</span>
+      <span style="font-size:0.65rem; color:#38bdf8;">App Version: v5.0 Master</span>
     </div>
     
     <div class="grid-duo">
@@ -842,15 +845,28 @@
       </div>
     </div>
 
-    <!-- Scanning Mode Defaults to Tier 1 -->
+    <!-- Scanning Mode Defaults strictly to Tier 1 -->
     <div class="pipeline-strategy-card">
       <div class="setting-label" style="color:#38bdf8; font-weight:700;">⚡ Scanning Mode &amp; Strategy:</div>
       <select id="pipeline-tier-select">
         <option value="tier1" selected>Tier 1: Standard Edge (Continuous Camera Loop - $0 / Unlimited Tokens)</option>
-        <option value="auto">✨ Smart Hybrid Auto-Escalate (Local OCR first; auto-calls Cloud AI if faint)</option>
+        <option value="auto">✨ Smart Hybrid Auto-Escalate (Local OCR first; auto-calls Gemini AI if faint)</option>
         <option value="tier2">Tier 2: Manual Shutter (Tap Snap to Scan - Zero battery &amp; Zero blur)</option>
         <option value="tier3">Tier 3: Direct Cloud AI Vision (Gemini Multimodal for Faint/Handwritten)</option>
       </select>
+    </div>
+
+    <!-- Admin Master Sheets Management Link -->
+    <div class="setting-group" style="background:#020617; border:1px solid #1e293b; padding:8px; border-radius:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.74rem; font-weight:700; color:#38bdf8;">📊 Master Admin Settings Dashboard:</span>
+        <a id="admin-sheet-link" href="#" target="_blank" class="btn btn-secondary" style="padding:3px 8px; font-size:0.68rem; color:#fef08a;">
+          Open App_Settings ↗
+        </a>
+      </div>
+      <span style="font-size:0.64rem; color:#94a3b8; margin-top:3px;">
+        Admins can check/uncheck sheet visibility checkboxes directly inside the <strong>App_Settings</strong> sheet in Google Drive.
+      </span>
     </div>
 
     <div class="drawer-sec-header">
@@ -890,7 +906,6 @@
       </div>
       <div class="setting-group">
         <label class="setting-label">Filter Processed Rows:</label>
-        <!-- DEFAULT IS ALLOW RE-SCAN -->
         <select id="skip-processed">
           <option value="false" selected>No (Allow Re-scan / Active Update)</option>
           <option value="true">Yes (Prevent Re-scan)</option>
@@ -1003,6 +1018,7 @@
     const modalCandidatesList = document.getElementById("modal-candidates-list");
     const closeModalBtn = document.getElementById("close-modal-btn");
     const logoutBtn = document.getElementById("logout-btn");
+    const adminSheetLink = document.getElementById("admin-sheet-link");
 
     // Dynamic Context Action Bar Elements
     const barModeTitle = document.getElementById("bar-mode-title");
@@ -1060,7 +1076,7 @@
     let shiftStartTime = Date.now();
 
     // =========================================================================
-    // 1. ENTERPRISE AUTHENTICATION & LOGIN SESSION AUDIT
+    // 1. ENTERPRISE AUTHENTICATION & SESSION PERSISTENCE
     // =========================================================================
     let currentUserSession = null;
 
@@ -1137,7 +1153,6 @@
     window.handleGoogleCredentialResponse = function(response) {
       if (!response || !response.credential) return;
       try {
-        // Decode JWT payload without external library
         const base64Url = response.credential.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -1154,7 +1169,7 @@
         };
         saveAndCompleteAuth(session);
       } catch(errJwt) {
-        alert("OAuth verification error: " + errJwt.message);
+        alert("OAuth verification notice: " + errJwt.message);
       }
     };
 
@@ -1162,7 +1177,7 @@
       if (window.google && window.google.accounts && window.google.accounts.id) {
         try {
           google.accounts.id.initialize({
-            client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com", // Optional OAuth Client ID
+            client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
             callback: handleGoogleCredentialResponse,
             auto_select: false
           });
@@ -1208,6 +1223,10 @@
       localStorage.setItem("hs_user_auth_session", JSON.stringify(session));
       applyAuthenticatedUser(session);
       authModal.style.display = "none";
+      
+      // Auto-open config drawer right after login for seamless configuration!
+      settingsDrawer.style.display = "flex";
+      
       recordLoginAuditToBackend(session);
       fetchSchema(false);
     }
@@ -1229,7 +1248,7 @@
     });
 
     // =========================================================================
-    // 2. PRE-FLIGHT CONFIGURATION ENFORCEMENT GUARD (FIXES STUCK BUTTON)
+    // 2. PRE-FLIGHT CONFIGURATION ENFORCEMENT GUARD (STRICT PRE-VALIDATION)
     // =========================================================================
     function validateConfigurationPreFlight() {
       const hasAuth = !!currentUserSession;
@@ -1240,7 +1259,7 @@
         tierActionBtn.classList.add("btn-locked-guard");
         tierActionBtn.textContent = "⚠️ COMPLETE CONFIG FIRST";
         barModeTitle.textContent = "Pre-Flight Guard Active";
-        barModeSub.textContent = "Select sheet & match columns in ⚙ Config before scanning.";
+        barModeSub.textContent = "Select sheet tab & match column in ⚙ Config before scanning.";
         return false;
       }
 
@@ -1272,7 +1291,7 @@
 
     function applyUserProfileSettings(profile) {
       if (!profile) return;
-      if (profile.mode) pipelineTierSelect.value = profile.mode;
+      // NOTE: We do NOT restore scanning mode/tier from user profile; it always defaults to Tier 1!
       if (profile.voice !== undefined) ttsToggle.value = profile.voice ? "true" : "false";
       if (profile.haptics !== undefined) hapticToggle.value = profile.haptics ? "true" : "false";
       if (profile.holdDurationMs) {
@@ -1288,7 +1307,6 @@
         action: "saveUserProfile",
         userEmail: currentUserSession.email,
         profileData: {
-          mode: pipelineTierSelect.value,
           voice: ttsToggle.value === "true",
           haptics: hapticToggle.value === "true",
           holdDurationMs: holdOnMatchDuration,
@@ -1379,7 +1397,7 @@
         tierActionBtn.classList.add("btn-locked-guard");
         tierActionBtn.textContent = "⚠️ COMPLETE CONFIG FIRST";
         barModeTitle.textContent = "Pre-Flight Guard Active";
-        barModeSub.textContent = "Select sheet & match columns in ⚙ Config before scanning.";
+        barModeSub.textContent = "Select sheet tab & match column in ⚙ Config before scanning.";
         return;
       }
 
@@ -1519,6 +1537,10 @@
           operatorInput.value = data.detectedEmail;
           localStorage.setItem("hs_operator_name", data.detectedEmail);
           headerUserEmail.textContent = data.detectedEmail.split("@")[0];
+        }
+
+        if (data.spreadsheetUrl) {
+          adminSheetLink.href = data.spreadsheetUrl;
         }
 
         if (data.userProfile) {

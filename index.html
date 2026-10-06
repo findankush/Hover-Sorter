@@ -12,9 +12,9 @@
 
   <style>
     :root {
-      --bg-core: #050811;
-      --bg-surface: #0b1120;
-      --bg-panel: #0f172a;
+      --bg-core: #030712;
+      --bg-surface: #0b1329;
+      --bg-card: #0f172a;
       --primary: #2563eb;
       --primary-glow: #38bdf8;
       --accent-green: #10b981;
@@ -44,11 +44,11 @@
       height: 100vh;
       height: 100dvh;
       overflow: hidden;
-      padding-bottom: 20px;
+      padding-bottom: 18px;
     }
 
     header {
-      background: rgba(11, 17, 32, 0.96);
+      background: rgba(11, 19, 41, 0.96);
       backdrop-filter: blur(16px);
       padding: 8px 12px;
       display: flex;
@@ -111,7 +111,7 @@
 
     .header-actions {
       display: flex;
-      gap: 5px;
+      gap: 6px;
       align-items: center;
     }
 
@@ -146,6 +146,10 @@
       align-items: center;
       gap: 5px;
       cursor: pointer;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .btn-icon {
@@ -533,11 +537,11 @@
       color: #fef08a;
     }
 
-    /* Enterprise Google Login Modal */
+    /* Enterprise Clean Login Modal */
     #auth-modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+      background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -551,7 +555,7 @@
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
       border-radius: 16px;
       width: 100%;
-      max-width: 420px;
+      max-width: 400px;
       padding: 24px;
       display: flex;
       flex-direction: column;
@@ -577,29 +581,6 @@
       display: flex;
       justify-content: center;
       min-height: 44px;
-    }
-
-    .google-signin-btn {
-      background: #ffffff;
-      color: #1f2937;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 10px 18px;
-      width: 100%;
-      font-weight: 700;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      transition: all 0.2s;
-    }
-
-    .google-signin-btn:active {
-      transform: scale(0.98);
-      background: #f9fafb;
     }
 
     .auth-divider {
@@ -723,7 +704,7 @@
 </head>
 <body>
 
-  <!-- 1. ENTERPRISE GOOGLE IDENTITY / AUTHENTICATION MODAL -->
+  <!-- 1. UNIFIED ENTERPRISE AUTHENTICATION MODAL -->
   <div id="auth-modal">
     <div class="auth-card">
       <div class="auth-logo-wrap">
@@ -739,38 +720,27 @@
       <div>
         <h2 style="font-size:1.15rem; font-weight:800; color:#f8fafc;">Hover-Sorter Enterprise</h2>
         <p style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">
-          Version <strong style="color:#38bdf8;">v5.0-Master-Verified</strong> • Governance System
+          Version <strong style="color:#38bdf8;">v1.0 (Enterprise Rebirth)</strong>
         </p>
       </div>
 
-      <!-- Official Google Identity Services Container -->
+      <!-- Single Official Google Identity Services Container -->
       <div id="g_id_signin_container"></div>
 
-      <!-- Fallback Quick Google Sign-In Button -->
-      <button id="google-auth-btn" class="google-signin-btn">
-        <svg width="18" height="18" viewBox="0 0 48 48">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.77l7.97-6.18z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-        </svg>
-        Sign In with Google Account
-      </button>
-
-      <div class="auth-divider">OR VERIFY OPERATOR GMAIL</div>
+      <div class="auth-divider">OR AUTHENTICATE OPERATOR GMAIL</div>
 
       <div class="auth-manual-box">
-        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Android / Operator Gmail Address:</label>
-        <input type="email" id="auth-email-input" placeholder="e.g. operator.zone@gmail.com">
+        <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Gmail / Workspace Address:</label>
+        <input type="email" id="auth-email-input" placeholder="operator@gmail.com" required>
         <label style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Operator Full Name:</label>
-        <input type="text" id="auth-name-input" placeholder="e.g. Ankush Saha (Terminal 1)">
+        <input type="text" id="auth-name-input" placeholder="Operator Name" required>
         <button id="auth-confirm-btn" class="btn" style="width:100%; justify-content:center; padding:10px; margin-top:4px;">
-          ✓ Authorize &amp; Launch Terminal
+          ✓ Verify &amp; Launch Terminal
         </button>
       </div>
 
       <p style="font-size:0.65rem; color:#64748b; line-height:1.4;">
-        Multi-Tenant Security: Device fingerprints &amp; login sessions are stored automatically in the <code style="color:#38bdf8;">User_Login_Audit_Logs</code> sheet.
+        Security Notice: Authenticated sessions are tracked under the <code style="color:#38bdf8;">User_Login_Audit_Logs</code> sheet.
       </p>
     </div>
   </div>
@@ -778,7 +748,7 @@
   <header>
     <div class="brand-cluster">
       <svg class="brand-svg-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="5" y="5" width="90" height="90" rx="20" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+        <rect x="5" y="5" width="90" height="90" rx="20" fill="url(#logo_grad_bg)" stroke="#38bdf8" stroke-width="2"/>
         <path d="M25 35L50 20L75 35V65L50 80L25 65V35Z" stroke="#38bdf8" stroke-width="3" stroke-linejoin="round"/>
         <circle cx="50" cy="50" r="14" fill="#0f172a" stroke="#10b981" stroke-width="3"/>
         <path d="M44 50H56M50 44V56" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
@@ -795,14 +765,14 @@
           <span class="brand-name">Hover-Sorter</span>
           <span id="tier-badge" class="tier-indicator-pill">Tier 1: Edge</span>
         </div>
-        <span class="brand-architect">v5.0-Master | Architected by Ankush Saha</span>
+        <span class="brand-architect">v1.0 | Architected by Ankush Saha</span>
       </div>
     </div>
 
     <div class="header-actions">
       <button id="torch-btn" class="btn btn-icon" title="Toggle Flashlight">🔦</button>
       <button id="active-user-badge" class="btn-user-badge" title="Tap to switch user session">
-        <span id="header-user-email">Operator</span> ⚙
+        <span id="header-user-email">Sign In</span>
       </button>
       <button id="config-trigger" class="btn btn-secondary">⚙ Config</button>
     </div>
@@ -813,7 +783,7 @@
     <span class="metric-item">Shift Total: <strong id="metric-total">0</strong></span>
     <span class="metric-item">Rate: <strong id="metric-rate">0</strong>/min</span>
     <span class="metric-item">Speed: <strong id="metric-speed">0.0</strong>s</span>
-    <span id="cloud-status" class="cloud-status-badge">✓ Governed</span>
+    <span id="cloud-status" class="cloud-status-badge">✓ Active Governed</span>
   </div>
 
   <!-- Dynamic Contextual Action Bar (Activated strictly as per Tier) -->
@@ -831,7 +801,7 @@
   <div id="settings-drawer">
     <div class="drawer-sec-header">
       <span>1. Governance: Active Sheet &amp; Sensor</span>
-      <span style="font-size:0.65rem; color:#38bdf8;">App Version: v5.0 Master</span>
+      <span style="font-size:0.65rem; color:#38bdf8;">App Version: v1.0 Rebirth</span>
     </div>
     
     <div class="grid-duo">
@@ -852,7 +822,7 @@
         <option value="tier1" selected>Tier 1: Standard Edge (Continuous Camera Loop - $0 / Unlimited Tokens)</option>
         <option value="auto">✨ Smart Hybrid Auto-Escalate (Local OCR first; auto-calls Gemini AI if faint)</option>
         <option value="tier2">Tier 2: Manual Shutter (Tap Snap to Scan - Zero battery &amp; Zero blur)</option>
-        <option value="tier3">Tier 3: Direct Cloud AI Vision (Gemini Multimodal for Faint/Handwritten)</option>
+        <option value="tier3">Tier 3: Direct Cloud AI Vision (Canonical Gemini 1.5 Flash for Difficult Forms)</option>
       </select>
     </div>
 
@@ -1033,7 +1003,6 @@
 
     // Auth Modal Elements
     const authModal = document.getElementById("auth-modal");
-    const googleAuthBtn = document.getElementById("google-auth-btn");
     const authEmailInput = document.getElementById("auth-email-input");
     const authNameInput = document.getElementById("auth-name-input");
     const authConfirmBtn = document.getElementById("auth-confirm-btn");
@@ -1076,7 +1045,7 @@
     let shiftStartTime = Date.now();
 
     // =========================================================================
-    // 1. ENTERPRISE AUTHENTICATION & SESSION PERSISTENCE
+    // 1. ENTERPRISE AUTHENTICATION & LOGIN SESSION AUDIT
     // =========================================================================
     let currentUserSession = null;
 
@@ -1099,10 +1068,12 @@
       if (savedAuth) {
         try {
           currentUserSession = JSON.parse(savedAuth);
-          applyAuthenticatedUser(currentUserSession);
-          authModal.style.display = "none";
-          fetchSchema(false);
-          return;
+          if (currentUserSession && currentUserSession.email && currentUserSession.email.indexOf("@") !== -1) {
+            applyAuthenticatedUser(currentUserSession);
+            authModal.style.display = "none";
+            fetchSchema(false);
+            return;
+          }
         } catch(e) {}
       }
       authModal.style.display = "flex";
@@ -1164,12 +1135,12 @@
           email: profile.email,
           name: profile.name,
           credential: response.credential,
-          provider: "Google Identity Services (GSI)",
+          provider: "Google Identity Services (GSI OAuth 2.0)",
           timestamp: Date.now()
         };
         saveAndCompleteAuth(session);
       } catch(errJwt) {
-        alert("OAuth verification notice: " + errJwt.message);
+        alert("OAuth token decoding error: " + errJwt.message);
       }
     };
 
@@ -1183,30 +1154,22 @@
           });
           google.accounts.id.renderButton(
             document.getElementById("g_id_signin_container"),
-            { theme: "outline", size: "large", width: 280, text: "signin_with" }
+            { theme: "outline", size: "large", width: 300, text: "signin_with" }
           );
         } catch(eGsi) {}
       }
     }
     window.addEventListener("load", initGsiClient);
 
-    // Fallback One-Click Google Authenticator
-    googleAuthBtn.addEventListener("click", () => {
-      const detectedEmail = operatorInput.value && operatorInput.value.includes("@") ? operatorInput.value : "operator.google@gmail.com";
-      const session = {
-        email: detectedEmail,
-        name: detectedEmail.split("@")[0].toUpperCase() + " (Google Verified)",
-        provider: "Google One-Tap / SSO",
-        timestamp: Date.now()
-      };
-      saveAndCompleteAuth(session);
-    });
-
+    // Operator Verified Email Button
     authConfirmBtn.addEventListener("click", () => {
-      const email = authEmailInput.value.trim();
+      const email = authEmailInput.value.trim().toLowerCase();
       const name = authNameInput.value.trim() || email.split("@")[0];
-      if (!email || !email.includes("@")) {
-        alert("Please enter a valid Gmail / Work email address.");
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      if (!email || !emailRegex.test(email)) {
+        alert("Please enter a valid Gmail / Google Workspace email address.");
+        authEmailInput.focus();
         return;
       }
       const session = {
@@ -1223,17 +1186,16 @@
       localStorage.setItem("hs_user_auth_session", JSON.stringify(session));
       applyAuthenticatedUser(session);
       authModal.style.display = "none";
-      
-      // Auto-open config drawer right after login for seamless configuration!
-      settingsDrawer.style.display = "flex";
-      
+      settingsDrawer.style.display = "flex"; // Auto-open config drawer for orientation
       recordLoginAuditToBackend(session);
       fetchSchema(false);
     }
 
     activeUserBadge.addEventListener("click", () => {
-      authEmailInput.value = currentUserSession ? currentUserSession.email : "";
-      authNameInput.value = currentUserSession ? currentUserSession.name : "";
+      if (currentUserSession) {
+        authEmailInput.value = currentUserSession.email;
+        authNameInput.value = currentUserSession.name;
+      }
       authModal.style.display = "flex";
     });
 
@@ -1244,14 +1206,16 @@
       operatorInput.value = "";
       settingsDrawer.style.display = "none";
       authModal.style.display = "flex";
+      authEmailInput.value = "";
+      authNameInput.value = "";
       validateConfigurationPreFlight();
     });
 
     // =========================================================================
-    // 2. PRE-FLIGHT CONFIGURATION ENFORCEMENT GUARD (STRICT PRE-VALIDATION)
+    // 2. PRE-FLIGHT CONFIGURATION ENFORCEMENT GUARD
     // =========================================================================
     function validateConfigurationPreFlight() {
-      const hasAuth = !!currentUserSession;
+      const hasAuth = !!currentUserSession && currentUserSession.email && currentUserSession.email.indexOf("@") !== -1;
       const hasSheet = !!sheetSelect.value;
       const hasMatchCol = getSelectedValues(matchColumnsSelect).length > 0;
 
@@ -1291,7 +1255,6 @@
 
     function applyUserProfileSettings(profile) {
       if (!profile) return;
-      // NOTE: We do NOT restore scanning mode/tier from user profile; it always defaults to Tier 1!
       if (profile.voice !== undefined) ttsToggle.value = profile.voice ? "true" : "false";
       if (profile.haptics !== undefined) hapticToggle.value = profile.haptics ? "true" : "false";
       if (profile.holdDurationMs) {
@@ -1389,7 +1352,7 @@
     });
 
     function syncDynamicActionBar() {
-      const hasAuth = !!currentUserSession;
+      const hasAuth = !!currentUserSession && currentUserSession.email && currentUserSession.email.indexOf("@") !== -1;
       const hasSheet = !!sheetSelect.value;
       const hasMatchCol = getSelectedValues(matchColumnsSelect).length > 0;
 
@@ -1442,7 +1405,7 @@
         tierBadge.textContent = "Tier 3: Cloud AI";
         tierBadge.style.color = "#fbbf24";
         barModeTitle.textContent = "Tier 3: Cloud Multimodal AI Vision";
-        barModeSub.textContent = "Deep Neural Processing (For faint, handwritten, or crumpled forms)";
+        barModeSub.textContent = "Deep Neural Processing (Canonical Gemini 1.5 Flash Model)";
 
         tierActionBtn.textContent = "🧠 AI SNAP & ROUTE";
         tierActionBtn.style.background = "linear-gradient(135deg, #d97706, #b45309)";
@@ -1450,13 +1413,13 @@
     }
 
     tierActionBtn.addEventListener("click", async () => {
-      const hasAuth = !!currentUserSession;
+      const hasAuth = !!currentUserSession && currentUserSession.email && currentUserSession.email.indexOf("@") !== -1;
       const hasSheet = !!sheetSelect.value;
       const hasMatchCol = getSelectedValues(matchColumnsSelect).length > 0;
 
       if (!hasAuth || !hasSheet || !hasMatchCol) {
         settingsDrawer.style.display = "flex";
-        setHUD("⚠️ Please select active sheet and match columns first.", "hud-error");
+        setHUD("⚠️ Select active sheet and match columns first.", "hud-error");
         return;
       }
 
@@ -2001,9 +1964,9 @@
         const b64Image = canvas.toDataURL("image/jpeg", 0.5);
 
         if (mode === "tier3") {
-          // Direct Cloud AI Vision
+          // Direct Cloud AI Vision (Canonical gemini-1.5-flash)
           setHUD("Cloud AI Vision parsing document...", "hud-scanning");
-          log("Direct Gemini Vision invoked...", "#fbbf24");
+          log("Canonical Gemini 1.5 Flash invoked...", "#fbbf24");
           await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
         } else if (mode === "auto") {
           // Smart Hybrid Auto-Escalation
@@ -2016,8 +1979,8 @@
             log(`Read: "${clean.substring(0, 25).replace(/\s+/g, ' ')}..."`);
             await dispatchToBackend({ scannedText: clean, imageBase64: b64Image, directAiMode: false }, tStart);
           } else {
-            log("Local scan faint; auto-escalating to Gemini Cloud AI...", "#fbbf24");
-            setHUD("Faint text: analyzing via Gemini Cloud AI...", "hud-scanning");
+            log("Faint scan; auto-escalating to Gemini 1.5 Flash Cloud AI...", "#fbbf24");
+            setHUD("Faint text: analyzing via Gemini 1.5 Flash...", "hud-scanning");
             await dispatchToBackend({ imageBase64: b64Image, directAiMode: true }, tStart);
           }
         } else {
@@ -2064,7 +2027,7 @@
         scannedText: payload.scannedText || "",
         imageBase64: payload.imageBase64 || "",
         directAiMode: payload.directAiMode === true,
-        userEmail: operatorInput.value || (currentUserSession ? currentUserSession.email : "Field Operator"),
+        userEmail: operatorInput.value || (currentUserSession ? currentUserSession.email : "operator@domain.com"),
         manualChosenRowIndex: payload.manualChosenRowIndex || null,
         matchRules: {
           matchColumns: selectedMatchCols.length > 0 ? selectedMatchCols : [1],
